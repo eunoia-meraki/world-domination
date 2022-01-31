@@ -1,0 +1,44 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""player"""
+type Player {
+  id: ID!
+  email: String!
+  password: String!
+  nickname: String!
+  games: [Game!]!
+}
+
+"""game"""
+type Game {
+  id: ID!
+  date: Date!
+  players: [Player!]!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  player(id: String!): Player!
+  players: [Player!]!
+  game(id: String!): Game!
+  games: [Game!]!
+}
+
+type Mutation {
+  addPlayer(newPlayerData: AddPlayerInput!): Player!
+  addGame(newGameInput: AddGameInput!): Game!
+}
+
+input AddPlayerInput {
+  email: String!
+  password: String!
+  nickname: String!
+}
+
+input AddGameInput {
+  playerIds: [String!]!
+}

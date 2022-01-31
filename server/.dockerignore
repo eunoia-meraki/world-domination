@@ -1,4 +1,8 @@
-node_modules/
-Dockerfile
-.dockerignore
-.gitignore
+# Ignore everything
+**
+
+# Allow files and directories
+!/starter.sh
+!/package.json
+!/package-lock.json
+!/src/**

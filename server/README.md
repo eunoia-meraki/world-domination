@@ -1,3 +1,49 @@
+# Development
+### Installation
+
+```bash
+# install nestjs
+npm i -g @nestjs/cli
+
+# create new project
+nest new world-domination-server
+
+npm i @nestjs/graphql graphql@^15 apollo-server-express apollo-server-core
+
+npm i @nestjs/config
+
+npm install --save @nestjs/mongoose mongoose
+
+npm install cross-env
+
+$ npm install
+```
+
+### Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+### Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
 # Deployment on Heroku is automated
 Just push changes into main branch, server subdirectory
 # MANUAL Deploy on Heroku
