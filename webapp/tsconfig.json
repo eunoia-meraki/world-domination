@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "baseUrl": "src",
+    "rootDir": "./",
+    "jsx": "react-jsx",
+  },
+  "include": [
+    "./src/**/*",
+    "webpack.config.ts",
+    "babel.config.ts",
+  ],
+  "exclude": ["node_modules"],
+}
