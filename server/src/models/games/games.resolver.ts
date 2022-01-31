@@ -1,19 +1,20 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { PlayersService } from '../players/players.service';
-import { AddGameDto } from './dto/add-game.dto';
+import { JwtAuthGuard } from '../../auth/auth.guard';
+import { UsersService } from '../users/users.service';
 import { AddGameInput } from './dto/add-game.input';
 import { GamesService } from './games.service';
 import { Game } from './schemas/game.schema';
 
 const pubSub = new PubSub();
 
+@UseGuards(JwtAuthGuard)
 @Resolver(() => Game)
 export class GamesResolver {
   constructor(
     private readonly gamesService: GamesService,
-    private readonly playersService: PlayersService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Query(() => Game)
@@ -31,14 +32,11 @@ export class GamesResolver {
   }
 
   @Mutation(() => Game)
-  async addGame(
-    @Args('newGameInput') newGameInput: AddGameInput,
-  ): Promise<Game> {
-    // TODO check types
-    const players = await Promise.all(
-      newGameInput.playerIds.map((id) => this.playersService.findOneById(id)),
+  async addGame(@Args('input') input: AddGameInput): Promise<Game> {
+    const users = await Promise.all(
+      input.userIds.map((id) => this.usersService.findOneById(id)),
     );
-    const game = await this.gamesService.create({ players });
+    const game = await this.gamesService.create({ users });
     pubSub.publish('gameAdded', { gameAdded: game });
     return game;
   }

@@ -1,5 +1,5 @@
-import { Player } from 'src/models/players/schemas/player.schema';
+import { User } from 'src/models/users/schemas/user.schema';
 
 export class AddGameDto {
-  readonly players: Player[];
+  readonly users: User[];
 }

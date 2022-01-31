@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 import { GamesModule } from './models/games/games.module';
-import { PlayersModule } from './models/players/players.module';
+import { UsersModule } from './models/users/users.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
@@ -18,9 +19,11 @@ const path = require('path');
       debug: true,
       playground: true,
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
+      context: ({ req }) => ({ headers: req.headers }),
     }),
-    PlayersModule,
+    UsersModule,
     GamesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

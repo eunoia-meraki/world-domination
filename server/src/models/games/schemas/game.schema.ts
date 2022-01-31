@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Player } from '../../players/schemas/player.schema';
+import { User } from '../../users/schemas/user.schema';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 export type GameDocument = Game & Document;
@@ -17,12 +17,12 @@ export class Game {
   @Prop({ default: Date.now() })
   date: Date;
 
-  @Field((type) => [Player])
+  @Field((type) => [User])
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     default: [],
   })
-  players: Player[];
+  users: User[];
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);

@@ -4,12 +4,14 @@ import { Game, GameSchema } from './schemas/game.schema';
 import { GamesService } from './games.service';
 import { GamesResolver } from './games.resolver';
 import { DateScalar } from '../common/scalars/date.scalar';
-import { PlayersModule } from '../players/players.module';
+import { UsersModule } from '../users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
-    PlayersModule,
+    UsersModule,
+    AuthModule,
   ],
   providers: [GamesService, GamesResolver, DateScalar],
 })

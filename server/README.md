@@ -16,6 +16,10 @@ npm install --save @nestjs/mongoose mongoose
 
 npm install cross-env
 
+@nestjs/jwt
+
+npm i bcryptjs
+
 $ npm install
 ```
 
