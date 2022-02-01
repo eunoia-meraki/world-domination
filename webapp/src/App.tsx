@@ -29,7 +29,7 @@ export const App: FC = () => {
         position="static"
         color="default"
         elevation={0}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Toolbar sx={{ flexWrap: 'wrap' }}>
           <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
@@ -51,7 +51,7 @@ export const App: FC = () => {
           py: 3,
           px: 2,
           mt: 'auto',
-          backgroundColor: (theme) =>
+          backgroundColor: theme =>
             theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
         }}
       >

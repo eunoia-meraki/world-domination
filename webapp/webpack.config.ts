@@ -9,13 +9,10 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 const dirnamePath = dirname(fileURLToPath(import.meta.url));
 
 const config = {
-  entry: [
-    'react-hot-loader/patch',
-    './src/index.tsx'
-  ],
+  entry: ['react-hot-loader/patch', './src/index.tsx'],
   output: {
     path: resolve(dirnamePath, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
@@ -33,10 +30,7 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader'
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.svg$/i,
@@ -49,17 +43,17 @@ const config = {
           {
             loader: 'url-loader',
             options: {
-              mimetype: 'image/png'
-            }
-          }
-        ]
-      }
-    ]
+              mimetype: 'image/png',
+            },
+          },
+        ],
+      },
+    ],
   },
   devServer: {
-    'static': {
-      directory: './build'
-    }
+    static: {
+      directory: './build',
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -71,20 +65,14 @@ const config = {
       openAnalyzer: false,
     }),
     new MiniCssExtractPlugin(),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
   ],
   resolve: {
-    extensions: [
-      '.tsx',
-      '.ts',
-      '.mts',
-      '.js',
-      '.css',
-    ],
+    extensions: ['.tsx', '.ts', '.mts', '.js', '.css'],
     alias: {
-      'react-dom': '@hot-loader/react-dom'
-    }
-  }
+      'react-dom': '@hot-loader/react-dom',
+    },
+  },
 };
 
 export default config;

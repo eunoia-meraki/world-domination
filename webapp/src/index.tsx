@@ -18,22 +18,19 @@ interface IContext {
 export const SubscriptionContext = createContext<IContext>({});
 
 const RelayApp = () => {
-  const subscriptionClient = new SubscriptionClient(
-    'ws://localhost:8001/graphql',
-    {
-      reconnect: true,
-      connectionParams: () => {
-        return { token: localStorage.getItem('token') };
-      },
+  const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
+    reconnect: true,
+    connectionParams: () => {
+      return { token: localStorage.getItem('token') };
     },
-  );
+  });
 
   const value: IContext = { subscriptionClient: subscriptionClient };
 
   return (
     <RelayEnvironmentProvider environment={RelayEnvironment}>
       <SubscriptionContext.Provider value={value}>
-        <App/>
+        <App />
       </SubscriptionContext.Provider>
     </RelayEnvironmentProvider>
   );

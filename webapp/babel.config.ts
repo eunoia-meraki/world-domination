@@ -1,7 +1,4 @@
-import type {
-  ConfigAPI,
-  TransformOptions,
-} from '@babel/core';
+import type { ConfigAPI, TransformOptions } from '@babel/core';
 
 const config = (api: ConfigAPI): TransformOptions => {
   return {
@@ -35,7 +32,7 @@ const config = (api: ConfigAPI): TransformOptions => {
       [
         'module-resolver',
         {
-          'alias': {
+          alias: {
             '@/': 'src/',
           },
         },

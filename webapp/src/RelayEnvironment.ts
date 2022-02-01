@@ -16,10 +16,7 @@ import type {
 
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
-import type {
-  Observer,
-  Observable,
-} from 'subscriptions-transport-ws';
+import type { Observer, Observable } from 'subscriptions-transport-ws';
 
 import { meros } from 'meros';
 
@@ -32,7 +29,6 @@ import { meros } from 'meros';
 const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variables) => {
   return ReactObservable.create(sink => {
     (async () => {
-
       // Check that the auth token is configured
       const token = localStorage.getItem('token');
 
@@ -74,13 +70,13 @@ const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variabl
           sink.next(result);
         }
       } else {
-
         const json = await parts.json();
 
         if (Array.isArray(json.errors)) {
           const errorsMessage: string = json.errors
-            .filter((error: { message?: string; }) => (error?.message !== undefined))
-            .map((error: { message: string; }) => error.message).join('\n');
+            .filter((error: { message?: string }) => error?.message !== undefined)
+            .map((error: { message: string }) => error.message)
+            .join('\n');
           sink.error(new Error(errorsMessage));
         }
 
@@ -95,34 +91,30 @@ const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variabl
 function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
   return (
     typeof input === 'object' &&
-		input !== null &&
-		// Some browsers still don't have Symbol.asyncIterator implemented (iOS Safari)
-		// That means every custom AsyncIterable must be built using a AsyncGeneratorFunction
-		// (async function * () {})
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		((input as any)[Symbol.toStringTag] === 'AsyncGenerator' ||
-			Symbol.asyncIterator in input)
+    input !== null &&
+    // Some browsers still don't have Symbol.asyncIterator implemented (iOS Safari)
+    // That means every custom AsyncIterable must be built using a AsyncGeneratorFunction
+    // (async function * () {})
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ((input as any)[Symbol.toStringTag] === 'AsyncGenerator' || Symbol.asyncIterator in input)
   );
 }
 
-const subscriptionClient = new SubscriptionClient(
-  'ws://localhost:8001/graphql',
-  {
-    reconnect: true,
-    connectionParams: () => {
-      return { token: localStorage.getItem('token') };
-    },
+const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
+  reconnect: true,
+  connectionParams: () => {
+    return { token: localStorage.getItem('token') };
   },
-);
+});
 
 // Mismatch type between relay and subscriptions-transport-ws
 // https://github.com/facebook/relay/issues/3091
 // https://github.com/facebook/relay/issues/3349
-interface RelayObservableFixed <T = Record<string, unknown>> extends Observable<T>{
+interface RelayObservableFixed<T = Record<string, unknown>> extends Observable<T> {
   subscribe(observer: Observer<T>): {
     unsubscribe: () => void;
     closed: boolean;
-  },
+  };
 }
 
 const subscribe: SubscribeFunction = (request: RequestParameters, variables: Variables) => {
