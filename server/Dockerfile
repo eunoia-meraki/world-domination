@@ -20,13 +20,6 @@ RUN npm run build
 
 FROM node:17.4.0-alpine AS production
 
-ARG PORT=8001
-ARG MONGO_CONNECTION_STRING=mongodb+srv://gasame6865:dtNWMqfU@cluster0.0u67a.mongodb.net/wd_prod
-ARG JWT_SECRET=ToPsEcReT
-
-ENV PORT=${PORT}
-ENV MONGO_CONNECTION_STRING=${MONGO_CONNECTION_STRING}
-ENV JWT_SECRET=${JWT_SECRET}
 ENV NODE_ENV=production
 
 WORKDIR /app
@@ -38,5 +31,6 @@ COPY --from=development /app/package.json ./package.json
 # Run app
 CMD [ "npm", "run", "start:prod" ]
 
+# before manual running you should pass env variables to container: PORT, JWT_SECRET, MONGO_CONNECTION_STRING
 # docker build . -t tmp --target production
 # docker run --rm -it tmp sh

@@ -17,3 +17,6 @@ jobs:
           heroku_email: "dreamteam2020q3@gmail.com"
           usedocker: true
           appdir: "server"
+        env:
+          HD_MONGO_CONNECTION_STRING: ${{secrets.MONGO_CONNECTION_STRING}}
+          HD_JWT_SECRET: ${{secrets.JWT_SECRET}}
