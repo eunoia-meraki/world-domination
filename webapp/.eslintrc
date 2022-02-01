@@ -6,10 +6,12 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "project": "tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     },
@@ -17,10 +19,29 @@
     "sourceType": "module"
   },
   "plugins": [
+    "@typescript-eslint",
     "react",
-    "@typescript-eslint"
+    "react-hooks",
+    "import",
+    "prettier"
   ],
   "settings": {
+    "import/no-unresolved": "error",
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "tsconfig.json"
+      },
+      "webpack": {
+        "config": "./webpack.config.ts"
+      },
+      "node": {
+        "paths": ["src"]
+      }
+    },
     "react": {
       "version": "detect"
     }
