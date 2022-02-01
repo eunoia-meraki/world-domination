@@ -8,9 +8,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "clean": "rimraf ./build",
     "relay": "relay-compiler",
-    "start": "pnpm clean && pnpm relay && pnpm dev",
+    "start": "pnpm relay && pnpm dev",
     "dev": "cross-env NODE_OPTIONS='--loader ts-node/esm' node_modules/.bin/webpack-cli serve --hot --entry ./src/index.tsx --mode development",
     "prod": "cross-env NODE_OPTIONS='--loader ts-node/esm' node_modules/.bin/webpack-cli --entry ./src/index.tsx --mode production"
   },
@@ -43,7 +42,6 @@
     "react-hot-loader": "^4.13.0",
     "react-relay": "^13.0.2",
     "relay-runtime": "^13.0.2",
-    "rimraf": "^3.0.2",
     "subscriptions-transport-ws": "^0.11.0",
     "ts-node": "^10.4.0"
   },
