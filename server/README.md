@@ -1,16 +1,10 @@
 # Development
-### Installation
-
 ```bash
-# install nestjs
 npm i -g @nestjs/cli
 
-# create new project
 nest new world-domination-server
 
 npm i @nestjs/graphql graphql@^15 apollo-server-express apollo-server-core
-
-npm i @nestjs/config
 
 npm install --save @nestjs/mongoose mongoose
 
@@ -19,8 +13,11 @@ npm install cross-env
 @nestjs/jwt
 
 npm i bcryptjs
+```
+### Installation
 
-$ npm install
+```bash
+npm install
 ```
 
 ### Running the app

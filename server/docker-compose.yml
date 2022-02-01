@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  wdserver:
+    container_name: wdserver
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+    command: npm run start:dev
+    depends_on:
+      - "mongodb"
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://root:dtNWMqfU@mongodb:27017/wd_dev?authSource=admin
+      - JWT_SECRET=top_secret_phrase
+      - PORT=8001
+    ports:
+      - 8001:8001
+      - 9229:9229
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=dtNWMqfU
+    volumes:
+      - ./db:/data/db
+    restart: unless-stopped
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    ports:
+      - 8080:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=dtNWMqfU
+    depends_on:
+      - "mongodb"

@@ -117,3 +117,5 @@ dist
 
 build
 __generated__
+
+db/

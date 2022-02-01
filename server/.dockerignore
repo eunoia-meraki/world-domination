@@ -1,8 +1,9 @@
-# Ignore everything
-**
-
-# Allow files and directories
-!/starter.sh
-!/package.json
-!/package-lock.json
-!/src/**
+.vscode/
+dist/
+node_modules/
+test/
+.dockerignore
+.gitignore
+Dockerfile
+docker-compose.yml
+Readme.md
