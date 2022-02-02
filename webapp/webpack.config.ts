@@ -58,7 +58,7 @@ const config = {
     ],
   },
   devServer: {
-    'static': {
+    static: {
       directory: './build',
     },
     historyApiFallback: true,

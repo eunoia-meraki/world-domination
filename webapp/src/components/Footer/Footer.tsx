@@ -12,7 +12,7 @@ export const Footer: FC = () => {
         py: 3,
         px: 2,
         mt: 'auto',
-        borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+        borderTop: theme => `1px solid ${theme.palette.divider}`,
       }}
     >
       <Typography variant="body2" color="text.secondary">
