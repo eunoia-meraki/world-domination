@@ -1174,9 +1174,9 @@ packages:
       '@babel/preset-modules': 0.1.5_@babel+core@7.16.12
       '@babel/types': 7.16.8
       babel-plugin-polyfill-corejs2: 0.3.1_@babel+core@7.16.12
-      babel-plugin-polyfill-corejs3: 0.5.1_@babel+core@7.16.12
+      babel-plugin-polyfill-corejs3: 0.5.2_@babel+core@7.16.12
       babel-plugin-polyfill-regenerator: 0.3.1_@babel+core@7.16.12
-      core-js-compat: 3.20.3
+      core-js-compat: 3.21.0
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -2547,14 +2547,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /babel-plugin-polyfill-corejs3/0.5.1_@babel+core@7.16.12:
-    resolution: {integrity: sha512-TihqEe4sQcb/QcPJvxe94/9RZuLQuF1+To4WqQcRvc+3J3gLCPIPgDKzGLG6zmQLfH3nn25heRuDNkS2KR4I8A==}
+  /babel-plugin-polyfill-corejs3/0.5.2_@babel+core@7.16.12:
+    resolution: {integrity: sha512-G3uJih0XWiID451fpeFaYGVuxHEjzKTHtc9uGFEjR6hHrvNzeS/PX+LLLcetJcytsB5m4j+K3o/EpXJNb/5IEQ==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.16.12
       '@babel/helper-define-polyfill-provider': 0.3.1_@babel+core@7.16.12
-      core-js-compat: 3.20.3
+      core-js-compat: 3.21.0
     transitivePeerDependencies:
       - supports-color
 
@@ -2642,8 +2642,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001304
-      electron-to-chromium: 1.4.59
+      caniuse-lite: 1.0.30001305
+      electron-to-chromium: 1.4.61
       escalade: 3.1.1
       node-releases: 2.0.1
       picocolors: 1.0.0
@@ -2707,8 +2707,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /caniuse-lite/1.0.30001304:
-    resolution: {integrity: sha512-bdsfZd6K6ap87AGqSHJP/s1V+U6Z5lyrcbBu3ovbCCf8cSYpwTtGrCBObMpJqwxfTbLW6YTIdbb1jEeTelcpYQ==}
+  /caniuse-lite/1.0.30001305:
+    resolution: {integrity: sha512-p7d9YQMji8haf0f+5rbcv9WlQ+N5jMPfRAnUmZRlNxsNeBO3Yr7RYG6M2uTY1h9tCVdlkJg6YNNc4kiAiBLdWA==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -2892,8 +2892,8 @@ packages:
       webpack: 5.68.0_webpack-cli@4.9.2
     dev: true
 
-  /core-js-compat/3.20.3:
-    resolution: {integrity: sha512-c8M5h0IkNZ+I92QhIpuSijOxGAcj3lgpsWdkCqmUTZNwidujF4r3pi6x1DCN+Vcs5qTS2XWWMfWSuCqyupX8gw==}
+  /core-js-compat/3.21.0:
+    resolution: {integrity: sha512-OSXseNPSK2OPJa6GdtkMz/XxeXx8/CJvfhQWTqd6neuUraujcL4jVsjkLQz1OWnax8xVQJnRPe0V2jqNWORA+A==}
     dependencies:
       browserslist: 4.19.1
       semver: 7.0.0
@@ -3220,8 +3220,8 @@ packages:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
     dev: true
 
-  /electron-to-chromium/1.4.59:
-    resolution: {integrity: sha512-AOJ3cAE0TWxz4fQ9zkND5hWrQg16nsZKVz9INOot1oV//u4wWu5xrj9CQMmPTYskkZRunSRc9sAnr4EkexXokg==}
+  /electron-to-chromium/1.4.61:
+    resolution: {integrity: sha512-kpzCOOFlx63C9qKRyIDEsKIUgzoe98ump7T4gU+/OLzj8gYkkWf2SIyBjhTSE0keAjMAp3i7C262YtkQOMYrGw==}
 
   /emoji-regex/9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}

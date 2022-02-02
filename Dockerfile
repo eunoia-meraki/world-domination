@@ -6,11 +6,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 
-COPY package*.json ./
+# server part
+
+COPY ./server/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./server/ .
 
 RUN npm run build
 
@@ -24,10 +26,29 @@ ENV TZ=Europe/Moscow
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ENV NODE_ENV=production
-
 WORKDIR /app
 
+# client part
+
+RUN npm install -g pnpm
+
+RUN mkdir webapp_proj
+
+COPY ./webapp/package*.json ./webapp_proj
+
+RUN pnpm install --prefix webapp_proj
+
+COPY ./webapp ./webapp_proj
+
+RUN pnpm run prod --prefix webapp_proj
+
+RUN cp -r ./webapp_proj/build ./webapp && rm -rf ./webapp_proj
+
+# server part
+
+ENV NODE_ENV=production
+
+COPY --from=development /app/dist ./dist
 COPY --from=development /app/dist ./dist
 COPY --from=development /app/node_modules ./node_modules
 COPY --from=development /app/package.json ./package.json
@@ -35,6 +56,10 @@ COPY --from=development /app/package.json ./package.json
 # Run app
 CMD [ "npm", "run", "start:prod" ]
 
-# before manual running you should pass env variables to container: PORT, JWT_SECRET, MONGO_CONNECTION_STRING
 # docker build . -t tmp --target production
-# docker run --rm -it tmp sh
+
+# Before manual running you should pass env variables to container: PORT, JWT_SECRET, MONGO_CONNECTION_STRING
+# docker run --rm -d tmp
+
+# Or use it
+# docker run --env-file .env -p 8001:8001 --rm -d tmp

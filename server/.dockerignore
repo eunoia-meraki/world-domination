@@ -1,9 +1,0 @@
-.vscode/
-dist/
-node_modules/
-test/
-.dockerignore
-.gitignore
-Dockerfile
-docker-compose.yml
-Readme.md
