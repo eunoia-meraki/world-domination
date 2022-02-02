@@ -13,6 +13,8 @@ npm install cross-env
 @nestjs/jwt
 
 npm i bcryptjs
+
+npm install --save @nestjs/serve-static
 ```
 ### Installation
 

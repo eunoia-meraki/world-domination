@@ -22,6 +22,7 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/mongoose": "^9.0.2",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/serve-static": "^2.2.2",
     "apollo-server-core": "^3.6.2",
     "apollo-server-express": "^3.6.2",
     "apollo-server-plugin-base": "^3.5.1",

@@ -20,6 +20,10 @@ RUN npm run build
 
 FROM node:17.4.0-alpine AS production
 
+ENV TZ=Europe/Moscow
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 ENV NODE_ENV=production
 
 WORKDIR /app
