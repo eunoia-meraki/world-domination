@@ -59,7 +59,7 @@ const config = {
   },
   devServer: {
     'static': {
-      directory: './build'
+      directory: './build',
     },
     historyApiFallback: true,
   },
