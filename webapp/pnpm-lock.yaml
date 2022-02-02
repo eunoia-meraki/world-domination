@@ -45,6 +45,8 @@ specifiers:
   react: ^17.0.2
   react-dom: ^17.0.2
   react-hot-loader: ^4.13.0
+  react-location: ^3.3.4
+  react-location-devtools: ^3.3.4
   react-relay: ^13.0.2
   relay-compiler: ^13.0.2
   relay-runtime: ^13.0.2
@@ -85,6 +87,7 @@ dependencies:
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-hot-loader: 4.13.0_b3482aaf5744fc7c2aeb7941b0e0a78f
+  react-location: 3.3.4_react-dom@17.0.2+react@17.0.2
   react-relay: 13.0.2_react@17.0.2
   relay-runtime: 13.0.2
   subscriptions-transport-ws: 0.11.0_graphql@16.3.0
@@ -110,6 +113,7 @@ devDependencies:
   file-loader: 6.2.0_webpack@5.68.0
   html-webpack-plugin: 5.5.0_webpack@5.68.0
   mini-css-extract-plugin: 2.5.3_webpack@5.68.0
+  react-location-devtools: 3.3.4_react-dom@17.0.2+react@17.0.2
   relay-compiler: 13.0.2
   style-loader: 3.3.1_webpack@5.68.0
   ts-loader: 9.2.6_typescript@4.5.5+webpack@5.68.0
@@ -5313,6 +5317,30 @@ packages:
   /react-lifecycles-compat/3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: false
+
+  /react-location-devtools/3.3.4_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-Cc9DcxElbCUaWNR/x1i8VngzGkZjftD4SYyIxdSYkcmA90YB21ntSFGa+PuI43xeqWR+ciCWwXup1gsxZSoB+w==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@babel/runtime': 7.16.7
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-location: 3.3.4_react-dom@17.0.2+react@17.0.2
+    dev: true
+
+  /react-location/3.3.4_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-XA1FLPh8qAO1aMmw80nY+QvLiPnQ1E2nXEWCpTTlqk1kQ+s9LsixMInGgzt/6AC6NnHW6PavpwnCZjs3e/ezow==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@babel/runtime': 7.16.7
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
 
   /react-relay/13.0.2_react@17.0.2:
     resolution: {integrity: sha512-7T67Hr6n/G090L3Ajl8bp0EAEFY/Ww8v5/dkDloGqSrduxW9hNa+4VLHM1MvIGxtwqbiSyz+LcRdfPRj7r87xw==}

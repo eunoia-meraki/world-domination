@@ -1,3 +1,48 @@
-"""
-  Empty schema
-"""
+# game
+type Game {
+  id: ID!
+  date: Date!
+  users: [User!]!
+}
+
+# Date custom scalar type
+scalar Date
+
+# user
+type User {
+  id: ID!
+  login: String!
+  password: String!
+  email: String!
+  nickname: String!
+  games: [Game!]!
+}
+
+type Query {
+  user(id: String!): User!
+  users: [User!]!
+  game(id: String!): Game!
+  games: [Game!]!
+}
+
+type Mutation {
+  signUp(input: SignUpInput!): String!
+  signIn(input: SignInInput!): String!
+  addGame(input: AddGameInput!): Game!
+}
+
+input SignUpInput {
+  login: String!
+  password: String!
+  nickname: String!
+  email: String!
+}
+
+input SignInInput {
+  login: String!
+  password: String!
+}
+
+input AddGameInput {
+  userIds: [String!]!
+}
