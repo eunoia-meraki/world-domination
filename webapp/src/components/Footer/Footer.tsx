@@ -2,9 +2,9 @@ import type { FC } from 'react';
 
 import { Stack, Box, Typography, Link } from '@mui/material';
 
-export const Footer: FC = () => {
-  const logo = new URL('../../assets/svg/rss.svg', import.meta.url).toString();
+import SchoolLogo from '../../assets/svg/school-logo.svg';
 
+export const Footer: FC = () => {
   return (
     <Box
       component="footer"
@@ -32,7 +32,7 @@ export const Footer: FC = () => {
               Curse
             </Link>
           </Stack>
-          <img src={logo} width="70" />
+          <SchoolLogo height="25" width="70"/>
         </Stack>
       </Typography>
     </Box>

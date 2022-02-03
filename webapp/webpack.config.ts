@@ -32,17 +32,10 @@ const config = {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
-      // {
-      //   test: /\.svg$/i,
-      //   issuer: /\.tsx?$/,
-      //   use: [{ loader: '@svgr/webpack', options: { icon: true } }],
-      // },
       {
-        test: /\.(svg)$/,
-        type: 'asset/resource',
-        generator: {
-          filename: 'image/svg/[contenthash].[ext]',
-        },
+        test: /\.svg$/i,
+        issuer: /\.tsx?$/,
+        use: [{ loader: '@svgr/webpack', options: { icon: true } }],
       },
       {
         test: /\.png$/,
