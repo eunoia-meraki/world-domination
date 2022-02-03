@@ -14,115 +14,171 @@ generator pothos {
 }
 
 model User {
-  id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  login    String     @unique
-  password_hash String
+  id            String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  login         String     @unique
+  passwordHash  String 
+  // players       Player[]
+  // gameId        String     @db.ObjectId 
+  // game          Game?       @relation(fields: [gameId], references: [id])
 }
 
 // model Player {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   user User
-//   role Role
+//   id               String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   userId           String     @db.ObjectId 
+//   user             User       @relation(fields: [userId], references: [id])
+//   roleId           String     @db.ObjectId 
+//   role             Role       @relation(fields: [roleId], references: [id])
+//   teamId           String     @db.ObjectId 
+//   team             Team       @relation(fields: [teamId], references: [id])
+//   guestTeamRoomId  String     @db.ObjectId 
+//   guestTeamRoom    TeamRoom   @relation(fields: [guestTeamRoomId], references: [id])
+//   actions          Action[]
+// }
+
+// model Role {
+//   id          String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name        String
+//   description String
+//   players     Player[]
+// }
+
+// model Nation {
+//   id                  String                @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name                String
+//   description         String
+//   teams               Team[]
+// }
+
+// model Team {
+//   id                String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   players           Player[]
+//   nationId          String     @db.ObjectId 
+//   nation            Nation     @relation(fields: [nationId], references: [id])
+//   money             Decimal
+//   maxPlayersCount   Int
+//   maxBombCount      Int
+//   gameId            String     @db.ObjectId 
+//   game              Game       @relation(fields: [gameId], references: [id])
+//   teamRoom          TeamRoom?
+//   sendBombActions   SendBombAction[]
+//   createBombActions CreateBombAction[]
+//   sendActions         SendDiplomatAction[] @relation("sender")
+//   destinationActions  SendDiplomatAction[] @relation("destination")
+
+// }
+
+// model GameStatus { // enum(ongoing, notstarted, ended)
+//   id    String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name  String
+//   games Game[]
 // }
 
 // model Game {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   status enum(ongoing, notstarted, ended)
-//   player to Player 1:many
-//   teams to Team 1:many
-//   current_round to Round 1:many
-//   ecology_value Number
+//   id                 String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   statusId           String     @db.ObjectId
+//   status             GameStatus @relation(fields: [statusId], references: [id])
+//   clients            User[]
+//   teams              Team[]
+//   currentRound       Int
+//   rounds             Round[]
+//   ecologyValue       Int
+// }
+
+// model Round {
+//   id             String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   currentStage   Int
+//   stages         Stage[]
+//   gameId         String     @db.ObjectId 
+//   game           Game       @relation(fields: [gameId], references: [id])
+//   actions        Action[]
+// }
+
+// model Stage {
+//   id             String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   livetime       Int
+//   roundId        Int
+//   round          Round       @relation(fields: [roundId], references: [id])
 // }
 
 // model TeamRoom {
 //   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   team Team
-//   guest Player
+//   teamId   String     @db.ObjectId 
+//   team     Team       @relation(fields: [teamId], references: [id])
+//   guest    Player?
 // }
 
-// model GameJournal {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   player Player
-//   round Round
-//   action (Action inheritance...)
+// model Town {
+//   id                       String                   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name                     String
+//   townLevelId              String                   @db.ObjectId    
+//   townLevel                TownLevel                @relation(fields: [townLevelId], references: [id])
+//   shield                   Boolean
+//   destroyed                Boolean
+//   economicDepositActions   EconomicDepositAction[]
+//   shieldCreationActions    ShieldCreationAction[]
+//   sendBombActions          SendBombAction[]
+// }
+
+// model TownLevel {
+//   id                String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   order             Int
+//   incomePerRound    Int
+//   upgradeCost       Int
+//   livingLevel       Int 
+//   towns             Town[]
 // }
 
 // model Action {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId 1:1 Any Action
-//   type TypeOfAction
+//   id                String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   typeId            String      @db.ObjectId       
+//   type              ActionType  @relation(fields: [typeId], references: [id])   
+//   roundId           String      @db.ObjectId       
+//   round             Round       @relation(fields: [roundId], references: [id])
+//   playerId          String      @db.ObjectId 
+//   player            Player      @relation(fields: [playerId], references: [id])
+// }
+
+// model ActionType {
+//   id        String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name      String // enum(EconomicDepositAction, ShieldCreationAction, SendBombAction, CreateBombAction, SendDiplomatAction)
+//   actions   Action[]
 // }
 
 // model EconomicDepositAction {
 //   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   town_id Town
+//   townId   String     @db.ObjectId 
+//   town     Town       @relation(fields: [townId], references: [id])
+//   actionId String    
 // }
 
 // model ShieldCreationAction {
 //   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   town_id Town
+//   townId   String     @db.ObjectId 
+//   town     Town       @relation(fields: [townId], references: [id])
+//   actionId String  
 // }
 
 // model SendBombAction {
 //   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   sender Team
-//   town_id Town
+//   senderId String     @db.ObjectId 
+//   sender   Team       @relation(fields: [townId], references: [id])
+//   townId   String     @db.ObjectId 
+//   town     Town       @relation(fields: [townId], references: [id])
+//   actionId String  
 // }
 
 // model CreateBombAction {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   creator Team
+//   id        String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   creatorId String     @db.ObjectId 
+//   creator   Team       @relation(fields: [creatorId], references: [id])
+//   actionId String  
 // }
 
 // model SendDiplomatAction {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   sender Team
-//   destination Team
-// }
-
-// model Round {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   stages to Stage 1:many
-//   current_stage Stage
-// }
-
-// model Stage {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   livetime Number
-// }
-
-// model Team {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   players to Player 1:many
-//   nation_id Nation
-//   money Number
-//   max_players_count Number
-//   max_bomb_count Number
-// }
-
-// model Nation {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name String
-//   description String
-// }
-
-// model Town {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name String
-//   town_level_id TownLevel
-//   shield Boolean
-//   destroyed Boolean
-// }
-
-// model TownLevel {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   order Number
-//   income_per_round Number
-//   upgrade_cost Number
-//   living_level Number
-// }
-
-// model Role {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name String
-//   description String
+//   id               String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   senderId         String   @db.ObjectId 
+//   sender           Team     @relation(name: "sender", fields: [senderId], references: [id])
+//   destinationId    String   @db.ObjectId 
+//   destination      Team     @relation(name: "destination", fields: [destinationId], references: [id])
+//   actionId String  
 // }

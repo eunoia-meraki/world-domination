@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "start:dev": "rimraf ./build && prisma generate && env-cmd nest start --debug 127.0.0.1:9229 --watch",
+    "start:dev": "rimraf ./build && prisma generate && env-cmd nest start --debug 127.0.0.1:9227 --watch",
     "build": "rimraf ./build && prisma generate && nest build",
     "start:prod": "node dist/main"
   },
@@ -20,8 +20,10 @@
     "@pothos/plugin-prisma": "^0.16.1",
     "@pothos/plugin-relay": "^3.1.0",
     "@prisma/client": "^3.9.1",
+    "@types/bcryptjs": "^2.4.2",
     "apollo-server-core": "^3.6.2",
     "apollo-server-express": "^3.6.2",
+    "bcryptjs": "^2.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.0",
     "env-cmd": "^10.1.0",

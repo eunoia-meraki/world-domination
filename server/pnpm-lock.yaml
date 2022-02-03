@@ -10,11 +10,13 @@ specifiers:
   '@pothos/plugin-prisma': ^0.16.1
   '@pothos/plugin-relay': ^3.1.0
   '@prisma/client': ^3.9.1
+  '@types/bcryptjs': ^2.4.2
   '@types/node': ^16.11.22
   '@typescript-eslint/eslint-plugin': ^5.10.2
   '@typescript-eslint/parser': ^5.10.2
   apollo-server-core: ^3.6.2
   apollo-server-express: ^3.6.2
+  bcryptjs: ^2.4.3
   class-transformer: ^0.4.0
   class-validator: ^0.13.0
   env-cmd: ^10.1.0
@@ -42,8 +44,10 @@ dependencies:
   '@pothos/plugin-prisma': 0.16.1_81535ca5b9c24595c178405bd82f8005
   '@pothos/plugin-relay': 3.1.0_graphql@15.8.0
   '@prisma/client': 3.9.1_prisma@3.9.1
+  '@types/bcryptjs': 2.4.2
   apollo-server-core: 3.6.2_graphql@15.8.0
   apollo-server-express: 3.6.2_express@4.17.2+graphql@15.8.0
+  bcryptjs: 2.4.3
   class-transformer: 0.4.0
   class-validator: 0.13.2
   env-cmd: 10.1.0
@@ -553,6 +557,10 @@ packages:
       '@types/node': 17.0.14
     dev: false
 
+  /@types/bcryptjs/2.4.2:
+    resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
+    dev: false
+
   /@types/body-parser/1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
@@ -985,6 +993,10 @@ packages:
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}

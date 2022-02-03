@@ -1,15 +1,15 @@
 // import { DateResolver } from 'graphql-scalars';
+import { AuthenticationError } from 'apollo-server-express';
 import { builder } from './builder';
 import { db } from './db';
+import * as bcrypt from 'bcryptjs';
 
 builder.prismaNode('User', {
   findUnique: (id) => ({ id }),
   id: { resolve: (user) => user.id },
   fields: (t) => ({
     login: t.exposeString('login'),
-    password: t.exposeString('password'),
-    email: t.exposeString('email'),
-    nickname: t.exposeString('nickname'),
+    passwordHash: t.exposeString('passwordHash'),
   }),
 });
 
@@ -19,17 +19,49 @@ builder.queryType({
       type: 'User',
       cursor: 'id',
       resolve: async (query) => {
-        await db.user.create({
-          data: {
-            email: 'email',
-            login: 'login',
-            password: 'password',
-            nickname: 'nickname',
-          },
-        });
         return db.user.findMany({
           ...query,
         });
+      },
+    }),
+  }),
+});
+
+builder.mutationType({
+  fields: (t) => ({
+    signUp: t.string({
+      args: {
+        login: t.arg.string({ required: true }),
+        password: t.arg.string({ required: true }),
+      },
+      resolve: async (query, args) => {
+        const hashPassword = await bcrypt.hash(args.password, 5);
+        const user = await db.user.create({
+          data: { login: args.login, passwordHash: hashPassword },
+        });
+
+        return user.passwordHash;
+      },
+    }),
+    signIn: t.string({
+      args: {
+        login: t.arg.string({ required: true }),
+        password: t.arg.string({ required: true }),
+      },
+      resolve: async (query, args) => {
+        const user = await db.user.findUnique({
+          where: { login: args.login },
+        });
+        const passwordEquals = await bcrypt.compare(
+          args.password,
+          user?.passwordHash || '',
+        );
+
+        if (!user || !passwordEquals) {
+          throw new AuthenticationError('Неверный логин или пароль');
+        }
+        console.log(user);
+        return user.passwordHash;
       },
     }),
   }),
