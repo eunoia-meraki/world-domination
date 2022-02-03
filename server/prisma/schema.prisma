@@ -1,0 +1,128 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_CONNECTION_STRING")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["mongoDb"]
+}
+
+generator pothos {
+  provider     = "prisma-pothos-types"
+  output       = "./generated.d.ts"
+}
+
+model User {
+  id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  login    String     @unique
+  password_hash String
+}
+
+// model Player {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   user User
+//   role Role
+// }
+
+// model Game {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   status enum(ongoing, notstarted, ended)
+//   player to Player 1:many
+//   teams to Team 1:many
+//   current_round to Round 1:many
+//   ecology_value Number
+// }
+
+// model TeamRoom {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   team Team
+//   guest Player
+// }
+
+// model GameJournal {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   player Player
+//   round Round
+//   action (Action inheritance...)
+// }
+
+// model Action {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId 1:1 Any Action
+//   type TypeOfAction
+// }
+
+// model EconomicDepositAction {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   town_id Town
+// }
+
+// model ShieldCreationAction {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   town_id Town
+// }
+
+// model SendBombAction {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   sender Team
+//   town_id Town
+// }
+
+// model CreateBombAction {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   creator Team
+// }
+
+// model SendDiplomatAction {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   sender Team
+//   destination Team
+// }
+
+// model Round {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   stages to Stage 1:many
+//   current_stage Stage
+// }
+
+// model Stage {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   livetime Number
+// }
+
+// model Team {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   players to Player 1:many
+//   nation_id Nation
+//   money Number
+//   max_players_count Number
+//   max_bomb_count Number
+// }
+
+// model Nation {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name String
+//   description String
+// }
+
+// model Town {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name String
+//   town_level_id TownLevel
+//   shield Boolean
+//   destroyed Boolean
+// }
+
+// model TownLevel {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   order Number
+//   income_per_round Number
+//   upgrade_cost Number
+//   living_level Number
+// }
+
+// model Role {
+//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+//   name String
+//   description String
+// }

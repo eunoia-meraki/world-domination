@@ -10,11 +10,13 @@ WORKDIR /app
 
 COPY ./server/package*.json ./
 
-RUN npm install
+RUN npm install -g pnpm
+
+RUN pnpm install
 
 COPY ./server/ .
 
-RUN npm run build
+RUN pnpm run build
 
 ########################
 ###### PRODUCTION ######
@@ -54,7 +56,7 @@ COPY --from=development /app/node_modules ./node_modules
 COPY --from=development /app/package.json ./package.json
 
 # Run app
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "pnpm", "run", "start:prod" ]
 
 # docker build . -t tmp --target production
 

@@ -9,7 +9,7 @@ services:
     volumes:
       - ./server:/app
       - ./webapp/build:/app/webapp
-    command: npm run start:dev
+    command: pnpm run start:dev
     depends_on:
       - "mongodb"
     environment:
@@ -30,6 +30,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=dtNWMqfU
     volumes:
       - ./db:/data/db
+      - ./db/etc/mongo:/etc/mongo
+    command: bash -c "chmod 400 /etc/mongo/keyfile && mongod --config /etc/mongo/mongod.conf"
     restart: unless-stopped
 
   mongo-express:
