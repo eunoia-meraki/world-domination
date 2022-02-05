@@ -4,181 +4,181 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["mongoDb"]
 }
 
 generator pothos {
-  provider     = "prisma-pothos-types"
-  output       = "./generated.d.ts"
+  provider = "prisma-pothos-types"
+  output   = "./generated.d.ts"
 }
 
 model User {
-  id            String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  login         String     @unique
-  passwordHash  String 
-  // players       Player[]
-  // gameId        String     @db.ObjectId 
-  // game          Game?       @relation(fields: [gameId], references: [id])
+  id           String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  login        String   @unique
+  passwordHash String
+  players      Player[]
+  gameId       String?  @db.ObjectId
+  game         Game?    @relation(fields: [gameId], references: [id])
 }
 
-// model Player {
-//   id               String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   userId           String     @db.ObjectId 
-//   user             User       @relation(fields: [userId], references: [id])
-//   roleId           String     @db.ObjectId 
-//   role             Role       @relation(fields: [roleId], references: [id])
-//   teamId           String     @db.ObjectId 
-//   team             Team       @relation(fields: [teamId], references: [id])
-//   guestTeamRoomId  String     @db.ObjectId 
-//   guestTeamRoom    TeamRoom   @relation(fields: [guestTeamRoomId], references: [id])
-//   actions          Action[]
-// }
+model Player {
+  id              String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  userId          String?   @db.ObjectId
+  user            User?     @relation(fields: [userId], references: [id])
+  roleId          String?   @db.ObjectId
+  role            Role?     @relation(fields: [roleId], references: [id])
+  teamId          String?   @db.ObjectId
+  team            Team?     @relation(fields: [teamId], references: [id])
+  guestTeamRoomId String?   @unique @db.ObjectId
+  guestTeamRoom   TeamRoom? @relation(fields: [guestTeamRoomId], references: [id])
+  actions         Action[]
+}
 
-// model Role {
-//   id          String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name        String
-//   description String
-//   players     Player[]
-// }
+model Role {
+  id          String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  players     Player[]
+}
 
-// model Nation {
-//   id                  String                @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name                String
-//   description         String
-//   teams               Team[]
-// }
+model Nation {
+  id          String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  teams       Team[]
+}
 
-// model Team {
-//   id                String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   players           Player[]
-//   nationId          String     @db.ObjectId 
-//   nation            Nation     @relation(fields: [nationId], references: [id])
-//   money             Decimal
-//   maxPlayersCount   Int
-//   maxBombCount      Int
-//   gameId            String     @db.ObjectId 
-//   game              Game       @relation(fields: [gameId], references: [id])
-//   teamRoom          TeamRoom?
-//   sendBombActions   SendBombAction[]
-//   createBombActions CreateBombAction[]
-//   sendActions         SendDiplomatAction[] @relation("sender")
-//   destinationActions  SendDiplomatAction[] @relation("destination")
+model Team {
+  id                 String               @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  players            Player[]
+  nationId           String               @db.ObjectId
+  nation             Nation               @relation(fields: [nationId], references: [id])
+  money              Decimal
+  maxPlayersCount    Int
+  maxBombCount       Int
+  gameId             String               @db.ObjectId
+  game               Game                 @relation(fields: [gameId], references: [id])
+  teamRoom           TeamRoom?
+  sendBombActions    SendBombAction[]
+  createBombActions  CreateBombAction[]
+  sendActions        SendDiplomatAction[] @relation("sender")
+  destinationActions SendDiplomatAction[] @relation("destination")
 
-// }
+}
 
-// model GameStatus { // enum(ongoing, notstarted, ended)
-//   id    String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name  String
-//   games Game[]
-// }
+model GameStatus {
+  id    String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name  String
+  games Game[]
+}
 
-// model Game {
-//   id                 String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   statusId           String     @db.ObjectId
-//   status             GameStatus @relation(fields: [statusId], references: [id])
-//   clients            User[]
-//   teams              Team[]
-//   currentRound       Int
-//   rounds             Round[]
-//   ecologyValue       Int
-// }
+model Game {
+  id           String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  statusId     String     @db.ObjectId
+  status       GameStatus @relation(fields: [statusId], references: [id])
+  clients      User[]
+  teams        Team[]
+  currentRound Int
+  rounds       Round[]
+  ecologyValue Int
+}
 
-// model Round {
-//   id             String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   currentStage   Int
-//   stages         Stage[]
-//   gameId         String     @db.ObjectId 
-//   game           Game       @relation(fields: [gameId], references: [id])
-//   actions        Action[]
-// }
+model Round {
+  id           String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  currentStage Int
+  stages       Stage[]
+  gameId       String   @db.ObjectId
+  game         Game     @relation(fields: [gameId], references: [id])
+  actions      Action[]
+}
 
-// model Stage {
-//   id             String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   livetime       Int
-//   roundId        Int
-//   round          Round       @relation(fields: [roundId], references: [id])
-// }
+model Stage {
+  id       String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  livetime Int
+  roundId  Int
+  round    Round  @relation(fields: [roundId], references: [id])
+}
 
-// model TeamRoom {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   teamId   String     @db.ObjectId 
-//   team     Team       @relation(fields: [teamId], references: [id])
-//   guest    Player?
-// }
+model TeamRoom {
+  id     String  @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  teamId String  @unique @db.ObjectId
+  team   Team    @relation(fields: [teamId], references: [id])
+  guest  Player?
+}
 
-// model Town {
-//   id                       String                   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name                     String
-//   townLevelId              String                   @db.ObjectId    
-//   townLevel                TownLevel                @relation(fields: [townLevelId], references: [id])
-//   shield                   Boolean
-//   destroyed                Boolean
-//   economicDepositActions   EconomicDepositAction[]
-//   shieldCreationActions    ShieldCreationAction[]
-//   sendBombActions          SendBombAction[]
-// }
+model Town {
+  id                     String                  @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name                   String
+  townLevelId            String                  @db.ObjectId
+  townLevel              TownLevel               @relation(fields: [townLevelId], references: [id])
+  shield                 Boolean
+  destroyed              Boolean
+  economicDepositActions EconomicDepositAction[]
+  shieldCreationActions  ShieldCreationAction[]
+  sendBombActions        SendBombAction[]
+}
 
-// model TownLevel {
-//   id                String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   order             Int
-//   incomePerRound    Int
-//   upgradeCost       Int
-//   livingLevel       Int 
-//   towns             Town[]
-// }
+model TownLevel {
+  id             String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  order          Int
+  incomePerRound Int
+  upgradeCost    Int
+  livingLevel    Int
+  towns          Town[]
+}
 
-// model Action {
-//   id                String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   typeId            String      @db.ObjectId       
-//   type              ActionType  @relation(fields: [typeId], references: [id])   
-//   roundId           String      @db.ObjectId       
-//   round             Round       @relation(fields: [roundId], references: [id])
-//   playerId          String      @db.ObjectId 
-//   player            Player      @relation(fields: [playerId], references: [id])
-// }
+model Action {
+  id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  typeId   String     @db.ObjectId
+  type     ActionType @relation(fields: [typeId], references: [id])
+  roundId  String     @db.ObjectId
+  round    Round      @relation(fields: [roundId], references: [id])
+  playerId String     @db.ObjectId
+  player   Player     @relation(fields: [playerId], references: [id])
+}
 
-// model ActionType {
-//   id        String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   name      String // enum(EconomicDepositAction, ShieldCreationAction, SendBombAction, CreateBombAction, SendDiplomatAction)
-//   actions   Action[]
-// }
+model ActionType {
+  id      String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name    String // enum(EconomicDepositAction, ShieldCreationAction, SendBombAction, CreateBombAction, SendDiplomatAction)
+  actions Action[]
+}
 
-// model EconomicDepositAction {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   townId   String     @db.ObjectId 
-//   town     Town       @relation(fields: [townId], references: [id])
-//   actionId String    
-// }
+model EconomicDepositAction {
+  id       String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  townId   String @db.ObjectId
+  town     Town   @relation(fields: [townId], references: [id])
+  actionId String
+}
 
-// model ShieldCreationAction {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   townId   String     @db.ObjectId 
-//   town     Town       @relation(fields: [townId], references: [id])
-//   actionId String  
-// }
+model ShieldCreationAction {
+  id       String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  townId   String @db.ObjectId
+  town     Town   @relation(fields: [townId], references: [id])
+  actionId String
+}
 
-// model SendBombAction {
-//   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   senderId String     @db.ObjectId 
-//   sender   Team       @relation(fields: [townId], references: [id])
-//   townId   String     @db.ObjectId 
-//   town     Town       @relation(fields: [townId], references: [id])
-//   actionId String  
-// }
+model SendBombAction {
+  id       String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  senderId String @db.ObjectId
+  sender   Team   @relation(fields: [townId], references: [id])
+  townId   String @db.ObjectId
+  town     Town   @relation(fields: [townId], references: [id])
+  actionId String
+}
 
-// model CreateBombAction {
-//   id        String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   creatorId String     @db.ObjectId 
-//   creator   Team       @relation(fields: [creatorId], references: [id])
-//   actionId String  
-// }
+model CreateBombAction {
+  id        String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  creatorId String @db.ObjectId
+  creator   Team   @relation(fields: [creatorId], references: [id])
+  actionId  String
+}
 
-// model SendDiplomatAction {
-//   id               String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-//   senderId         String   @db.ObjectId 
-//   sender           Team     @relation(name: "sender", fields: [senderId], references: [id])
-//   destinationId    String   @db.ObjectId 
-//   destination      Team     @relation(name: "destination", fields: [destinationId], references: [id])
-//   actionId String  
-// }
+model SendDiplomatAction {
+  id            String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  senderId      String @db.ObjectId
+  sender        Team   @relation(name: "sender", fields: [senderId], references: [id])
+  destinationId String @db.ObjectId
+  destination   Team   @relation(name: "destination", fields: [destinationId], references: [id])
+  actionId      String
+}

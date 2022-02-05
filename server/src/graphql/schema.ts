@@ -1,8 +1,8 @@
-// import { DateResolver } from 'graphql-scalars';
-import { AuthenticationError } from 'apollo-server-express';
-import { builder } from './builder';
-import { db } from './db';
+import { builder } from './schema_builder';
+import { db } from '../database/db';
 import * as bcrypt from 'bcryptjs';
+import { generateJwtToken } from '../auth';
+import { AuthenticationError } from 'apollo-server';
 
 builder.prismaNode('User', {
   findUnique: (id) => ({ id }),
@@ -10,12 +10,34 @@ builder.prismaNode('User', {
   fields: (t) => ({
     login: t.exposeString('login'),
     passwordHash: t.exposeString('passwordHash'),
+    players: t.relation('players'),
+  }),
+});
+
+builder.prismaNode('Player', {
+  findUnique: (id) => ({ id }),
+  id: { resolve: (user) => user.id },
+  fields: (t) => ({
+    users: t.relation('user'),
+    roles: t.relation('role'),
+  }),
+});
+
+builder.prismaNode('Role', {
+  findUnique: (id) => ({ id }),
+  id: { resolve: (user) => user.id },
+  fields: (t) => ({
+    name: t.exposeString('name'),
+    players: t.relation('players'),
   }),
 });
 
 builder.queryType({
   fields: (t) => ({
     users: t.prismaConnection({
+      authScopes: {
+        public: true,
+      },
       type: 'User',
       cursor: 'id',
       resolve: async (query) => {
@@ -35,12 +57,25 @@ builder.mutationType({
         password: t.arg.string({ required: true }),
       },
       resolve: async (query, args) => {
-        const hashPassword = await bcrypt.hash(args.password, 5);
-        const user = await db.user.create({
-          data: { login: args.login, passwordHash: hashPassword },
+        const candidate = await db.user.findUnique({
+          where: { login: args.login },
         });
 
-        return user.passwordHash;
+        if (candidate) {
+          throw new AuthenticationError(
+            'Пользователь с таким login уже существует',
+          );
+        }
+
+        const hashPassword = await bcrypt.hash(args.password, 5);
+        const user = await db.user.create({
+          data: {
+            login: args.login,
+            passwordHash: hashPassword,
+          },
+        });
+
+        return generateJwtToken(user);
       },
     }),
     signIn: t.string({
@@ -60,8 +95,8 @@ builder.mutationType({
         if (!user || !passwordEquals) {
           throw new AuthenticationError('Неверный логин или пароль');
         }
-        console.log(user);
-        return user.passwordHash;
+
+        return generateJwtToken(user);
       },
     }),
   }),

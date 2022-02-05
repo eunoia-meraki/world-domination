@@ -1,11 +1,23 @@
 import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
 import RelayPlugin from '@pothos/plugin-relay';
-import PrismaTypes from '../prisma/generated';
-import { db } from './db';
+import ScopeAuthPlugin from '@pothos/plugin-scope-auth';
+import PrismaTypes from '../../prisma/generated';
+import { db } from '../database/db';
 
-export const builder = new SchemaBuilder<{ PrismaTypes: PrismaTypes }>({
-  plugins: [PrismaPlugin, RelayPlugin],
+export const builder = new SchemaBuilder<{
+  PrismaTypes: PrismaTypes;
+  AuthScopes: {
+    public: boolean;
+  };
+}>({
+  plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin],
+  authScopes: async (context: any) => {
+    const user = await context.user;
+    return {
+      public: !!user,
+    };
+  },
   relayOptions: {
     clientMutationId: 'omit',
     cursorType: 'String',
