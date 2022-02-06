@@ -1,106 +1,22 @@
-import { builder } from './schema_builder';
-import { db } from '../database/db';
-import * as bcrypt from 'bcryptjs';
-import { generateJwtToken } from '../auth';
-import { AuthenticationError } from 'apollo-server';
+import { getSchemaBuilder } from './schema_builder';
+import includeNodeUser from './nodes/user';
+import includeNodeRole from './nodes/role';
+import includeNodePlayer from './nodes/player';
+import includeCommonMutations from './common_mutations';
+import { GraphQLSchema } from 'graphql';
 
-builder.prismaNode('User', {
-  findUnique: (id) => ({ id }),
-  id: { resolve: (user) => user.id },
-  fields: (t) => ({
-    login: t.exposeString('login'),
-    passwordHash: t.exposeString('passwordHash'),
-    players: t.relation('players'),
-  }),
-});
+const getGraphQLSchema = (): GraphQLSchema => {
+  const builder = getSchemaBuilder();
 
-builder.prismaNode('Player', {
-  findUnique: (id) => ({ id }),
-  id: { resolve: (user) => user.id },
-  fields: (t) => ({
-    users: t.relation('user'),
-    roles: t.relation('role'),
-  }),
-});
+  includeCommonMutations(builder);
+  includeNodeUser(builder);
+  includeNodeRole(builder);
+  includeNodePlayer(builder);
 
-builder.prismaNode('Role', {
-  findUnique: (id) => ({ id }),
-  id: { resolve: (user) => user.id },
-  fields: (t) => ({
-    name: t.exposeString('name'),
-    players: t.relation('players'),
-  }),
-});
+  return builder.toSchema({});
+};
 
-builder.queryType({
-  fields: (t) => ({
-    users: t.prismaConnection({
-      authScopes: {
-        public: true,
-      },
-      type: 'User',
-      cursor: 'id',
-      resolve: async (query) => {
-        return db.user.findMany({
-          ...query,
-        });
-      },
-    }),
-  }),
-});
-
-builder.mutationType({
-  fields: (t) => ({
-    signUp: t.string({
-      args: {
-        login: t.arg.string({ required: true }),
-        password: t.arg.string({ required: true }),
-      },
-      resolve: async (query, args) => {
-        const candidate = await db.user.findUnique({
-          where: { login: args.login },
-        });
-
-        if (candidate) {
-          throw new AuthenticationError(
-            'Пользователь с таким login уже существует',
-          );
-        }
-
-        const hashPassword = await bcrypt.hash(args.password, 5);
-        const user = await db.user.create({
-          data: {
-            login: args.login,
-            passwordHash: hashPassword,
-          },
-        });
-
-        return generateJwtToken(user);
-      },
-    }),
-    signIn: t.string({
-      args: {
-        login: t.arg.string({ required: true }),
-        password: t.arg.string({ required: true }),
-      },
-      resolve: async (query, args) => {
-        const user = await db.user.findUnique({
-          where: { login: args.login },
-        });
-        const passwordEquals = await bcrypt.compare(
-          args.password,
-          user?.passwordHash || '',
-        );
-
-        if (!user || !passwordEquals) {
-          throw new AuthenticationError('Неверный логин или пароль');
-        }
-
-        return generateJwtToken(user);
-      },
-    }),
-  }),
-});
+export default getGraphQLSchema;
 
 // builder.prismaNode('Post', {
 //   findUnique: (id) => ({ id: Number.parseInt(id, 10) }),
@@ -159,5 +75,3 @@ builder.mutationType({
 //     }),
 //   }),
 // });
-
-export const schema = builder.toSchema({});
