@@ -14,7 +14,7 @@ import {
   Container,
 } from '@mui/material';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { LockOutlined } from '@mui/icons-material';
 
 import { Routes } from '@/enumerations';
 
@@ -31,7 +31,7 @@ export const SignIn: FC = () => {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
+          <LockOutlined />
         </Avatar>
         <Typography variant="h5">Sign in</Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
