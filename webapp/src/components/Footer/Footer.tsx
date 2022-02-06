@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Stack, Box, Typography, Link } from '@mui/material';
 
-import SchoolLogo from '../../assets/svg/school-logo.svg';
+import SchoolLogo from '@/assets/svg/school-logo.svg';
 
 export const Footer: FC = () => {
   return (

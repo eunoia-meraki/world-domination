@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { useNavigate } from 'react-location';
 
-import { Routes } from '../../enumerations';
+import { Routes } from '@/enumerations';
 
 import { Box, Button, Container, CssBaseline } from '@mui/material';
 

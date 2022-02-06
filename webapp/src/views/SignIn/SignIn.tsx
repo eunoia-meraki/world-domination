@@ -16,7 +16,7 @@ import {
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
-import { Routes } from '../../enumerations';
+import { Routes } from '@/enumerations';
 
 export const SignIn: FC = () => {
   return (

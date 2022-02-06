@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
     "outDir": "./build/",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -20,5 +25,5 @@
     "webpack.config.ts",
     "babel.config.ts",
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "build"]
 }
