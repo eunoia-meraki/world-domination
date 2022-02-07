@@ -2,7 +2,7 @@ import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
 import RelayPlugin from '@pothos/plugin-relay';
 import ScopeAuthPlugin from '@pothos/plugin-scope-auth';
-import { User } from '@prisma/client';
+import { GQLContext } from 'src/app';
 import PrismaTypes from '../../prisma/generated';
 import { db } from '../database/db';
 
@@ -11,9 +11,7 @@ export type SBProps = {
   AuthScopes: {
     public: boolean;
   };
-  Context: {
-    user: Promise<User | null>;
-  };
+  Context: GQLContext;
 };
 
 export type WDSchemaBuilder = PothosSchemaTypes.SchemaBuilder<
@@ -23,8 +21,8 @@ export type WDSchemaBuilder = PothosSchemaTypes.SchemaBuilder<
 export const getSchemaBuilder = (): WDSchemaBuilder =>
   new SchemaBuilder<SBProps>({
     plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin],
-    authScopes: async (context) => {
-      const user = await context.user;
+    authScopes: (context) => {
+      const user = context.user;
       return {
         public: !!user,
       };

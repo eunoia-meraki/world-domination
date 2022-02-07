@@ -8,7 +8,6 @@ import includeNodeEconomicDepositAction from './nodes/economicDepositAction';
 import includeNodeGame from './nodes/game';
 import includeNodeRound from './nodes/round';
 import includeNodeSendBombAction from './nodes/sendBombAction';
-import includeNodeSendDiplomatAction from './nodes/SendDiplomatAction';
 import includeNodeShieldCreationAction from './nodes/shieldCreationAction';
 import includeNodeTeam from './nodes/team';
 import includeNodeTeamRoom from './nodes/teamRoom';
@@ -17,6 +16,8 @@ import includeCommonQueries from './commonQueries';
 import includeNodeStage from './nodes/stage';
 import includeNodeTown from './nodes/town';
 import { GameStatus, Nation, RoleType } from '@prisma/client';
+import includeCommonSubscriptions from './commonSubscriptions';
+import includeNodeSendDiplomatAction from './nodes/sendDiplomatAction';
 
 const getGraphQLSchema = (): GraphQLSchema => {
   const builder = getSchemaBuilder();
@@ -50,6 +51,8 @@ const getGraphQLSchema = (): GraphQLSchema => {
 
   includeCommonMutations(builder);
   includeCommonQueries(builder);
+
+  includeCommonSubscriptions(builder);
 
   return builder.toSchema({});
 };
