@@ -1,16 +1,17 @@
-import { RoleType } from '@prisma/client';
 import { WDSchemaBuilder } from '../schemaBuilder';
 
-const includeNodePlayer = (builder: WDSchemaBuilder) => {
-  builder.prismaNode('Player', {
+const includeNodeRound = (builder: WDSchemaBuilder) => {
+  builder.prismaNode('Round', {
     findUnique: (id) => ({ id }),
-    id: { resolve: (user) => user.id },
+    id: { resolve: (round) => round.id },
     authScopes: {
       public: true,
     },
     fields: (t) => ({
-      users: t.relation('user'),
-      roles: t.expose('role', { type: RoleType }),
+      currentStage: t.exposeInt('currentStage'),
+      order: t.exposeInt('order'),
+      stages: t.relation('stages'),
+      game: t.relation('game'),
       economicDepositActions: t.relation('economicDepositActions'),
       shieldCreationActionActions: t.relation('shieldCreationActionActions'),
       sendBombActions: t.relation('sendBombActions'),
@@ -20,4 +21,4 @@ const includeNodePlayer = (builder: WDSchemaBuilder) => {
   });
 };
 
-export default includeNodePlayer;
+export default includeNodeRound;

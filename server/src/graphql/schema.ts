@@ -1,77 +1,57 @@
-import { getSchemaBuilder } from './schema_builder';
+import { getSchemaBuilder } from './schemaBuilder';
 import includeNodeUser from './nodes/user';
-import includeNodeRole from './nodes/role';
 import includeNodePlayer from './nodes/player';
-import includeCommonMutations from './common_mutations';
+import includeCommonMutations from './commonMutations';
 import { GraphQLSchema } from 'graphql';
+import includeNodeCreateBombAction from './nodes/createBombAction';
+import includeNodeEconomicDepositAction from './nodes/economicDepositAction';
+import includeNodeGame from './nodes/game';
+import includeNodeRound from './nodes/round';
+import includeNodeSendBombAction from './nodes/sendBombAction';
+import includeNodeSendDiplomatAction from './nodes/SendDiplomatAction';
+import includeNodeShieldCreationAction from './nodes/shieldCreationAction';
+import includeNodeTeam from './nodes/team';
+import includeNodeTeamRoom from './nodes/teamRoom';
+import includeNodeTownLevel from './nodes/townLevel';
+import includeCommonQueries from './commonQueries';
+import includeNodeStage from './nodes/stage';
+import includeNodeTown from './nodes/town';
+import { GameStatus, Nation, RoleType } from '@prisma/client';
 
 const getGraphQLSchema = (): GraphQLSchema => {
   const builder = getSchemaBuilder();
 
-  includeCommonMutations(builder);
+  builder.enumType(GameStatus, {
+    name: 'GameStatus',
+  });
+
+  builder.enumType(Nation, {
+    name: 'Nation',
+  });
+
+  builder.enumType(RoleType, {
+    name: 'RoleType',
+  });
+
   includeNodeUser(builder);
-  includeNodeRole(builder);
   includeNodePlayer(builder);
+  includeNodeCreateBombAction(builder);
+  includeNodeEconomicDepositAction(builder);
+  includeNodeGame(builder);
+  includeNodeStage(builder);
+  includeNodeRound(builder);
+  includeNodeSendBombAction(builder);
+  includeNodeSendDiplomatAction(builder);
+  includeNodeShieldCreationAction(builder);
+  includeNodeTeam(builder);
+  includeNodeTeamRoom(builder);
+  includeNodeTown(builder);
+  includeNodeTownLevel(builder);
+
+  includeCommonMutations(builder);
+  includeCommonQueries(builder);
 
   return builder.toSchema({});
 };
 
 export default getGraphQLSchema;
-
-// builder.prismaNode('Post', {
-//   findUnique: (id) => ({ id: Number.parseInt(id, 10) }),
-//   id: { resolve: (post) => post.id },
-//   fields: (t) => ({
-//     title: t.exposeString('title'),
-//     content: t.exposeString('content'),
-//     author: t.relation('author'),
-//     comments: t.relation('comments'),
-//   }),
-// });
-
-// builder.prismaNode('Comment', {
-//   findUnique: (id) => ({ id: Number.parseInt(id, 10) }),
-//   id: { resolve: (post) => post.id },
-//   fields: (t) => ({
-//     comment: t.exposeString('comment'),
-//     author: t.relation('author'),
-//     post: t.relation('post'),
-//   }),
-// });
-
-// builder.queryType({
-//   fields: (t) => ({
-//     post: t.prismaField({
-//       type: 'Post',
-//       nullable: true,
-//       args: {
-//         id: t.arg.id({ required: true }),
-//       },
-//       resolve: (query, root, args) =>
-//         db.post.findUnique({
-//           ...query,
-//           where: { id: Number.parseInt(String(args.id), 10) },
-//         }),
-//     }),
-//     posts: t.prismaConnection({
-//       type: 'Post',
-//       cursor: 'id',
-//       resolve: (query) =>
-//         db.post.findMany({
-//           ...query,
-//         }),
-//     }),
-//     user: t.prismaField({
-//       type: 'User',
-//       nullable: true,
-//       args: {
-//         id: t.arg.id({ required: true }),
-//       },
-//       resolve: (query, root, args) =>
-//         db.user.findUnique({
-//           ...query,
-//           where: { id: Number.parseInt(String(args.id), 10) },
-//         }),
-//     }),
-//   }),
-// });

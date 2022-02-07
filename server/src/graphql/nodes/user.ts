@@ -1,5 +1,4 @@
-import { db } from '../../database/db';
-import { WDSchemaBuilder } from '../schema_builder';
+import { WDSchemaBuilder } from '../schemaBuilder';
 
 const includeNodeUser = (builder: WDSchemaBuilder) => {
   builder.prismaNode('User', {
@@ -10,25 +9,10 @@ const includeNodeUser = (builder: WDSchemaBuilder) => {
     },
     fields: (t) => ({
       login: t.exposeString('login'),
-      passwordHash: t.exposeString('passwordHash'),
-      players: t.relation('players'),
-    }),
-  });
-
-  builder.queryType({
-    fields: (t) => ({
-      users: t.prismaConnection({
-        authScopes: {
-          public: true,
-        },
-        type: 'User',
-        cursor: 'id',
-        resolve: async (query) => {
-          return db.user.findMany({
-            ...query,
-          });
-        },
+      passwordHash: t.exposeString('passwordHash', {
+        authScopes: {},
       }),
+      players: t.relation('players'),
     }),
   });
 };
