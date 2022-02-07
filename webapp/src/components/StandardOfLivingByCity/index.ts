@@ -1,0 +1,1 @@
+export { StandardOfLivingByCity } from './StandardOfLivingByCity';
