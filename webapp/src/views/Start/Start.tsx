@@ -1,10 +1,9 @@
-import type { FC } from 'react';
-
+import { Box, Button, Container, CssBaseline } from '@mui/material';
 import { useNavigate } from 'react-location';
 
-import { Routes } from '@/enumerations';
+import type { FC } from 'react';
 
-import { Box, Button, Container, CssBaseline } from '@mui/material';
+import { Routes } from '@/enumerations';
 
 export const Start: FC = () => {
   const navigate = useNavigate();

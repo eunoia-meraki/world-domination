@@ -1,13 +1,10 @@
-import { FC } from 'react';
-
+import { Box } from '@mui/material';
 import { Outlet, ReactLocation, Router } from 'react-location';
-
 import { ReactLocationDevtools } from 'react-location-devtools';
 
-import { Box } from '@mui/material';
+import { FC } from 'react';
 
 import { Footer } from './components/Footer';
-
 import { routes } from './routes';
 
 export const App: FC = () => {
@@ -23,8 +20,10 @@ export const App: FC = () => {
     >
       <Router location={location} routes={routes}>
         <Outlet />
+
         <ReactLocationDevtools initialIsOpen={false} />
       </Router>
+
       <Footer />
     </Box>
   );

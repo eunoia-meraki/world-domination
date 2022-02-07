@@ -1,10 +1,10 @@
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 const dirnamePath = dirname(fileURLToPath(import.meta.url));
 

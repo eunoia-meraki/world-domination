@@ -1,8 +1,8 @@
-import type { Route } from 'react-location';
+import { SignIn } from './SignIn';
 
 import { Routes } from '../../enumerations';
 
-import { SignIn } from './SignIn';
+import type { Route } from 'react-location';
 
 export const SignInRoutes: Route = {
   path: Routes.SignIn,
