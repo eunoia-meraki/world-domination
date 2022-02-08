@@ -6,13 +6,19 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import type { Configuration as WebpackConfiguration } from 'webpack';
+import type { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+
 const dirnamePath = dirname(fileURLToPath(import.meta.url));
 
-const config = {
+type Configuration = WebpackConfiguration & WebpackDevServerConfiguration;
+
+const config: Configuration = {
+  target: 'web',
   entry: ['react-hot-loader/patch', './src/index.tsx'],
   output: {
     path: resolve(dirnamePath, 'build'),
-    filename: 'bundle.js',
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -69,13 +75,6 @@ const config = {
     new CleanWebpackPlugin(),
   ],
   resolve: {
-    fallback: {
-      'os': false,
-      'fs': false,
-      'util': false,
-      'path': false,
-      'crypto': false,
-    },
     extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.cjs', '.mjs', '.wasm', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',
