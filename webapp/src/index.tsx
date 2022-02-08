@@ -2,7 +2,7 @@ import { render } from 'react-dom';
 import { RelayEnvironmentProvider } from 'react-relay';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 
 import { App } from './App';
 import { RelayEnvironment } from './RelayEnvironment';
@@ -16,12 +16,17 @@ interface IContext {
 export const SubscriptionContext = createContext<IContext>({});
 
 const RelayApp = () => {
-  const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
-    reconnect: true,
-    connectionParams: () => ({ token: localStorage.getItem('token') }),
-  });
 
-  const value: IContext = { subscriptionClient };
+  const value: IContext  = useMemo(() => {
+    const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
+      reconnect: true,
+      connectionParams: () => ({ token: localStorage.getItem('token') }),
+    });
+
+    return {
+      subscriptionClient,
+    };
+  }, []);
 
   return (
     <RelayEnvironmentProvider environment={RelayEnvironment}>
