@@ -7,6 +7,8 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { getAuthorizedUserAsync } from './auth';
 import { pubsub } from './pubsub';
 import getGraphQLSchema from './graphql/schema';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
 
 const schema = getGraphQLSchema();
 
@@ -42,21 +44,30 @@ export const init = async (
   apolloServer.applyMiddleware({ app, path: graphqlPath });
 
   const server = app.listen(gqlPort, () => {
-    const wsServer = new WebSocketServer({
-      server,
-      path: graphqlPath,
-    });
-
-    useServer(
+    SubscriptionServer.create(
       {
         schema,
-        onConnect: () => console.log('ws: connected'),
-        onDisconnect: () => console.log('ws: disconnected'),
-        context: (ctx) =>
-          makeContext(pubsub, `${ctx.connectionParams?.Authorization}`),
+        execute,
+        subscribe,
+        onConnect: async (params) =>
+          await makeContext(pubsub, params?.Authorization),
       },
-      wsServer,
+      {
+        server,
+        path: graphqlPath,
+      },
     );
+
+    // useServer(
+    //   {
+    //     schema,
+    //     onConnect: () => console.log('ws: connected'),
+    //     onDisconnect: () => console.log('ws: disconnected'),
+    //     context: (ctx) =>
+    //       makeContext(pubsub, `${ctx.connectionParams?.Authorization}`),
+    //   },
+    //   wsServer,
+    // );
   });
 
   return apolloServer;

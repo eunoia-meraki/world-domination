@@ -38,7 +38,7 @@ const fetchQuery: FetchFunction = (
     // Check that the auth token is configured
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8001/graphql', {
+    const response = await fetch('http://localhost:8002/', {
       body: JSON.stringify({
         query: params.text,
         variables,
@@ -102,7 +102,7 @@ const isAsyncIterable = (input: unknown): input is AsyncIterable<unknown> => (
     ((input as any)[Symbol.toStringTag] === 'AsyncGenerator' || Symbol.asyncIterator in input)
 );
 
-const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
+const subscriptionClient = new SubscriptionClient('ws://localhost:8002/', {
   reconnect: true,
   connectionParams: () => ({ token: localStorage.getItem('token') }),
 });

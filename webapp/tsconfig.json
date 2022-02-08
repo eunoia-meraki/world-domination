@@ -20,10 +20,5 @@
     "rootDir": "./",
     "jsx": "react-jsx",
   },
-  "include": [
-    "./src/**/*",
-    "webpack.config.ts",
-    "babel.config.ts",
-  ],
   "exclude": ["node_modules", "build"]
 }

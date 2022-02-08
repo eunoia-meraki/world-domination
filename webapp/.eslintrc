@@ -123,7 +123,7 @@
           "position": "before"
         },
         {
-          "pattern": "@/**/*.pcss",
+          "pattern": "@/**/*.css",
           "group": "index"
         },
         {

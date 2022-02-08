@@ -1,48 +1,217 @@
-# game
-type Game {
-  id: ID!
-  date: Date!
-  users: [User!]!
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+type ActionEvent {
+  actionType: ActionType!
+  data: String!
 }
 
-# Date custom scalar type
-scalar Date
-
-# user
-type User {
-  id: ID!
-  login: String!
-  password: String!
-  email: String!
-  nickname: String!
-  games: [Game!]!
+enum ActionType {
+  ADD_PEER
+  ICE_CANDIDATE
+  JOIN
+  LEAVE
+  RELAY_ICE
+  RELAY_SDP
+  REMOVE_PEER
+  SESSION_DESCRIPTION
+  SHARE_ROOMS
 }
 
-type Query {
-  user(id: String!): User!
-  users: [User!]!
-  game(id: String!): Game!
-  games: [Game!]!
+type CreateBombAction implements Node {
+  creator: Team!
+  id: ID!
+  player: Player!
+  round: Round!
+}
+
+type EconomicDepositAction implements Node {
+  id: ID!
+  player: Player!
+  round: Round!
+  town: Town!
+}
+
+type Game implements Node {
+  clients: [User!]!
+  currentRound: Int!
+  ecologyValue: Int!
+  id: ID!
+  name: String!
+  owner: User!
+  rounds: [Round!]!
+  status: GameStatus!
+  teams: [Team!]!
+}
+
+enum GameStatus {
+  ENDED
+  NOT_STARTED
+  ON_GOING
 }
 
 type Mutation {
-  signUp(input: SignUpInput!): String!
-  signIn(input: SignInInput!): String!
-  addGame(input: AddGameInput!): Game!
+  createGame(gameName: String!): Game!
+  signIn(login: String!, password: String!): String!
+  signUp(login: String!, password: String!): String!
 }
 
-input SignUpInput {
+enum Nation {
+  CHINA
+  RUSSIA
+  UKRAINE
+  USA
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Player implements Node {
+  createBombActions: [CreateBombAction!]!
+  economicDepositActions: [EconomicDepositAction!]!
+  id: ID!
+  roles: RoleType!
+  sendBombActions: [SendBombAction!]!
+  sendDiplomatActions: [SendDiplomatAction!]!
+  shieldCreationActionActions: [ShieldCreationAction!]!
+  users: User!
+}
+
+type Query {
+  games(after: String, before: String, first: Int, last: Int): QueryGamesConnection!
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+  users(after: String, before: String, first: Int, last: Int): QueryUsersConnection!
+}
+
+type QueryGamesConnection {
+  edges: [QueryGamesConnectionEdge]!
+  pageInfo: PageInfo!
+}
+
+type QueryGamesConnectionEdge {
+  cursor: String!
+  node: Game!
+}
+
+type QueryUsersConnection {
+  edges: [QueryUsersConnectionEdge]!
+  pageInfo: PageInfo!
+}
+
+type QueryUsersConnectionEdge {
+  cursor: String!
+  node: User!
+}
+
+enum RoleType {
+  DIPLOMAT
+  PRESIDENT
+}
+
+type Round implements Node {
+  createBombActions: [CreateBombAction!]!
+  currentStage: Int!
+  economicDepositActions: [EconomicDepositAction!]!
+  game: Game!
+  id: ID!
+  order: Int!
+  sendBombActions: [SendBombAction!]!
+  sendDiplomatActions: [SendDiplomatAction!]!
+  shieldCreationActionActions: [ShieldCreationAction!]!
+  stages: [Stage!]!
+}
+
+type SendBombAction implements Node {
+  id: ID!
+  player: Player!
+  round: Round!
+  sender: Team!
+  town: Town!
+}
+
+type SendDiplomatAction implements Node {
+  destination: Team!
+  id: ID!
+  player: Player!
+  round: Round!
+  sender: Team!
+}
+
+type ShieldCreationAction implements Node {
+  id: ID!
+  player: Player!
+  round: Round!
+  town: Town!
+}
+
+type Stage implements Node {
+  id: ID!
+  livetime: Int!
+  order: Int!
+  round: Round!
+}
+
+type Subscription {
+  superpolling: ActionEvent!
+}
+
+type Team implements Node {
+  createBombActions: [CreateBombAction!]!
+  destinationDiplomatActions: [SendDiplomatAction!]!
+  game: Game!
+  id: ID!
+  maxBombCount: Int!
+  maxPlayersCount: Int!
+  money: Int!
+  nation: Nation!
+  players: [Player!]!
+  sendBombActions: [SendBombAction!]!
+  sendDiplomatActions: [SendDiplomatAction!]!
+  teamRoom: TeamRoom!
+}
+
+type TeamRoom implements Node {
+  gues: Player!
+  id: ID!
+  team: Team!
+}
+
+type Town implements Node {
+  destroyed: Boolean!
+  economicDepositActions: [EconomicDepositAction!]!
+  id: ID!
+  name: String!
+  sendBombActions: [SendBombAction!]!
+  shield: Boolean!
+  shieldCreationActions: [ShieldCreationAction!]!
+  townLevel: TownLevel!
+}
+
+type TownLevel implements Node {
+  id: ID!
+  incomePerRound: Int!
+  livingLevel: Int!
+  order: Int!
+  towns: [Town!]!
+  upgradeCost: Int!
+}
+
+type User implements Node {
+  id: ID!
   login: String!
-  password: String!
-  nickname: String!
-  email: String!
+  passwordHash: String!
+  players: [Player!]!
 }
 
-input SignInInput {
-  login: String!
-  password: String!
-}
-
-input AddGameInput {
-  userIds: [String!]!
-}
