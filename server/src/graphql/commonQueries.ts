@@ -1,5 +1,9 @@
 import { db } from '../database/db';
-import { superpollingEvent } from './commonSubscriptions';
+import {
+  ActionType,
+  ActionEvent,
+  superpollingEvent,
+} from './commonSubscriptions';
 import { WDSchemaBuilder } from './schemaBuilder';
 
 const includeCommonQueries = (builder: WDSchemaBuilder) => {
@@ -12,7 +16,7 @@ const includeCommonQueries = (builder: WDSchemaBuilder) => {
         type: 'User',
         cursor: 'id',
         resolve: async (query, _, __, ctx) => {
-          superpollingEvent(ctx, 'qwe');
+          superpollingEvent(ctx, new ActionEvent(ActionType.JOIN, 'qwerty'));
           return db.user.findMany({
             ...query,
           });

@@ -1,29 +1,61 @@
+import { User } from '@prisma/client';
 import { GQLContext } from '../app';
 import { WDSchemaBuilder } from './schemaBuilder';
 
 const SuperPollingEventLabel = 'POST_EVENT';
 
-const includeCommonSubscriptions = (builder: WDSchemaBuilder) => {
-  builder.subscriptionType({
-    fields: (t) => ({
-      superpolling: t.field({
-        authScopes: {
-          public: true,
-        },
-        type: 'String',
-        args: {
-          something: t.arg.string({ required: true }),
-        },
-        subscribe: (_, { something }, ctx) =>
-          withCallbacks(
-            ctx.pubsub.asyncIterator(SuperPollingEventLabel),
-            () => console.log('subscribed', ctx.user?.id, something),
-            () => console.log('unsubscribed', ctx.user?.id, something),
-          ),
-        resolve: async (payload) => payload as string,
-      }),
-    }),
-  });
+export enum ActionType {
+  JOIN = 'join',
+  LEAVE = 'leave',
+  SHARE_ROOMS = 'share-rooms',
+  ADD_PEER = 'add-peer',
+  REMOVE_PEER = 'remove-peer',
+  RELAY_SDP = 'relay-sdp',
+  RELAY_ICE = 'relay-ice',
+  ICE_CANDIDATE = 'ice-candidate',
+  SESSION_DESCRIPTION = 'session-description',
+}
+
+export class ActionEvent {
+  actionType: ActionType;
+  data: string;
+
+  constructor(actionType: ActionType, data: string) {
+    this.actionType = actionType;
+    this.data = data;
+  }
+}
+
+let users: (User | null)[] = [];
+
+const joinEventHandler = (ctx: GQLContext) => {
+  console.log(ActionType.JOIN, ctx.user?.id);
+  superpollingEvent(
+    ctx,
+    new ActionEvent(
+      ActionType.ADD_PEER,
+      `{"createOffer":${ctx.user?.id}, "to": ${users
+        .map((u) => u?.id)
+        .filter((u) => u)}}`,
+    ),
+  );
+
+  users.push(ctx.user);
+};
+
+const removePeerEventHandler = (ctx: GQLContext) => {
+  console.log(ActionType.REMOVE_PEER, ctx.user?.id);
+  superpollingEvent(
+    ctx,
+    new ActionEvent(
+      ActionType.REMOVE_PEER,
+      `{"remove": ${ctx.user?.id}, "from": ${users
+        .map((u) => u?.id)
+        .filter((u) => u)}}`,
+    ),
+  );
+
+  users = users.filter((u) => u?.id !== ctx.user?.id);
 };
 
 const withCallbacks = (
@@ -45,7 +77,54 @@ const withCallbacks = (
   return asyncIterator as any;
 };
 
-export async function superpollingEvent(context: GQLContext, event: string) {
+const includeCommonSubscriptions = (builder: WDSchemaBuilder) => {
+  const ActionTypeGql = builder.enumType(ActionType, {
+    name: 'ActionType',
+  });
+
+  const ActionEventGqlType = builder.objectType(ActionEvent, {
+    name: 'ActionEvent',
+    fields: (t) => ({
+      actionType: t.field({
+        type: ActionTypeGql,
+        resolve: (event) => {
+          return event.actionType;
+        },
+      }),
+      data: t.field({
+        type: 'String',
+        resolve: (event) => {
+          return event.data;
+        },
+      }),
+    }),
+  });
+
+  builder.subscriptionType({
+    fields: (t) => ({
+      superpolling: t.field({
+        authScopes: {
+          public: true,
+        },
+        type: ActionEventGqlType,
+        args: {},
+        subscribe: (_, __, ctx) => {
+          return withCallbacks(
+            ctx.pubsub.asyncIterator(SuperPollingEventLabel),
+            () => joinEventHandler(ctx),
+            () => removePeerEventHandler(ctx),
+          );
+        },
+        resolve: async (payload) => payload as ActionEvent,
+      }),
+    }),
+  });
+};
+
+export async function superpollingEvent(
+  context: GQLContext,
+  event: ActionEvent,
+) {
   await context.pubsub.publish(SuperPollingEventLabel, event);
 }
 
