@@ -23,7 +23,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.11.0
   babel-loader: ^8.2.3
   babel-plugin-module-resolver: ^4.1.0
-  babel-plugin-relay: ^13.0.3
+  babel-plugin-relay: ^13.1.0
   browserify-fs: ^1.0.0
   clean-webpack-plugin: ^4.0.0
   copy-webpack-plugin: ^10.2.4
@@ -53,9 +53,9 @@ specifiers:
   react-hot-loader: ^4.13.0
   react-location: ^3.3.4
   react-location-devtools: ^3.3.4
-  react-relay: ^13.0.3
-  relay-compiler: ^13.0.3
-  relay-runtime: ^13.0.3
+  react-relay: ^13.1.0
+  relay-compiler: ^13.1.0
+  relay-runtime: ^13.1.0
   style-loader: ^3.3.1
   subscriptions-transport-ws: ^0.11.0
   ts-loader: ^9.2.6
