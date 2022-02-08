@@ -18,7 +18,7 @@ export const SubscriptionContext = createContext<IContext>({});
 const RelayApp = () => {
 
   const value: IContext  = useMemo(() => {
-    const subscriptionClient = new SubscriptionClient('ws://localhost:8001/graphql', {
+    const subscriptionClient = new SubscriptionClient('ws://localhost:8002/', {
       reconnect: true,
       connectionParams: () => ({ token: localStorage.getItem('token') }),
     });
