@@ -1,6 +1,5 @@
-import graphql from 'babel-plugin-relay/macro';
 import { useMatch } from 'react-location';
-import { usePreloadedQuery } from 'react-relay';
+import { graphql, usePreloadedQuery } from 'react-relay';
 
 import { FC } from 'react';
 
@@ -11,10 +10,6 @@ export const Games: FC = () => {
   const {
     data: { gamesRef },
   } = useMatch<GamesLocation>();
-
-  // if (!gamesRef) {
-  //   return null;
-  // }
 
   const data = usePreloadedQuery<GamesQuery>(
     graphql`
@@ -30,8 +25,6 @@ export const Games: FC = () => {
     `,
     gamesRef!,
   );
-
-  // console.log(data);
 
   return (
     <div>
