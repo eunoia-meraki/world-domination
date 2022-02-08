@@ -76,7 +76,7 @@ const config = {
       'path': false,
       'crypto': false,
     },
-    extensions: ['.ts', '.mts', '.tsx', '.mtsx', '.js', '.mjs', '.css'],
+    extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.cjs', '.mjs', '.wasm', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',
       '@': resolve(dirnamePath, 'src'),
