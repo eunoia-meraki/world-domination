@@ -1,18 +1,16 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "paths": {
       "@/*": [
         "./*"
       ]
     },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
     "outDir": "./build/",
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
     "module": "ESNext",
     "moduleResolution": "node",
     "target": "ESNext",
@@ -20,5 +18,13 @@
     "rootDir": "./",
     "jsx": "react-jsx",
   },
-  "exclude": ["node_modules", "build"]
+  "include": [
+    "./src/**/*",
+    "webpack.config.ts",
+    "babel.config.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
 }

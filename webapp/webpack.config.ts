@@ -69,6 +69,13 @@ const config = {
     new CleanWebpackPlugin(),
   ],
   resolve: {
+    fallback: {
+      'os': false,
+      'fs': false,
+      'util': false,
+      'path': false,
+      'crypto': false,
+    },
     extensions: ['.tsx', '.ts', '.mts', '.js', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',
