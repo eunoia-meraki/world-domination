@@ -20,6 +20,7 @@ const config: Configuration = {
     path: resolve(dirnamePath, 'build'),
     filename: '[name].js',
   },
+  devtool: 'eval-source-map',
   module: {
     rules: [
       {

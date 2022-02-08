@@ -10,7 +10,7 @@ import { Routes } from '@/enumerations';
 
 export const GamesRoutes: Route<GamesLocation> = {
   path: Routes.Games,
-  element: import('@/views/Games')
+  element: () => import('@/views/Games')
     .then(({ Games }) => <Games />),
   loader: () => ({
     gamesRef: loadQuery(

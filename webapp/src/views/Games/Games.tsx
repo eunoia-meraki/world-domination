@@ -11,13 +11,14 @@ export const Games: FC = () => {
     data: { gamesRef },
   } = useMatch<GamesLocation>();
 
-  const data = usePreloadedQuery<GamesQuery>(
+  usePreloadedQuery<GamesQuery>(
     graphql`
       query GamesQuery {
         games {
           edges {
             node {
               id
+              name
             }
           }
         }
@@ -28,7 +29,7 @@ export const Games: FC = () => {
 
   return (
     <div>
-      {data}
+      asdasdas
     </div>
   );
 };
