@@ -1,3 +1,5 @@
 declare module 'babel-plugin-relay/macro' {
-  export { graphql as default } from 'react-relay';
+  import { graphql } from 'react-relay';
+
+  export default graphql;
 }
