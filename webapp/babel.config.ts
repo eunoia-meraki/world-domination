@@ -1,7 +1,21 @@
 import type { ConfigAPI, TransformOptions } from '@babel/core';
 
 const config = (api: ConfigAPI): TransformOptions => ({
-  presets: ['@babel/preset-env'],
+  plugins: [
+    'relay',
+    [
+      'module-resolver',
+      {
+        extensions: ['.ts', '.mts', '.tsx', '.mtsx'],
+        root: ['./src/'],
+        alias: {
+          '@/': 'src/',
+        },
+      },
+    ],
+  ],
+
+  presets: ['@babel/preset-env' ],
 
   overrides: [
     {
@@ -25,19 +39,6 @@ const config = (api: ConfigAPI): TransformOptions => ({
       test: '**/*.d.ts',
       presets: [['@babel/preset-env', { targets: { esmodules: true } }]],
     },
-  ],
-
-  plugins: [
-    [
-      'module-resolver',
-      {
-        extensions: ['.ts', '.mts', '.tsx', '.mtsx'],
-        root: ['./src/'],
-        alias: {
-          '@/': 'src/',
-        },
-      },
-    ],
   ],
 });
 

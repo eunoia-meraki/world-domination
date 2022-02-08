@@ -1,6 +1,7 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import NodePolyfillPlugin  from 'node-polyfill-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 import { resolve, dirname } from 'path';
@@ -64,6 +65,7 @@ const config: Configuration = {
     historyApiFallback: true,
   },
   plugins: [
+    new NodePolyfillPlugin(),
     new HtmlWebpackPlugin({
       template: resolve(dirnamePath, 'public/index.html'),
       filename: 'index.html',
@@ -76,6 +78,9 @@ const config: Configuration = {
     new CleanWebpackPlugin(),
   ],
   resolve: {
+    fallback: {
+      fs: 'browserify-fs/index.js',
+    },
     extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.cjs', '.mjs', '.wasm', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',

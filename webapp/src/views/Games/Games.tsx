@@ -1,5 +1,6 @@
+import graphql from 'babel-plugin-relay/macro';
 import { useMatch } from 'react-location';
-import { graphql, usePreloadedQuery } from 'react-relay';
+import { usePreloadedQuery } from 'react-relay';
 
 import { FC } from 'react';
 
