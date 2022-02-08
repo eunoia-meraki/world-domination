@@ -31,6 +31,8 @@ const config = (api: ConfigAPI): TransformOptions => ({
     [
       'module-resolver',
       {
+        extensions: ['.ts', '.mts', '.tsx', '.mtsx'],
+        root: ['./src/'],
         alias: {
           '@/': 'src/',
         },
