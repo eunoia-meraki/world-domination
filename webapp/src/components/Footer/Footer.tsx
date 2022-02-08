@@ -31,7 +31,7 @@ export const Footer: FC = () => (
           </Link>
 
           <Link color="inherit" href="https://rs.school/js">
-              Curse
+              Course
           </Link>
         </Stack>
 
