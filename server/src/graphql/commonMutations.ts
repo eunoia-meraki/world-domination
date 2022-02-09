@@ -6,6 +6,34 @@ import { WDSchemaBuilder } from './schemaBuilder';
 import { GameStatus, Nation } from '@prisma/client';
 
 const includeCommonMutations = (builder: WDSchemaBuilder) => {
+  class SignInPayload {
+    id: string;
+    token: string;
+
+    constructor(id: string, token: string) {
+      this.id = id;
+      this.token = token;
+    }
+  }
+
+  const SignInPayloadGqlType = builder.objectType(SignInPayload, {
+    name: 'SignInPayload',
+    fields: (t) => ({
+      id: t.field({
+        type: 'String',
+        resolve: (payload) => {
+          return payload.id;
+        },
+      }),
+      token: t.field({
+        type: 'String',
+        resolve: (payload) => {
+          return payload.token;
+        },
+      }),
+    }),
+  });
+
   builder.mutationType({
     fields: (t) => ({
       signUp: t.string({
@@ -35,7 +63,8 @@ const includeCommonMutations = (builder: WDSchemaBuilder) => {
           return generateJwtToken(user);
         },
       }),
-      signIn: t.string({
+      signIn: t.field({
+        type: SignInPayloadGqlType,
         args: {
           login: t.arg.string({ required: true }),
           password: t.arg.string({ required: true }),
@@ -53,7 +82,7 @@ const includeCommonMutations = (builder: WDSchemaBuilder) => {
             throw new AuthenticationError('Неверный логин или пароль');
           }
 
-          return generateJwtToken(user);
+          return { id: user.id, token: generateJwtToken(user) };
         },
       }),
       createGame: t.prismaField({

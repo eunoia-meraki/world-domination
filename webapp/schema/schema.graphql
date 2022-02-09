@@ -55,7 +55,7 @@ enum GameStatus {
 
 type Mutation {
   createGame(gameName: String!): Game!
-  signIn(login: String!, password: String!): String!
+  signIn(login: String!, password: String!): SignInPayload!
   signUp(login: String!, password: String!): String!
 }
 
@@ -154,6 +154,11 @@ type ShieldCreationAction implements Node {
   player: Player!
   round: Round!
   town: Town!
+}
+
+type SignInPayload {
+  id: String!
+  token: String!
 }
 
 type Stage implements Node {

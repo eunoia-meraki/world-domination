@@ -27,7 +27,10 @@ export const SignIn: FC = () => {
   const [signIn] = useMutation<SignIn_signInMutation>(
     graphql`
       mutation SignIn_signInMutation($login: String!, $password: String!) {
-        signIn(login: $login, password: $password)
+        signIn(login: $login, password: $password) {
+          id
+          token
+        }
       }
     `,
   );
@@ -40,8 +43,12 @@ export const SignIn: FC = () => {
         login: data.get('login') as string,
         password: data.get('password') as string,
       },
-      onCompleted: token => {
-        localStorage.setItem('token', token.signIn);
+      onCompleted: response => {
+        const { id, token } = response.signIn;
+
+        localStorage.setItem('userId', id);
+        localStorage.setItem('token', token);
+
         navigate({ to: Routes.Games });
       },
       onError: error => {

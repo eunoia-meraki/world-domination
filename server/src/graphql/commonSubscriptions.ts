@@ -36,7 +36,7 @@ const joinEventHandler = (ctx: GQLContext) => {
       ActionType.ADD_PEER,
       `{"createOffer":${ctx.user?.id}, "to": ${users
         .map((u) => u?.id)
-        .filter((u) => u)}}`,
+        .filter((id) => id && id != ctx.user?.id)}}`,
     ),
   );
 
