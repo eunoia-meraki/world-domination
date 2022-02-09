@@ -2,7 +2,6 @@ import { LockOutlined } from '@mui/icons-material';
 import {
   Avatar,
   Button,
-  CssBaseline,
   TextField,
   FormControlLabel,
   Checkbox,
@@ -14,98 +13,102 @@ import {
 } from '@mui/material';
 
 import type { FC } from 'react';
+import React from 'react';
 
+import { Footer } from '@/components/Footer';
 import { Routes } from '@/enumerations';
 
 export const SignUp: FC = () => (
-  <Container component="main" maxWidth="xs">
-    <CssBaseline />
-    <Box
-      sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-        <LockOutlined />
-      </Avatar>
-      <Typography variant="h5">Sign up</Typography>
-      <Box component="form" noValidate sx={{ mt: 3 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              autoComplete="given-name"
-              name="firstName"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              autoFocus
-            />
+  <React.Fragment>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlined />
+        </Avatar>
+        <Typography variant="h5">Sign up</Typography>
+        <Box component="form" noValidate sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="given-name"
+                name="firstName"
+                required
+                fullWidth
+                id="firstName"
+                label="First Name"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+                autoComplete="family-name"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="login"
+                label="Login"
+                name="login"
+                autoComplete="login"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                label="I want to receive inspiration, marketing promotions and updates via email."
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              fullWidth
-              id="lastName"
-              label="Last Name"
-              name="lastName"
-              autoComplete="family-name"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="login"
-              label="Login"
-              name="login"
-              autoComplete="login"
-              autoFocus
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-            />
-          </Grid>
-        </Grid>
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign Up
-        </Button>
-        <Grid container justifyContent="flex-end">
-          <Grid item>
-            <Link href={Routes.SignIn} variant="body2">
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href={Routes.SignIn} variant="body2">
                 Already have an account? Sign in
-            </Link>
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Box>
-    </Box>
-  </Container>
+    </Container>
+    <Footer />
+  </React.Fragment>
 );
