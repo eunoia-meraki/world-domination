@@ -1,7 +1,7 @@
 {
   "env": {
     "es2021": true,
-    "node": true
+    "browser": true
   },
   "extends": [
     "airbnb",
@@ -42,9 +42,6 @@
       },
       "webpack": {
         "config": "./webpack.config.ts"
-      },
-      "node": {
-        "paths": ["src"]
       }
     },
     "react": {

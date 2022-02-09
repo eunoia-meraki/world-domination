@@ -37,7 +37,7 @@ const config = (api: ConfigAPI): TransformOptions => ({
     },
     {
       test: '**/*.d.ts',
-      presets: [['@babel/preset-env', { targets: { esmodules: true } }]],
+      presets: [['@babel/preset-env']],
     },
   ],
 });

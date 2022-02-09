@@ -15,10 +15,15 @@ const dirnamePath = dirname(fileURLToPath(import.meta.url));
 type Configuration = WebpackConfiguration & WebpackDevServerConfiguration;
 
 const config: Configuration = {
-  target: 'web',
+  target: ['browserslist','web'],
+  experiments: {
+    outputModule: true,
+  },
   entry: ['react-hot-loader/patch', './src/index.tsx'],
   output: {
     path: resolve(dirnamePath, 'build'),
+    chunkFormat: 'module',
+    module: true,
     filename: '[name].js',
   },
   devtool: 'eval-source-map',
@@ -26,15 +31,13 @@ const config: Configuration = {
     rules: [
       {
         test: /\.(m?js|m?ts|m?tsx)$/,
-        include: resolve(dirnamePath),
-        resolve: {
-          fullySpecified: false,
-        },
         use: 'babel-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(m?ts|m?tsx)$/,
         loader: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/i,
@@ -80,8 +83,9 @@ const config: Configuration = {
   resolve: {
     fallback: {
       fs: 'browserify-fs/index.js',
+      modules: [resolve(dirnamePath, 'src'), resolve(dirnamePath, 'node_modules')],
     },
-    extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.cjs', '.mjs', '.wasm', '.css'],
+    extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.jsx', '.cjs', '.mjs', '.wasm', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',
       '@': resolve(dirnamePath, 'src'),
