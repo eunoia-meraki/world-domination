@@ -111,7 +111,7 @@ const subscriptionClient = new SubscriptionClient(
   {
     reconnect: true,
     connectionParams: () => {
-      return { token: localStorage.getItem('token') };
+      return { Authorization: `Bearer ${localStorage.getItem('token')}` };
     },
   },
 );

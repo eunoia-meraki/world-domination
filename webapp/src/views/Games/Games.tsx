@@ -1,5 +1,5 @@
 import graphql from 'babel-plugin-relay/macro';
-import { useMatch } from 'react-location';
+import { useMatch, useNavigate } from 'react-location';
 import { usePreloadedQuery } from 'react-relay';
 
 import type { FC } from 'react';
@@ -11,6 +11,8 @@ export const Games: FC = () => {
   const {
     data: { gamesRef },
   } = useMatch<GamesLocation>();
+
+  const navigate = useNavigate();
 
   const data = usePreloadedQuery<GamesQuery>(
     graphql`
@@ -30,15 +32,14 @@ export const Games: FC = () => {
 
   const games = data.games.edges.map(edge => edge?.node) ?? [];
 
-  // eslint-disable-next-line no-console
-  console.log(games);
-
   return (
     <div>
-      qwerty
+      <h1>Lobbies list</h1>
       <ul>
         {games.map(g => (
-          <li key={g?.id}>{g?.name}</li>
+          <li key={g?.id}>
+            <button onClick={() => navigate({ to: g?.id })}>{g?.name}</button>
+          </li>
         ))}
       </ul>
     </div>

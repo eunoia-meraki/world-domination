@@ -33,7 +33,6 @@ export const SignIn: FC = () => {
   );
 
   const onSignIn = (event: React.SyntheticEvent<HTMLFormElement>) => {
-    console.log(event);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     signIn({
