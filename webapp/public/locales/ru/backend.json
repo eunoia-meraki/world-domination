@@ -1,0 +1,47 @@
+{
+  "configurationMatrices": {
+    "BUTTON": "Кнопки",
+    "INPUT": "Входы",
+    "LED": "Светодиоды",
+    "RELAY": "Реле"
+  },
+  "widgets": {
+    "COMPLEX_VALUE": "Комплексное значение",
+    "RESPONSIBLE_CONTROL": "Ответственное управление",
+    "SIMPLE_CONTROL": "Простое управление",
+    "SIMPLE_VALUE": "Простое значение",
+    "TEXT": "Текст",
+    "VECTOR_DIAGRAM": "Векторная диаграмма"
+  },
+  "addCauseDesc": {
+    "ADD_CAUSE_UNKNOWN": "Команда не выполнена по неизвестным причинам",
+    "ADD_CAUSE_NOT_SUPPORTED": "Команда не поддерживается",
+    "ADD_CAUSE_BLOCKED_BY_SWITCHING_HIERARCHY": "Неуспешен, так как один из Loc переключателей по ходу трафика, как в CSWI имеет значение TRUE",
+    "ADD_CAUSE_SELECT_FAILED": "Отменено из-за неуспешности выбора (Сервис select)",
+    "ADD_CAUSE_INVALID_POSITION": "Управляющее воздействие прекращено из-за неправильного положения переключателя (Pos в XCBR или XSWI)",
+    "ADD_CAUSE_POSITION_REACHED": "Переключатель уже находится в нужном положении (Pos в XCBR или XSWI)",
+    "ADD_CAUSE_PARAMETER_CHANGE_IN_EXECUTION": "Управляющее воздействие блокировано из-за выполнения изменения параметра parameter change",
+    "ADD_CAUSE_STEP_LIMIT": "Управляющее воздействие блокировано, так как переключатель РПН находится в конечном положении (EndPosR или EndposL в YLTC)",
+    "ADD_CAUSE_BLOCKED_BY_MODE": "Управляющее воздействие блокировано, так как LN (CSWI или XCBR/XSWI) находится в режиме (Mod), в котором запрещены любые переключения",
+    "ADD_CAUSE_BLOCKED_BY_PROCESS": "Управляющее воздействие блокировано из-за какого-либо внешнего события на уровне процесса, которое мешает успешному выполнению действия, например, индикация блокировки (EEHealth в XCBR или XSWI)",
+    "ADD_CAUSE_BLOCKED_BY_INTERLOCKING": "Управляющее воздествие блокировано из-за блокировки переключающих устройств (в CILO атрибут EnaOpn.stVal=“FALSE” или EnaCls.stVal=“FALSE”",
+    "ADD_CAUSE_BLOCKED_BY_SYNCHROCHECK": "Управляющее воздействие с проверкой синхронизации прекращено из-за превышения временного предела time limit",
+    "ADD_CAUSE_COMMAND_ALREADY_IN_EXECUTION": "Сервис управления или отмена отклонены, так как управляющее воздействие control action уже в процессе выполнения",
+    "ADD_CAUSE_BLOCKED_BY_HEALTH": "Управляющее воздействие блокировано из-за некоего внутреннего события, которое мешает успешному выполнению действия (Health)",
+    "ADD_CAUSE_1_OF_N_CONTROL": "Управляющее воздействие блокировано из-за того, что другое control action находится в процессе выполнения в домене (например, подстанции) (в любом XCBR или XSWI, DPC.stSeld=“TRUE”)",
+    "ADD_CAUSE_ABORTION_BY_CANCEL": "Управляющее воздействие прекращено из-за сервиса cancel service",
+    "ADD_CAUSE_TIME_LIMIT_OVER": "Управляющее воздействие прервано из-за превышения некоторого временного предела time limit",
+    "ADD_CAUSE_ABORTION_BY_TRIP": "Управляющее воздействие прекращено по сигналу отключения (PTRC с ACT.general=“TRUE”)",
+    "ADD_CAUSE_OBJECT_NOT_SELECTED": "Управляющее действие отклонено, так как не был выбран управляемый объект",
+    "ADD_CAUSE_OBJECT_ALREADY_SELECTED": "Действие выбора не было выполнено, так как адресованный объект уже выбран",
+    "ADD_CAUSE_NO_ACCESS_AUTHORITY": "Действие управления заблокировано из-за отсутствия прав доступа",
+    "ADD_CAUSE_ENDED_WITH_OVERSHOOT": "Управляющее действие выполнено, но конечное положение имеет превышение",
+    "ADD_CAUSE_ABORTION_DUE_TO_DEVIATION": "Управляющее действие блокироано из-за отклонения между значением команды и измеренным значением",
+    "ADD_CAUSE_ABORTION_BY_COMMUNICATION_LOSS": "Действие управления прервано из-за потери соединения с клиентом, выдавшим управление",
+    "ADD_CAUSE_ABORTION_BY_COMMAND": "Действие управления заблокировано из-за того, что атрибут данных CmdBlk.stVal имеет значение TRUE",
+    "ADD_CAUSE_NONE": "Действие управления успешно выполнено",
+    "ADD_CAUSE_INCONSISTENT_PARAMETERS": "Параметры между последовательными службами управления не согласованы, например, ctlNum службы Select и Operate различны",
+    "ADD_CAUSE_LOCKED_BY_OTHER_CLIENT": "Другой клиент уже зарезервировал объект",
+    "%future added value": "Неизвестная ошибка"
+  }
+}

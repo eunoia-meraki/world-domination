@@ -1,17 +1,38 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "allowUnreachableCode": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "removeComments": true,
-    "resolveJsonModule": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "baseUrl": "src",
+    "rootDir": "./",
     "sourceMap": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true
-  }
+    "module": "esnext",
+    "target": "es6",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "esModuleInterop": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "importsNotUsedAsValues": "error"
+  },
+  "include": [
+    "src",
+    "@types"
+  ],
+  "compileOnSave": false
 }

@@ -1,0 +1,47 @@
+{
+  "configurationMatrices": {
+    "BUTTON": "Button",
+    "INPUT": "Input",
+    "LED": "Led",
+    "RELAY": "Relay"
+  },
+  "widgets": {
+    "COMPLEX_VALUE": "Complex value",
+    "RESPONSIBLE_CONTROL": "Responsible control",
+    "SIMPLE_CONTROL": "Simple control",
+    "SIMPLE_VALUE": "Simple value",
+    "TEXT": "Text",
+    "VECTOR_DIAGRAM": "Vector diagram"
+  },
+  "addCauseDesc": {
+    "ADD_CAUSE_UNKNOWN": "Command not successful due to Unknown causes",
+    "ADD_CAUSE_NOT_SUPPORTED": "Command not supported",
+    "ADD_CAUSE_BLOCKED_BY_SWITCHING_HIERARCHY": "Not successful since one of the downstream Loc switches like in CSWI has the value TRUE",
+    "ADD_CAUSE_SELECT_FAILED": "Cancelled due to an unsuccessful selection (select service)",
+    "ADD_CAUSE_INVALID_POSITION": "Control action is aborted due to invalid switch position (Pos in XCBR or XSWI)",
+    "ADD_CAUSE_POSITION_REACHED": "Switch is already in the intended position (Pos in XCBR or XSWI)",
+    "ADD_CAUSE_PARAMETER_CHANGE_IN_EXECUTION": "Control action is blocked due to running parameter change",
+    "ADD_CAUSE_STEP_LIMIT": "Control action is blocked, because tap changer has reached the limit (EndPosR or EndPosL in YLTC)",
+    "ADD_CAUSE_BLOCKED_BY_MODE": "Control action is blocked, because the LN (CSWI or XCBR/XSWI) is in a mode (Mod) which doesn’t allow any switching",
+    "ADD_CAUSE_BLOCKED_BY_PROCESS": "Control action is blocked due to some external event at process level that prevents a successful operation, for example blocking indication (EEHealth in XCBR or XSWI)",
+    "ADD_CAUSE_BLOCKED_BY_INTERLOCKING": "Control action is blocked due to interlocking of switching devices (in CILO attribute EnaOpn.stVal=”FALSE” or EnaCls.stVal=”FALSE”)",
+    "ADD_CAUSE_BLOCKED_BY_SYNCHROCHECK": "Control action with synchrocheck is aborted due to exceed of time limit and missing synchronism condition",
+    "ADD_CAUSE_COMMAND_ALREADY_IN_EXECUTION": "Control, select or cancel service is rejected, because control action is already running",
+    "ADD_CAUSE_BLOCKED_BY_HEALTH": "Control action is blocked due to some internal event that prevents a successful operation (Health)",
+    "ADD_CAUSE_1_OF_N_CONTROL": "Control action is blocked, because another control action in a domain (for example substation) is already running (in any XCBR or XSWI of that domain, the DPC.stSeld=”TRUE”)",
+    "ADD_CAUSE_ABORTION_BY_CANCEL": "Control action is aborted due to cancel service",
+    "ADD_CAUSE_TIME_LIMIT_OVER": "Control action is terminated due to exceed of some time limit",
+    "ADD_CAUSE_ABORTION_BY_TRIP": "Control action is aborted due to a trip (PTRC with ACT.general=”TRUE”)",
+    "ADD_CAUSE_OBJECT_NOT_SELECTED": "Control action is rejected, because control object was not selected",
+    "ADD_CAUSE_OBJECT_ALREADY_SELECTED": "Select action is not executed, because the addressed object is already selected",
+    "ADD_CAUSE_NO_ACCESS_AUTHORITY": "Control action is blocked due to lack of access authority",
+    "ADD_CAUSE_ENDED_WITH_OVERSHOOT": "Control action executed but the end position has overshoot",
+    "ADD_CAUSE_ABORTION_DUE_TO_DEVIATION": "Control action is aborted due to deviation between the command value and the measured value",
+    "ADD_CAUSE_ABORTION_BY_COMMUNICATION_LOSS": "Control action is aborted due to the loss of connection with the client that issued the control",
+    "ADD_CAUSE_ABORTION_BY_COMMAND": "Control action is blocked due to the data attribute CmdBlk.stVal is TRUE",
+    "ADD_CAUSE_NONE": "Control action successfully executed",
+    "ADD_CAUSE_INCONSISTENT_PARAMETERS": "The parameters between successive control services are not consistent, for example the ctlNum of Select and Operate service are different",
+    "ADD_CAUSE_LOCKED_BY_OTHER_CLIENT": "Another client has already reserved the object",
+    "%future added value": "Unknown error"
+  }
+}
