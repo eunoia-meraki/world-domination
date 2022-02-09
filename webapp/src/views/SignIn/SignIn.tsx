@@ -13,13 +13,47 @@ import {
 } from '@mui/material';
 
 import type { FC } from 'react';
-import React from 'react';
 
 import { Footer } from '@/components/Footer';
+import graphql from 'babel-plugin-relay/macro';
 import { Routes } from '@/enumerations';
+import { useNavigate } from 'react-location';
+import { useMutation } from 'react-relay';
+import type { SignIn_signInMutation } from './__generated__/SignIn_signInMutation.graphql';
 
-export const SignIn: FC = () => (
-  <React.Fragment>
+export const SignIn: FC = () => {
+  const navigate = useNavigate();
+
+  const [signIn] = useMutation<SignIn_signInMutation>(
+    graphql`
+      mutation SignIn_signInMutation($login: String!, $password: String!) {
+        signIn(login: $login, password: $password)
+      }
+    `,
+  );
+
+  const onSignIn = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    console.log(event);
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    signIn({
+      variables: {
+        login: data.get('login') as string,
+        password: data.get('password') as string,
+      },
+      onCompleted: token => {
+        localStorage.setItem('token', token.signIn);
+        navigate({ to: Routes.Games });
+      },
+      onError: error => {
+        // TODO
+        console.log('error', error);
+      },
+    });
+  };
+
+  return (
+    <>
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
@@ -32,8 +66,10 @@ export const SignIn: FC = () => (
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlined />
         </Avatar>
+
         <Typography variant="h5">Sign in</Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+
+        <Box onSubmit={onSignIn} component="form" noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -44,6 +80,7 @@ export const SignIn: FC = () => (
             autoComplete="login"
             autoFocus
           />
+
           <TextField
             margin="normal"
             required
@@ -54,13 +91,21 @@ export const SignIn: FC = () => (
             id="password"
             autoComplete="current-password"
           />
+
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Sign In
           </Button>
+
           <Grid container>
             <Grid item>
               <Link href={Routes.SignUp} variant="body2">
@@ -71,6 +116,7 @@ export const SignIn: FC = () => (
         </Box>
       </Box>
     </Container>
+
     <Footer />
-  </React.Fragment>
+  </>
 );
