@@ -1,7 +1,7 @@
 import { RoleType } from '@prisma/client';
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodePlayer = (builder: WDSchemaBuilder) => {
+const includeNodePlayer = () => {
   builder.prismaNode('Player', {
     findUnique: (id) => ({ id }),
     id: { resolve: (user) => user.id },

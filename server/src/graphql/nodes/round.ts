@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeRound = (builder: WDSchemaBuilder) => {
+const includeNodeRound = () => {
   builder.prismaNode('Round', {
     findUnique: (id) => ({ id }),
     id: { resolve: (round) => round.id },

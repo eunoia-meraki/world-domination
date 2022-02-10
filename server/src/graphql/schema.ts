@@ -1,4 +1,4 @@
-import { getSchemaBuilder } from './schemaBuilder';
+import { builder } from './schemaBuilder';
 import includeNodeUser from './nodes/user';
 import includeNodePlayer from './nodes/player';
 import includeCommonMutations from './commonMutations';
@@ -16,11 +16,15 @@ import includeCommonQueries from './commonQueries';
 import includeNodeStage from './nodes/stage';
 import includeNodeTown from './nodes/town';
 import { GameStatus, Nation, RoleType } from '@prisma/client';
-import includeCommonSubscriptions from './commonSubscriptions';
 import includeNodeSendDiplomatAction from './nodes/sendDiplomatAction';
+import { includeCommonSubscriptions } from './commonSubscriptions';
+import { includeWebRTC } from './webRTC';
 
 const getGraphQLSchema = (): GraphQLSchema => {
-  const builder = getSchemaBuilder();
+  // TODO uncomment later
+  // builder.queryType({});
+  builder.mutationType({});
+  builder.subscriptionType({});
 
   builder.enumType(GameStatus, {
     name: 'GameStatus',
@@ -34,25 +38,26 @@ const getGraphQLSchema = (): GraphQLSchema => {
     name: 'RoleType',
   });
 
-  includeNodeUser(builder);
-  includeNodePlayer(builder);
-  includeNodeCreateBombAction(builder);
-  includeNodeEconomicDepositAction(builder);
-  includeNodeGame(builder);
-  includeNodeStage(builder);
-  includeNodeRound(builder);
-  includeNodeSendBombAction(builder);
-  includeNodeSendDiplomatAction(builder);
-  includeNodeShieldCreationAction(builder);
-  includeNodeTeam(builder);
-  includeNodeTeamRoom(builder);
-  includeNodeTown(builder);
-  includeNodeTownLevel(builder);
+  includeNodeUser();
+  includeNodePlayer();
+  includeNodeCreateBombAction();
+  includeNodeEconomicDepositAction();
+  includeNodeGame();
+  includeNodeStage();
+  includeNodeRound();
+  includeNodeSendBombAction();
+  includeNodeSendDiplomatAction();
+  includeNodeShieldCreationAction();
+  includeNodeTeam();
+  includeNodeTeamRoom();
+  includeNodeTown();
+  includeNodeTownLevel();
 
-  includeCommonMutations(builder);
-  includeCommonQueries(builder);
+  includeCommonMutations();
+  includeCommonQueries();
+  includeCommonSubscriptions();
 
-  includeCommonSubscriptions(builder);
+  includeWebRTC();
 
   return builder.toSchema({});
 };

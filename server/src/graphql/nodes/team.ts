@@ -1,7 +1,7 @@
 import { Nation } from '@prisma/client';
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeTeam = (builder: WDSchemaBuilder) => {
+const includeNodeTeam = () => {
   builder.prismaNode('Team', {
     findUnique: (id) => ({ id }),
     id: { resolve: (team) => team.id },

@@ -25,6 +25,7 @@ export const Game: FC = () => {
   const [rooms, updateRooms] = useState([]);
 
   const rootNode = useRef<HTMLDivElement | null>(null);
+
   useSubscription<Game_SuperpollingSubscription>({
     subscription: voiceChatSubscription,
     variables:{},

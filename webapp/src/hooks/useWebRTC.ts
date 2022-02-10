@@ -1,12 +1,12 @@
 import graphql from 'babel-plugin-relay/macro';
-import freeice from 'freeice';
+// import freeice from 'freeice';
 
 import { useEffect, useRef, useCallback } from 'react';
 import { useSubscription } from 'react-relay';
 import type internal from 'stream';
 
 import useStateWithCallback from './useStateWithCallback';
-import type { useWebRTC_SuperpollingSubscription } from './__generated__/useWebRTC_SuperpollingSubscription.graphql';
+import type { useWebRTC_WebRTCSubscription } from './__generated__/useWebRTC_WebRTCSubscription.graphql';
 
 export const LOCAL_VIDEO = 'LOCAL_VIDEO';
 
@@ -23,8 +23,8 @@ const ACTIONS = {
 };
 
 const voiceChatSubscription = graphql`
-  subscription useWebRTC_SuperpollingSubscription {
-    superpolling {
+  subscription useWebRTC_WebRTCSubscription {
+    webRTC {
       actionType
       data
     }
@@ -81,7 +81,8 @@ export default function useWebRTC(roomID: string) {
     //   return console.warn(`Already connected to peer ${peerID}`);
     // }
     if (to.includes(userId)) {
-      peerConnections.current[userId] = new RTCPeerConnection({ iceServers: freeice() });
+      // peerConnections.current[userId] = new RTCPeerConnection({ iceServers: freeice() });
+      peerConnections.current[userId] = new RTCPeerConnection();
       peerConnections.current[userId].onicecandidate = event => {
         if (event.candidate) {
           relayIce(userId, event.candidate);
@@ -164,13 +165,13 @@ export default function useWebRTC(roomID: string) {
     updateClients((list: any[]) => list.filter(c => c !== peerID));
   };
 
-  useSubscription<useWebRTC_SuperpollingSubscription>({
+  useSubscription<useWebRTC_WebRTCSubscription>({
     subscription: voiceChatSubscription,
     variables: {},
     onCompleted: () => console.log('onCompleted'),
     onError: e => console.log('onError', e),
     onNext: response => {
-      switch (response?.superpolling.actionType) {
+      switch (response?.webRTC.actionType) {
         case 'ADD_PEER': {
           handleNewPeer('createOffer', ['peerId', 'peerId']);
           break;
@@ -188,7 +189,7 @@ export default function useWebRTC(roomID: string) {
         }
 
       }
-      console.log('onNext', response?.superpolling);
+      console.log('onNext', response?.webRTC);
     },
   },
   );

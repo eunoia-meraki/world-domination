@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeShieldCreationAction = (builder: WDSchemaBuilder) => {
+const includeNodeShieldCreationAction = () => {
   builder.prismaNode('ShieldCreationAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },

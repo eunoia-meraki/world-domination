@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeTeamRoom = (builder: WDSchemaBuilder) => {
+const includeNodeTeamRoom = () => {
   builder.prismaNode('TeamRoom', {
     findUnique: (id) => ({ id }),
     id: { resolve: (teamRoom) => teamRoom.id },

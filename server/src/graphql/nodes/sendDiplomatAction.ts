@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeSendDiplomatAction = (builder: WDSchemaBuilder) => {
+const includeNodeSendDiplomatAction = () => {
   builder.prismaNode('SendDiplomatAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },

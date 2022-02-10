@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeTownLevel = (builder: WDSchemaBuilder) => {
+const includeNodeTownLevel = () => {
   builder.prismaNode('Town', {
     findUnique: (id) => ({ id }),
     id: { resolve: (townLevel) => townLevel.id },

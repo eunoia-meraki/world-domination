@@ -18,28 +18,27 @@ export type WDSchemaBuilder = PothosSchemaTypes.SchemaBuilder<
   PothosSchemaTypes.ExtendDefaultTypes<SBProps>
 >;
 
-export const getSchemaBuilder = (): WDSchemaBuilder =>
-  new SchemaBuilder<SBProps>({
-    plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin],
-    authScopes: (context) => {
-      const user = context.user;
-      return {
-        public: !!user,
-      };
+export const builder = new SchemaBuilder<SBProps>({
+  plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin],
+  authScopes: (context) => {
+    const user = context.user;
+    return {
+      public: !!user,
+    };
+  },
+  relayOptions: {
+    clientMutationId: 'omit',
+    cursorType: 'String',
+    encodeGlobalID: (typename, id) =>
+      Buffer.from(`${typename}\n${id}`).toString('base64'),
+    decodeGlobalID: (globalId: string) => {
+      const [typename, id] = Buffer.from(globalId, 'base64')
+        .toString('ascii')
+        .split('\n');
+      return { typename, id };
     },
-    relayOptions: {
-      clientMutationId: 'omit',
-      cursorType: 'String',
-      encodeGlobalID: (typename, id) =>
-        Buffer.from(`${typename}\n${id}`).toString('base64'),
-      decodeGlobalID: (globalId: string) => {
-        const [typename, id] = Buffer.from(globalId, 'base64')
-          .toString('ascii')
-          .split('\n');
-        return { typename, id };
-      },
-    },
-    prisma: {
-      client: db,
-    },
-  });
+  },
+  prisma: {
+    client: db,
+  },
+});
