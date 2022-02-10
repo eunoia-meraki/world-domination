@@ -1,4 +1,4 @@
-import { ContentPaste, Public, Flag, People } from '@mui/icons-material';
+import { ThumbUp, Public, Flag, People } from '@mui/icons-material';
 import {
   Toolbar,
   List,
@@ -6,7 +6,7 @@ import {
   ListItemText,
   ListItemIcon,
   Divider,
-  ListSubheader,
+  Typography,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-location';
 import type { FC } from 'react';
 import { useState } from 'react';
 
-import { Routes } from '@/enumerations';
+import { Contents, Routes } from '@/enumerations';
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -41,93 +41,98 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
         },
       }),
     },
-  }),
+  })
 );
-
-enum NavigationItem {
-  Main,
-  WorldStatistics,
-  CountryStatistics,
-  Actions,
-}
 
 interface INavigation {
   open: boolean;
-  setHeading: (heading: string) => void;
+  setContent: (content: Contents) => void;
+  content: Contents;
 }
 
-export const Navigation: FC<INavigation> = ({ open, setHeading }) => {
+export const Navigation: FC<INavigation> = ({ open, setContent, content }) => {
   const navigate = useNavigate();
-
-  const [navigationItem, setNavigationItem] = useState<NavigationItem>(NavigationItem.Main);
 
   const onMainClick = (): void => {
     navigate({ to: Routes.Game });
-    setNavigationItem(NavigationItem.Main);
-    setHeading('Main');
+    setContent(Contents.ConferenceHall);
   };
 
   const onWorldStatisticsClick = (): void => {
     navigate({ to: `${Routes.Game}/worldstatistics` });
-    setNavigationItem(NavigationItem.WorldStatistics);
-    setHeading('World Statistics');
+    setContent(Contents.WorldStatistics);
   };
 
   const onCountryStatisticsClick = (): void => {
     navigate({ to: `${Routes.Game}/countrystatistics` });
-    setNavigationItem(NavigationItem.CountryStatistics);
-    setHeading('Country Statistics');
+    setContent(Contents.CountryStatistics);
   };
 
   const onActionsClick = (): void => {
     navigate({ to: `${Routes.Game}/actions` });
-    setNavigationItem(NavigationItem.Actions);
-    setHeading('Actions');
+    setContent(Contents.Actions);
   };
 
-  const mainSelected = navigationItem === NavigationItem.Main;
-  const worldStatisticsSelected = navigationItem === NavigationItem.WorldStatistics;
-  const countryStatisticsSelected = navigationItem === NavigationItem.CountryStatistics;
-  const actionsSelected = navigationItem === NavigationItem.Actions;
+  const conferenceHallSelected = content === Contents.ConferenceHall;
+  const worldStatisticsSelected = content === Contents.WorldStatistics;
+  const countryStatisticsSelected = content === Contents.CountryStatistics;
+  const actionsSelected = content === Contents.Actions;
+
+  const hostName = 'Hostname';
+  const participantCount = 8;
 
   return (
     <Drawer variant="permanent" open={open}>
       <Toolbar
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          px: [1],
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          gap: '1px',
+          pl: 2,
         }}
-      />
+      >
+        <Typography
+          variant="subtitle2"
+          sx={{
+            fontWeight: 600,
+          }}
+        >
+          {hostName}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Participants: {participantCount}
+        </Typography>
+      </Toolbar>
+
       <Divider />
+
       <List component="nav">
-        <ListItemButton onClick={onMainClick} selected={mainSelected}>
+        <ListItemButton onClick={onMainClick} selected={conferenceHallSelected}>
           <ListItemIcon>
             <People />
           </ListItemIcon>
-          <ListItemText>Main</ListItemText>
+          <ListItemText>Conference Hall</ListItemText>
         </ListItemButton>
-        <Divider sx={{ my: 1 }} />
-        <ListSubheader component="div" inset>
-          Statistics
-        </ListSubheader>
-        <ListItemButton onClick={onWorldStatisticsClick} selected={worldStatisticsSelected}>
-          <ListItemIcon>
-            <Public />
-          </ListItemIcon>
-          <ListItemText>World</ListItemText>
-        </ListItemButton>
+
         <ListItemButton onClick={onCountryStatisticsClick} selected={countryStatisticsSelected}>
           <ListItemIcon>
             <Flag />
           </ListItemIcon>
-          <ListItemText>Country</ListItemText>
+          <ListItemText>Country statistics</ListItemText>
         </ListItemButton>
-        <Divider sx={{ my: 1 }} />
+
+        <ListItemButton onClick={onWorldStatisticsClick} selected={worldStatisticsSelected}>
+          <ListItemIcon>
+            <Public />
+          </ListItemIcon>
+          <ListItemText>World statistics</ListItemText>
+        </ListItemButton>
+
         <ListItemButton onClick={onActionsClick} selected={actionsSelected}>
           <ListItemIcon>
-            <ContentPaste />
+            <ThumbUp />
           </ListItemIcon>
           <ListItemText>Actions</ListItemText>
         </ListItemButton>

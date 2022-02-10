@@ -1,3 +1,3 @@
 import type { FC } from 'react';
 
-export const CountryStatistics: FC = () => <h1>CountryStatistics</h1>;
+export const CountryStatistics: FC = () => <></>;

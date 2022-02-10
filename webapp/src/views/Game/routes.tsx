@@ -1,6 +1,6 @@
 import { Actions } from './Content/Actions';
 import { CountryStatistics } from './Content/CountryStatistics';
-import { Main } from './Content/Main';
+import { ConferenceHall } from './Content/ConferenceHall';
 import { WorldStatistics } from './Content/WorldStatistics';
 import { Game } from './Game';
 
@@ -14,7 +14,7 @@ export const GameRoutes: Route = {
   children: [
     {
       path: '/',
-      element: <Main />,
+      element: <ConferenceHall />,
     },
     {
       path: 'worldstatistics',

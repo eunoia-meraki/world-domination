@@ -1,0 +1,1 @@
+export { ConferenceHall } from './ConferenceHall';

@@ -5,3 +5,10 @@ export enum Routes {
   Game = '/game',
   Games = '/games',
 }
+
+export enum Contents {
+  ConferenceHall,
+  WorldStatistics,
+  CountryStatistics,
+  Actions,
+}

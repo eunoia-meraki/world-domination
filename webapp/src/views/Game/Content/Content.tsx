@@ -5,16 +5,17 @@ import type { FC } from 'react';
 import React from 'react';
 
 import { Header } from './Header';
+import { Contents } from '@/enumerations';
 
 interface IContent {
   open: boolean;
   toggleOpen: () => void;
-  heading: string;
+  content: Contents;
 }
 
-export const Content: FC<IContent> = ({ open, toggleOpen, heading }) => (
+export const Content: FC<IContent> = ({ open, toggleOpen, content }) => (
   <React.Fragment>
-    <Header open={open} toggleOpen={toggleOpen} heading={heading} />
+    <Header open={open} toggleOpen={toggleOpen} content={content} />
     <Box
       component="main"
       sx={{

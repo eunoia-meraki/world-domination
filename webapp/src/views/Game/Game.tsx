@@ -49,6 +49,7 @@
 //     </div>
 //   );};
 
+import { Contents } from '@/enumerations';
 import { Box } from '@mui/material';
 
 import type { FC } from 'react';
@@ -59,7 +60,7 @@ import { Navigation } from './Navigation';
 
 export const Game: FC = () => {
   const [open, setOpen] = useState<boolean>(true);
-  const [heading, setHeading] = useState<string>('Main');
+  const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
 
   const toggleOpen = (): void => {
     setOpen(!open);
@@ -69,12 +70,13 @@ export const Game: FC = () => {
     <Box
       sx={{
         display: 'flex',
-        flexGrow: 1,
+        height: '100%',
       }}
     >
-      <Navigation open={open} setHeading={setHeading} />
+      <Navigation open={open} setContent={setContent} content={content}/>
 
-      <Content toggleOpen={toggleOpen} heading={heading} open={open} />
+      <Content toggleOpen={toggleOpen} content={content} open={open} />
     </Box>
   );
 };
+
