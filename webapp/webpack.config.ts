@@ -15,7 +15,7 @@ const dirnamePath = dirname(fileURLToPath(import.meta.url));
 type Configuration = WebpackConfiguration & WebpackDevServerConfiguration;
 
 const config: Configuration = {
-  target: ['browserslist','web'],
+  target: ['browserslist'],
   experiments: {
     outputModule: true,
   },
@@ -30,7 +30,7 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.(m?js|m?ts|m?tsx)$/,
+        test: /\.([mc]?js|m?ts|m?tsx)$/,
         use: 'babel-loader',
         exclude: /node_modules/,
       },
@@ -82,9 +82,9 @@ const config: Configuration = {
   ],
   resolve: {
     fallback: {
-      fs: 'browserify-fs/index.js',
-      modules: [resolve(dirnamePath, 'src'), resolve(dirnamePath, 'node_modules')],
+      fs: 'browserify-fs',
     },
+    modules: [resolve(dirnamePath, 'src'), 'node_modules'],
     extensions: ['.ts', '.mts', '.cts', '.tsx', '.mtsx', '.js', '.jsx', '.cjs', '.mjs', '.wasm', '.css'],
     alias: {
       'react-dom': '@hot-loader/react-dom',

@@ -1,8 +1,12 @@
 import type { ConfigAPI, TransformOptions } from '@babel/core';
 
 const config = (api: ConfigAPI): TransformOptions => ({
+  presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+
   plugins: [
+    'macros',
     'relay',
+    '@babel/plugin-transform-runtime',
     [
       'module-resolver',
       {
@@ -15,8 +19,6 @@ const config = (api: ConfigAPI): TransformOptions => ({
     ],
   ],
 
-  presets: ['@babel/preset-env' ],
-
   overrides: [
     {
       test: /\.(m?ts|m?tsx)$/,
@@ -28,6 +30,8 @@ const config = (api: ConfigAPI): TransformOptions => ({
         [
           '@babel/preset-react',
           {
+            flow: false,
+            typescript: true,
             development: api.env() === 'development',
             useBuiltIns: true,
             runtime: 'automatic',
