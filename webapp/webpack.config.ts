@@ -16,14 +16,9 @@ type Configuration = WebpackConfiguration & WebpackDevServerConfiguration;
 
 const config: Configuration = {
   target: ['browserslist'],
-  experiments: {
-    outputModule: true,
-  },
   entry: ['react-hot-loader/patch', './src/index.tsx'],
   output: {
     path: resolve(dirnamePath, 'build'),
-    chunkFormat: 'module',
-    module: true,
     filename: '[name].js',
   },
   devtool: 'eval-source-map',
