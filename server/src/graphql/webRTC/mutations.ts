@@ -5,13 +5,13 @@ import { broadcastWebRTCEvent } from './subscriptions';
 import { GQLContext } from 'src/app';
 
 const actionResolvers = {
-  [ActionType.RELAY_ICE]: (data: string, ctx: GQLContext) =>
+  [ActionType.RELAY_ICE]: (data: any, ctx: GQLContext) =>
     console.log(ActionType.RELAY_ICE, data),
 
-  [ActionType.RELAY_SDP]: (data: string, ctx: GQLContext) =>
+  [ActionType.RELAY_SDP]: (data: any, ctx: GQLContext) =>
     console.log(ActionType.RELAY_SDP, data),
 
-  [ActionType.JOIN]: (data: string, ctx: GQLContext) => {
+  [ActionType.JOIN]: (data: any, ctx: GQLContext) => {
     console.log(ActionType.JOIN, data);
     broadcastWebRTCEvent(ctx, { actionType: ActionType.JOIN, data });
   },
@@ -40,7 +40,7 @@ export const interactWebRTCMutation = builder.mutationField(
         const actionResolver = actionResolvers[actionType];
 
         if (actionResolver) {
-          actionResolver(data, ctx);
+          actionResolver(JSON.parse(data), ctx);
           return true;
         } else {
           return false;

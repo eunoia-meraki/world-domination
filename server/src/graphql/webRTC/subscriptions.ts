@@ -18,7 +18,7 @@ export const webRtcSubscription = builder.subscriptionField('webRTC', (t) =>
     subscribe: (_, __, ctx) => {
       return withCallbacks(
         ctx.pubsub.asyncIterator(BroadcastWebRTCEventLabel),
-        () => joinEventHandler(ctx),
+        () => addPeerEventHandler(ctx),
         () => removePeerEventHandler(ctx),
       );
     },
@@ -33,8 +33,8 @@ export async function broadcastWebRTCEvent(
   await context.pubsub.publish(BroadcastWebRTCEventLabel, event);
 }
 
-const joinEventHandler = (ctx: GQLContext) => {
-  console.log(ActionType.JOIN, ctx.user?.id);
+const addPeerEventHandler = (ctx: GQLContext) => {
+  // console.log(ActionType.ADD_PEER, ctx.user?.id);
   broadcastWebRTCEvent(
     ctx,
     new ActionEvent(
@@ -49,7 +49,7 @@ const joinEventHandler = (ctx: GQLContext) => {
 };
 
 const removePeerEventHandler = (ctx: GQLContext) => {
-  console.log(ActionType.REMOVE_PEER, ctx.user?.id);
+  // console.log(ActionType.REMOVE_PEER, ctx.user?.id);
   broadcastWebRTCEvent(
     ctx,
     new ActionEvent(

@@ -2,10 +2,11 @@ import graphql from 'babel-plugin-relay/macro';
 // import freeice from 'freeice';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { useSubscription } from 'react-relay';
+import { useMutation, useSubscription } from 'react-relay';
 import type internal from 'stream';
 
 import useStateWithCallback from './useStateWithCallback';
+import type { useWebRTC_interactWebRTCMutation } from './__generated__/useWebRTC_interactWebRTCMutation.graphql';
 import type { useWebRTC_WebRTCSubscription } from './__generated__/useWebRTC_WebRTCSubscription.graphql';
 
 export const LOCAL_VIDEO = 'LOCAL_VIDEO';
@@ -28,6 +29,12 @@ const voiceChatSubscription = graphql`
       actionType
       data
     }
+  }
+`;
+
+const interactWebRTCMutation = graphql`
+  mutation useWebRTC_interactWebRTCMutation($actionType: ActionType!, $data: String!){   
+    interactWebRTC(actionType: $actionType, data: $data) 
   }
 `;
 
@@ -60,35 +67,58 @@ export default function useWebRTC(roomID: string) {
     [LOCAL_VIDEO]: null,
   });
 
+  const [interactWebRTC] = useMutation<useWebRTC_interactWebRTCMutation>(
+    interactWebRTCMutation,
+  );
   const relayIce = (peerId: string, iceCandidate: RTCIceCandidate) => {
-    // TODO Mutation with parametr ACTIONS.RELAY_ICE,
+    interactWebRTC({
+      variables: {
+        actionType: 'RELAY_ICE',
+        data: JSON.stringify({ peerId, iceCandidate }),
+      },
+    });
   };
 
   const relaySdp = (peerId: string, offer: RTCSessionDescriptionInit) => {
-    // TODO Mutation with parametr ACTIONS.RELAY_SDP,
+    interactWebRTC({
+      variables: {
+        actionType: 'RELAY_SDP',
+        data: JSON.stringify({ peerId, offer }),
+      },
+    });
   };
 
   const relaySdpAnsw = (peerId: string, answer: RTCSessionDescriptionInit) => {
-    // TODO Mutation with parametr ACTIONS.RELAY_SDP,
+    interactWebRTC({
+      variables: {
+        actionType: 'RELAY_SDP',
+        data: JSON.stringify({ peerId, answer }),
+      },
+    });
   };
 
   const join = (roomId: string) => {
-    // TODO join mutation JOIN
+    interactWebRTC({
+      variables: {
+        actionType: 'JOIN',
+        data: JSON.stringify({ roomId }),
+      },
+    });
   };
 
   const handleNewPeer = async (createOffer: string, to: string[]) => {
     // if (peerID in peerConnections.current) {
     //   return console.warn(`Already connected to peer ${peerID}`);
     // }
-    if (to.includes(userId)) {
-      // peerConnections.current[userId] = new RTCPeerConnection({ iceServers: freeice() });
-      peerConnections.current[userId] = new RTCPeerConnection();
-      peerConnections.current[userId].onicecandidate = event => {
-        if (event.candidate) {
-          relayIce(userId, event.candidate);
-        }
-      };
-    }
+    // if (to.includes(userId)) {
+    // peerConnections.current[userId] = new RTCPeerConnection({ iceServers: freeice() });
+    peerConnections.current[userId] = new RTCPeerConnection();
+    peerConnections.current[userId].onicecandidate = event => {
+      if (event.candidate) {
+        relayIce(userId, event.candidate);
+      }
+    };
+    // }
 
     let tracksNumber = 0;
     peerConnections.current[userId].ontrack = ({ streams: [remoteStream] }) => {
@@ -153,7 +183,11 @@ export default function useWebRTC(roomID: string) {
     );
   };
 
-  const handleRemovePeer = (peerID: string) => {
+  const handleRemovePeer = (peerID: string, from: string[]) => {
+    if (!from.includes(userId)) { // TODO is 'from' neacesary?
+      return;
+    }
+
     if (peerConnections.current[peerID]) {
       peerConnections.current[peerID].close();
     }
@@ -173,7 +207,8 @@ export default function useWebRTC(roomID: string) {
     onNext: response => {
       switch (response?.webRTC.actionType) {
         case 'ADD_PEER': {
-          handleNewPeer('createOffer', ['peerId', 'peerId']);
+          const { createOffer, to }: { createOffer: string, to: string[] } = JSON.parse(response.webRTC.data);
+          handleNewPeer(createOffer, to);
           break;
         }
         case 'SESSION_DESCRIPTION': {
@@ -185,7 +220,8 @@ export default function useWebRTC(roomID: string) {
           break;
         }
         case 'REMOVE_PEER': {
-          handleRemovePeer('peerId');
+          const { createOffer, from }: { createOffer: string, from: string[] } = JSON.parse(response.webRTC.data);
+          handleRemovePeer(createOffer, from);
         }
 
       }
@@ -230,7 +266,7 @@ export default function useWebRTC(roomID: string) {
   }, []);
 
   return {
-    clients,
+    clients: clients as string[],
     provideMediaRef,
   };
 }

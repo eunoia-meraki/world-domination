@@ -55,7 +55,7 @@ enum GameStatus {
 
 type Mutation {
   createGame(gameName: String!): Game!
-  interactWebRTC(login: String!, password: String!): Boolean!
+  interactWebRTC(actionType: ActionType!, data: String!): Boolean!
   signIn(login: String!, password: String!): SignInPayload!
   signUp(login: String!, password: String!): String!
 }

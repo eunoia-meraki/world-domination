@@ -8,7 +8,7 @@
     "start": "pnpm clean && cross-env BROWSER=none craco start",
     "build": "craco build",
     "relay": "relay-compiler",
-    "update-schema": "get-graphql-schema http://localhost:8002/ > schema/schema.graphql",
+    "update-schema": "get-graphql-schema http://localhost:8002/graphql > schema/schema.graphql",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
