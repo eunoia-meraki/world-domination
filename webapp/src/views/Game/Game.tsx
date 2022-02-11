@@ -49,7 +49,6 @@
 //     </div>
 //   );};
 
-import { Contents } from '@/enumerations';
 import { Box } from '@mui/material';
 
 import type { FC } from 'react';
@@ -57,6 +56,8 @@ import { useState } from 'react';
 
 import { Content } from './Content';
 import { Navigation } from './Navigation';
+
+import { Contents } from '@/enumerations';
 
 export const Game: FC = () => {
   const [open, setOpen] = useState<boolean>(true);
@@ -79,4 +80,3 @@ export const Game: FC = () => {
     </Box>
   );
 };
-

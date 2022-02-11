@@ -13,7 +13,6 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-location';
 
 import type { FC } from 'react';
-import { useState } from 'react';
 
 import { Contents, Routes } from '@/enumerations';
 
@@ -41,7 +40,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
         },
       }),
     },
-  })
+  }),
 );
 
 interface INavigation {

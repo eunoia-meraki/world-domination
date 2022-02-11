@@ -1,10 +1,11 @@
-import { Contents } from '@/enumerations';
 import { Menu, Notifications } from '@mui/icons-material';
 import { Toolbar, Typography, Badge, IconButton, LinearProgress, Box } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled } from '@mui/material/styles';
 
 import type { FC } from 'react';
+
+import { Contents } from '@/enumerations';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -37,7 +38,7 @@ interface IHeader {
 export const Header: FC<IHeader> = ({ open, toggleOpen, content }) => {
   const stageNum = 2;
   const countryName = 'Russia';
-  const amountOfMoney = 500;
+  const amountOfMoney = 1000000000;
   const stageProgressValue = 80;
 
   const headings = {
@@ -55,7 +56,7 @@ export const Header: FC<IHeader> = ({ open, toggleOpen, content }) => {
     },
     [`${Contents.Actions}`]: {
       heading: 'Actions',
-      subheading: 'Protect your home, throw grenades and rockets to the enemy',
+      subheading: 'Protect your home, throw rockets to the enemy',
     },
   };
 
@@ -107,7 +108,7 @@ export const Header: FC<IHeader> = ({ open, toggleOpen, content }) => {
           }}
         >
           <Typography
-            variant="body2"
+            variant="subtitle2"
             color="inherit"
             sx={{
               display: 'flex',

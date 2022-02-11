@@ -5,6 +5,7 @@ import type { FC } from 'react';
 import React from 'react';
 
 import { Header } from './Header';
+
 import { Contents } from '@/enumerations';
 
 interface IContent {
@@ -21,6 +22,8 @@ export const Content: FC<IContent> = ({ open, toggleOpen, content }) => (
       sx={{
         backgroundColor: theme =>
           theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
+        display: 'flex',
+        flexDirection: 'column',
         flexGrow: 1,
         overflow: 'auto',
       }}
