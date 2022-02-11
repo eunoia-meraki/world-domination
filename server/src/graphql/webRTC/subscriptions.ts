@@ -22,45 +22,49 @@ export const webRtcSubscription = builder.subscriptionField('webRTC', (t) =>
         () => removePeerEventHandler(ctx),
       );
     },
-    resolve: async (payload) => payload as ActionEvent,
+    resolve: (payload) => payload as ActionEvent,
   }),
 );
 
-export async function broadcastWebRTCEvent(
+export const broadcastWebRTCEvent = async (
   context: GQLContext,
   event: ActionEvent,
-) {
-  await context.pubsub.publish(BroadcastWebRTCEventLabel, event);
-}
+) => context.pubsub.publish(BroadcastWebRTCEventLabel, event);
 
 const addPeerEventHandler = (ctx: GQLContext) => {
-  // console.log(ActionType.ADD_PEER, ctx.user?.id);
-  broadcastWebRTCEvent(
-    ctx,
-    new ActionEvent(
-      ActionType.ADD_PEER,
-      `{"createOffer":${ctx.user?.id}, "to": ${users
-        .map((u) => u?.id)
-        .filter((id) => id && id != ctx.user?.id)}}`,
-    ),
-  );
+  const user = ctx.user;
+  if (user) {
+    const to = users.map((u) => u?.id).filter((id) => id && id != user?.id);
+    if (to.length !== 0) {
+      // Must rewrite this dirty stuff
+      setTimeout(
+        () =>
+          broadcastWebRTCEvent(ctx, {
+            actionType: ActionType.ADD_PEER,
+            data: JSON.stringify({
+              offerCreator: user.id,
+              to,
+            }),
+          }),
+        100,
+      );
+    }
+  }
 
   users.push(ctx.user);
 };
 
 const removePeerEventHandler = (ctx: GQLContext) => {
-  // console.log(ActionType.REMOVE_PEER, ctx.user?.id);
-  broadcastWebRTCEvent(
-    ctx,
-    new ActionEvent(
-      ActionType.REMOVE_PEER,
-      `{"remove": ${ctx.user?.id}, "from": ${users
-        .map((u) => u?.id)
-        .filter((u) => u)}}`,
-    ),
-  );
-
-  users = users.filter((u) => u?.id !== ctx.user?.id);
+  const user = ctx.user;
+  if (user) {
+    broadcastWebRTCEvent(ctx, {
+      actionType: ActionType.REMOVE_PEER,
+      data: JSON.stringify({
+        disconnected: user.id,
+      }),
+    });
+    users = users.filter((u) => u?.id !== ctx.user?.id);
+  }
 };
 
 const withCallbacks = (
@@ -69,7 +73,6 @@ const withCallbacks = (
   onUnsubscribe: () => void,
 ): AsyncIterable<unknown> => {
   onSubscribe();
-
   const asyncReturn = asyncIterator.return;
 
   asyncIterator.return = () => {

@@ -1,19 +1,38 @@
 import { builder } from '../schemaBuilder';
 import { AuthenticationError } from 'apollo-server';
-import { ActionEvent, ActionType, ActionTypeGql } from './types';
+import { ActionType, ActionTypeGql } from './types';
 import { broadcastWebRTCEvent } from './subscriptions';
 import { GQLContext } from 'src/app';
 
+type SessionDescriptionDict = { [key: string]: RTCSessionDescriptionInit };
+
+type IceCandidateDict = { [key: string]: RTCIceCandidate };
+
 const actionResolvers = {
-  [ActionType.RELAY_ICE]: (data: any, ctx: GQLContext) =>
-    console.log(ActionType.RELAY_ICE, data),
+  [ActionType.RELAY_ICE]: (icd: IceCandidateDict, ctx: GQLContext) => {
+    const user = ctx.user;
+    if (user) {
+      broadcastWebRTCEvent(ctx, {
+        actionType: ActionType.ICE_CANDIDATE,
+        data: JSON.stringify({
+          creator: user.id,
+          icd: icd,
+        }),
+      });
+    }
+  },
 
-  [ActionType.RELAY_SDP]: (data: any, ctx: GQLContext) =>
-    console.log(ActionType.RELAY_SDP, data),
-
-  [ActionType.JOIN]: (data: any, ctx: GQLContext) => {
-    console.log(ActionType.JOIN, data);
-    broadcastWebRTCEvent(ctx, { actionType: ActionType.JOIN, data });
+  [ActionType.RELAY_SDP]: (sdd: SessionDescriptionDict, ctx: GQLContext) => {
+    const user = ctx.user;
+    if (user) {
+      broadcastWebRTCEvent(ctx, {
+        actionType: ActionType.SESSION_DESCRIPTION,
+        data: JSON.stringify({
+          creator: user.id,
+          sdd,
+        }),
+      });
+    }
   },
 };
 
