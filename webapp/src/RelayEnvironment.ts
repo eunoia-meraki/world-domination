@@ -25,6 +25,8 @@ import type {
 
 import { meros } from 'meros';
 
+const GRAPHQL_ENDPOINT = 'localhost:8002/';
+
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
  * the results of GraphQL queries from your server (or other data source). See more at
@@ -37,7 +39,7 @@ const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variabl
       // Check that the auth token is configured
       const token = localStorage.getItem('token');
 
-      const response = await fetch('http://localhost:8002/', {
+      const response = await fetch(`http://${GRAPHQL_ENDPOINT}`, {
         body: JSON.stringify({
           query: params.text,
           variables,
@@ -107,7 +109,7 @@ function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
 }
 
 const subscriptionClient = new SubscriptionClient(
-  'ws://localhost:8002/',
+  `ws://${GRAPHQL_ENDPOINT}`,
   {
     reconnect: true,
     connectionParams: () => {

@@ -14,11 +14,11 @@ import type { useWebRTC_WebRTCSubscription } from './__generated__/useWebRTC_Web
 export const LOCAL_VIDEO = 'LOCAL_VIDEO';
 
 const voiceChatSubscription = graphql`
-  subscription useWebRTC_WebRTCSubscription {
-    webRTC {
-      actionType
+  subscription useWebRTC_WebRTCSubscription($roomId: String!) {
+    webRTC(roomId: $roomId) {
+        actionType
       data
-    }
+  }
   }
 `;
 
@@ -229,7 +229,9 @@ export default function useWebRTC(roomID: string) {
           RelayEnvironment,
           {
             subscription: voiceChatSubscription,
-            variables: {},
+            variables: {
+              roomId: roomID,
+            },
             onCompleted: () => console.log('established'),
             onError: e => console.error(e),
             onNext: response => {

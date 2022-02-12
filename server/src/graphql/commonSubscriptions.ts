@@ -1,1 +1,2 @@
-export const includeCommonSubscriptions = () => console.log('nothing');
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const includeCommonSubscriptions = () => {};

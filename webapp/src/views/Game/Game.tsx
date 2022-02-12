@@ -55,8 +55,11 @@ export const Game: FC = () => {
   const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
   const [rooms, updateRooms] = useState([]);
 
-  const { clients, provideMediaRef } = useWebRTC('roomId');
-  // console.log(clients);
+  const {
+    params: { gameid },
+  } = useMatch();
+
+  const { clients, provideMediaRef } = useWebRTC(gameid);
   const videoLayout = layout(clients.length);
 
   useSubscription<Game_SuperpollingSubscription>({

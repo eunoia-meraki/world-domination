@@ -170,7 +170,7 @@ type Stage implements Node {
 }
 
 type Subscription {
-  webRTC: ActionEvent!
+  webRTC(roomId: String!): ActionEvent!
 }
 
 type Team implements Node {
