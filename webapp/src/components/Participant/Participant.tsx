@@ -1,4 +1,3 @@
-import { PanTool } from '@mui/icons-material';
 import { Paper, Box, Typography } from '@mui/material';
 
 import { FC } from 'react';
@@ -8,7 +7,6 @@ interface IParticipant {
   firstName: string;
   lastName: string;
   speaking: boolean;
-  raisedHand: boolean;
 }
 
 export const Participant: FC<IParticipant> = ({
@@ -16,7 +14,6 @@ export const Participant: FC<IParticipant> = ({
   firstName,
   lastName,
   speaking,
-  raisedHand,
 }) => {
   const initials = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 
@@ -30,23 +27,10 @@ export const Participant: FC<IParticipant> = ({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: '3px',
-        outlineWidth: '3px',
         borderStyle: 'solid',
-        outlineStyle: 'solid',
-        borderColor: raisedHand ? 'yellow' : 'transparent',
-        outlineColor: speaking ? 'red' : 'transparent',
+        borderColor: speaking ? 'red' : 'transparent',
       }}
     >
-      {raisedHand && (
-        <PanTool
-          sx={{
-            position: 'absolute',
-            left: 20,
-            top: 20,
-            color: 'yellow',
-          }}
-        />
-      )}
       <Box
         sx={{
           width: 120,

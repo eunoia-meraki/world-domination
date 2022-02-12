@@ -50,11 +50,12 @@
 //   );};
 
 import { Box } from '@mui/material';
+import { Outlet } from 'react-location';
 
 import type { FC } from 'react';
 import { useState } from 'react';
 
-import { Content } from './Content';
+import { Header } from './Header';
 import { Navigation } from './Navigation';
 
 import { Contents } from '@/enumerations';
@@ -76,7 +77,9 @@ export const Game: FC = () => {
     >
       <Navigation open={open} setContent={setContent} content={content}/>
 
-      <Content toggleOpen={toggleOpen} content={content} open={open} />
+      <Header open={open} toggleOpen={toggleOpen} content={content} />
+
+      <Outlet />
     </Box>
   );
 };

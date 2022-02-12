@@ -1,8 +1,8 @@
-import { Actions } from './Content/Actions';
-import { CountryStatistics } from './Content/CountryStatistics';
-import { ConferenceHall } from './Content/ConferenceHall';
-import { WorldStatistics } from './Content/WorldStatistics';
+import { Actions } from './Actions';
+import { ConferenceHall } from './ConferenceHall';
+import { CountryStatistics } from './CountryStatistics';
 import { Game } from './Game';
+import { WorldStatistics } from './WorldStatistics';
 
 import type { Route } from 'react-location';
 
