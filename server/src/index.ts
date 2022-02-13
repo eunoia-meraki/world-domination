@@ -5,8 +5,9 @@ const ENDPOINT = '/';
 
 init(PORT, ENDPOINT)
   .then((server) => {
-    console.log(`GraphQL server started on port ${PORT}.\n`);
-    console.log(`Endpoint: http://localhost:${PORT}${server.graphqlPath}`);
+    console.log(
+      `GraphQL server started on: http://localhost:${PORT}${ENDPOINT}`,
+    );
     return server;
   })
   .catch((err) => {

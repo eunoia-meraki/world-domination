@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeSendBombAction = (builder: WDSchemaBuilder) => {
+const includeNodeSendBombAction = () => {
   builder.prismaNode('SendBombAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },

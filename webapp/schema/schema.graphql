@@ -55,7 +55,8 @@ enum GameStatus {
 
 type Mutation {
   createGame(gameName: String!): Game!
-  signIn(login: String!, password: String!): String!
+  interactWebRTC(actionType: ActionType!, data: String!): Boolean!
+  signIn(login: String!, password: String!): SignInPayload!
   signUp(login: String!, password: String!): String!
 }
 
@@ -156,6 +157,11 @@ type ShieldCreationAction implements Node {
   town: Town!
 }
 
+type SignInPayload {
+  id: String!
+  token: String!
+}
+
 type Stage implements Node {
   id: ID!
   livetime: Int!
@@ -164,7 +170,7 @@ type Stage implements Node {
 }
 
 type Subscription {
-  superpolling: ActionEvent!
+  webRTC(roomId: String!): ActionEvent!
 }
 
 type Team implements Node {

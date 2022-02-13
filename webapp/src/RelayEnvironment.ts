@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import _ from 'lodash';
 import { meros } from 'meros';
 import {
   Store,
@@ -22,29 +16,34 @@ import type {
   SubscribeFunction,
   RequestParameters,
 } from 'relay-runtime';
-import type { Observer, Observable } from 'subscriptions-transport-ws';
+import type {
+  Observer,
+  Observable,
+} from 'subscriptions-transport-ws';
+
+const GRAPHQL_ENDPOINT = 'localhost:8002/';
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
  * the results of GraphQL queries from your server (or other data source). See more at
  * https://relay.dev/docs/en/quick-start-guide#relay-environment.
  */
-
 const fetchQuery: FetchFunction = (
   params: RequestParameters,
   variables: Variables,
 ) => ReactObservable.create(sink => {
   (async () => {
+
     // Check that the auth token is configured
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:8002/', {
+    const response = await fetch(`http://${GRAPHQL_ENDPOINT}`, {
       body: JSON.stringify({
         query: params.text,
         variables,
       }),
       headers: {
-        Authorization: `bearer ${token || ''}`,
+        Authorization: `bearer ${token}`,
         'Content-Type': 'application/json',
       },
       method: 'POST',
@@ -52,7 +51,6 @@ const fetchQuery: FetchFunction = (
 
     const parts = await meros<GraphQLResponse>(response);
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (isAsyncIterable(parts)) {
       for await (const part of parts) {
         if (!part.json) {
@@ -64,24 +62,29 @@ const fetchQuery: FetchFunction = (
 
         // Realyism
         if ('hasNext' in result) {
-          // @ts-ignore
-          if (!result.extensions) result.extensions = {};
-          // @ts-ignore
-          result.extensions.is_final = !result.hasNext;
-          // @ts-ignore
-          delete result.hasNext;
+          /* eslint-disable */
+            // @ts-ignore
+            if (!result.extensions) {
+              // @ts-ignore
+              result.extensions = {};
+            }
+            // @ts-ignore
+            result.extensions.is_final = !result.hasNext;
+            // @ts-ignore
+            delete result.hasNext;
+            /* eslint-enable */
         }
 
         sink.next(result);
       }
     } else {
+
       const json = await parts.json();
 
       if (Array.isArray(json.errors)) {
         const errorsMessage: string = json.errors
-          .filter((error: { message?: string }) => error?.message !== undefined)
-          .map((error: { message: string }) => error.message)
-          .join('\n');
+          .filter((error: { message?: string }) => !_.isUndefined(error?.message))
+          .map((error: { message: string }) => error.message).join('\n');
         sink.error(new Error(errorsMessage));
       }
 
@@ -92,25 +95,31 @@ const fetchQuery: FetchFunction = (
   })();
 });
 
-const isAsyncIterable = (input: unknown): input is AsyncIterable<unknown> => (
-  typeof input === 'object' &&
-    input !== null &&
-    // Some browsers still don't have Symbol.asyncIterator implemented (iOS Safari)
-    // That means every custom AsyncIterable must be built using a AsyncGeneratorFunction
-    // (async function * () {})
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((input as any)[Symbol.toStringTag] === 'AsyncGenerator' || Symbol.asyncIterator in input)
-);
+function isAsyncIterable (input: unknown): input is AsyncIterable<unknown> {
+  return (
+    typeof input === 'object' &&
+		input !== null &&
+		// Some browsers still don't have Symbol.asyncIterator implemented (iOS Safari)
+		// That means every custom AsyncIterable must be built using a AsyncGeneratorFunction
+		// (async function * () {})
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		((input as any)[Symbol.toStringTag] === 'AsyncGenerator' ||
+			Symbol.asyncIterator in input)
+  );
+}
 
-const subscriptionClient = new SubscriptionClient('ws://localhost:8002/', {
-  reconnect: true,
-  connectionParams: () => ({ token: localStorage.getItem('token') }),
-});
+const subscriptionClient = new SubscriptionClient(
+  `ws://${GRAPHQL_ENDPOINT}`,
+  {
+    reconnect: true,
+    connectionParams: () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
+  },
+);
 
 // Mismatch type between relay and subscriptions-transport-ws
 // https://github.com/facebook/relay/issues/3091
 // https://github.com/facebook/relay/issues/3349
-interface RelayObservableFixed<T = Record<string, unknown>> extends Observable<T> {
+interface RelayObservableFixed <T = Record<string, unknown>> extends Observable<T>{
   subscribe(observer: Observer<T>): {
     unsubscribe: () => void;
     closed: boolean;
@@ -119,7 +128,7 @@ interface RelayObservableFixed<T = Record<string, unknown>> extends Observable<T
 
 const subscribe: SubscribeFunction = (request: RequestParameters, variables: Variables) => {
   const subscribeObservable = subscriptionClient.request({
-    query: request.text as string | undefined,
+    query: request.text as string,
     operationName: request.name,
     variables,
   });

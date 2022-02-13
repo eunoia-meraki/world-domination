@@ -1,12 +1,7 @@
 import { db } from '../database/db';
-import {
-  ActionType,
-  ActionEvent,
-  superpollingEvent,
-} from './commonSubscriptions';
-import { WDSchemaBuilder } from './schemaBuilder';
+import { builder } from './schemaBuilder';
 
-const includeCommonQueries = (builder: WDSchemaBuilder) => {
+const includeCommonQueries = () => {
   builder.queryType({
     fields: (t) => ({
       users: t.prismaConnection({
@@ -15,8 +10,7 @@ const includeCommonQueries = (builder: WDSchemaBuilder) => {
         },
         type: 'User',
         cursor: 'id',
-        resolve: async (query, _, __, ctx) => {
-          superpollingEvent(ctx, new ActionEvent(ActionType.JOIN, 'qwerty'));
+        resolve: async (query) => {
           return db.user.findMany({
             ...query,
           });

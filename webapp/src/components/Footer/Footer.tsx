@@ -2,8 +2,6 @@ import { Stack, Box, Typography, Link } from '@mui/material';
 
 import type { FC } from 'react';
 
-import SchoolLogo from '@/assets/svg/school-logo.svg';
-
 export const Footer: FC = () => (
   <Box
     component="footer"
@@ -35,7 +33,6 @@ export const Footer: FC = () => (
           </Link>
         </Stack>
 
-        <SchoolLogo height="25" width="70"/>
       </Stack>
     </Typography>
   </Box>

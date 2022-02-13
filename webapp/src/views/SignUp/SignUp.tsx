@@ -19,7 +19,7 @@ import { Footer } from '@/components/Footer';
 import { Routes } from '@/enumerations';
 
 export const SignUp: FC = () => (
-  <React.Fragment>
+  <>
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
@@ -110,5 +110,5 @@ export const SignUp: FC = () => (
       </Box>
     </Container>
     <Footer />
-  </React.Fragment>
+  </>
 );

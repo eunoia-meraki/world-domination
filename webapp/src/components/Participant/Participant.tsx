@@ -1,6 +1,6 @@
 import { Paper, Box, Typography } from '@mui/material';
 
-import { FC } from 'react';
+import type { FC } from 'react';
 
 interface IParticipant {
   color: string;

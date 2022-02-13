@@ -1,7 +1,6 @@
-import { MakeGenerics } from 'react-location';
-import { PreloadedQuery } from 'react-relay';
-
-import type { GamesQuery as GamesQueryType } from './__generated__/GamesQuery.graphql';
+import type { Games_Query as GamesQueryType } from './__generated__/Games_Query.graphql';
+import type { MakeGenerics } from 'react-location';
+import type { PreloadedQuery } from 'react-relay';
 
 export type GamesLocation = MakeGenerics<{
   LoaderData: {

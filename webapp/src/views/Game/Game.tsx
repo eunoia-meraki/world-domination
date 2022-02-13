@@ -1,68 +1,55 @@
-// /* eslint-disable react/button-has-type */
-// /* eslint-disable @typescript-eslint/restrict-template-expressions */
-// /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// /* eslint-disable @typescript-eslint/no-unsafe-call */
-// import { Link } from 'react-location';
-// // import { graphql } from 'react-relay';
-// // import { v4 } from 'uuid';
-
-// import { FC, useEffect, useRef, useState } from 'react';
-
-// // const voiceChatCoordinatorSubscription = graphql`
-// //   subscription VoiceChatCoordinatorSubscription($input: FeedbackLikeSubscribeData!) {
-// //     feedback_like_subscribe(data: $input) {
-// //       feedback {
-// //         id
-// //         like_count
-// //       }
-// //     }
-// //   }
-// // `;
-
-// export const Game: FC = () => {
-//   const [rooms, updateRooms] = useState([]);
-//   const rootNode = useRef<HTMLDivElement | null>(null);
-
-//   useEffect(() => {
-//     updateRooms(rooms);
-//     // socket.on(ACTIONS.SHARE_ROOMS, ({ rooms = [] } = {}) => {
-//     //   if (rootNode.current) {
-//     //     updateRooms(rooms);
-//     //   }
-//     // });
-//   }, []);
-
-//   return (
-//     <div ref={rootNode}>
-//       <h1>Available Rooms</h1>
-
-//       <ul>
-//         {rooms.map(roomID => (
-//           <li key={roomID}>
-//             {roomID}
-//             <Link to={`/room/${roomID}`} />
-//           </li>
-//         ))}
-//       </ul>
-
-//       {/* <Link to={`/room/${v4()}`} title='Create New Room'/> */}
-//     </div>
-//   );};
-
+// import { Navigation } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { Outlet } from 'react-location';
+import { Outlet, useMatch } from 'react-location';
 
 import type { FC } from 'react';
 import { useState } from 'react';
 
 import { Header } from './Header';
-import { Navigation } from './Navigation';
 
 import { Contents } from '@/enumerations';
+import useWebRTC, { LOCAL_VIDEO } from '@/hooks/useWebRTC';
+
+const layout = (clientsNumber = 1) => {
+  const pairs = Array.from({ length: clientsNumber })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .reduce<any>((acc, next, index, arr) => {
+    if (index % 2 === 0) {
+      acc.push(arr.slice(index, index + 2));
+    }
+
+    return acc;
+  }, []) as string[][];
+
+  const rowsNumber = pairs.length;
+  const height = `${100 / rowsNumber}%`;
+
+  return pairs.map((row, index, arr) => {
+
+    if (index === arr.length - 1 && row.length === 1) {
+      return [{
+        width: '100%',
+        height,
+      }];
+    }
+
+    return row.map(() => ({
+      width: '50%',
+      height,
+    }));
+  }).flat();
+};
 
 export const Game: FC = () => {
   const [open, setOpen] = useState<boolean>(true);
   const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
+
+  const {
+    params: { gameid },
+  } = useMatch();
+
+  const { clients, provideMediaRef } = useWebRTC(gameid);
+  const videoLayout = layout(clients.length);
 
   const toggleOpen = (): void => {
     setOpen(!open);
@@ -75,9 +62,24 @@ export const Game: FC = () => {
         height: '100%',
       }}
     >
-      <Navigation open={open} setContent={setContent} content={content}/>
+      {/* <Navigation open={open} setContent={setContent} content={content}/> */}
 
       <Header open={open} toggleOpen={toggleOpen} content={content} />
+
+      {clients.map((clientID, index) => (
+        <div key={clientID} style={videoLayout[index]} id={clientID}>
+          <video
+            width='100%'
+            height='100%'
+            ref={instance => {
+              provideMediaRef(clientID, instance);
+            }}
+            autoPlay
+            playsInline
+            muted={clientID === LOCAL_VIDEO}
+          />
+        </div>
+      ))}
 
       <Outlet />
     </Box>

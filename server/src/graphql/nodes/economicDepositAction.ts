@@ -1,6 +1,6 @@
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeEconomicDepositAction = (builder: WDSchemaBuilder) => {
+const includeNodeEconomicDepositAction = () => {
   builder.prismaNode('EconomicDepositAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },

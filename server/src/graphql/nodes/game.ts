@@ -1,7 +1,7 @@
 import { GameStatus } from '@prisma/client';
-import { WDSchemaBuilder } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
-const includeNodeGame = (builder: WDSchemaBuilder) => {
+const includeNodeGame = () => {
   builder.prismaNode('Game', {
     findUnique: (id) => ({ id }),
     id: { resolve: (game) => game.id },

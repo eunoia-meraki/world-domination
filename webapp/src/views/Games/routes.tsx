@@ -1,8 +1,8 @@
 import { loadQuery } from 'react-relay';
 
-import { GamesLocation } from './GamesLocation';
-import IGamesQuery from './__generated__/GamesQuery.graphql';
+import IGamesQuery from './__generated__/Games_Query.graphql';
 
+import type { GamesLocation } from './GamesLocation';
 import type { Route } from 'react-location';
 
 import { RelayEnvironment } from '@/RelayEnvironment';

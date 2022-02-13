@@ -1,20 +1,22 @@
 import graphql from 'babel-plugin-relay/macro';
-import { useMatch } from 'react-location';
+import { useMatch, useNavigate } from 'react-location';
 import { usePreloadedQuery } from 'react-relay';
 
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { GamesLocation } from './GamesLocation';
-import { GamesQuery } from './__generated__/GamesQuery.graphql';
+import type { GamesLocation } from './GamesLocation';
+import type { Games_Query } from './__generated__/Games_Query.graphql';
 
 export const Games: FC = () => {
   const {
     data: { gamesRef },
   } = useMatch<GamesLocation>();
 
-  usePreloadedQuery<GamesQuery>(
+  const navigate = useNavigate();
+
+  const data = usePreloadedQuery<Games_Query>(
     graphql`
-      query GamesQuery {
+      query Games_Query {
         games {
           edges {
             node {
@@ -28,9 +30,20 @@ export const Games: FC = () => {
     gamesRef!,
   );
 
+  const games = data.games.edges.map(edge => edge?.node) ?? [];
+
   return (
     <div>
-      asdasdas
+      <h1>Lobbies list</h1>
+      <ul>
+        {games.map(g => (
+          <li key={g?.id}>
+            <button type='button' onClick={() => navigate({ to: g?.id })}>
+              {g?.name}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
