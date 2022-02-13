@@ -5,7 +5,7 @@ import { usePreloadedQuery } from 'react-relay';
 import type { FC } from 'react';
 
 import type { GamesLocation } from './GamesLocation';
-import type { GamesQuery } from './__generated__/GamesQuery.graphql';
+import type { Games_Query } from './__generated__/Games_Query.graphql';
 
 export const Games: FC = () => {
   const {
@@ -14,9 +14,9 @@ export const Games: FC = () => {
 
   const navigate = useNavigate();
 
-  const data = usePreloadedQuery<GamesQuery>(
+  const data = usePreloadedQuery<Games_Query>(
     graphql`
-      query GamesQuery {
+      query Games_Query {
         games {
           edges {
             node {
@@ -38,7 +38,9 @@ export const Games: FC = () => {
       <ul>
         {games.map(g => (
           <li key={g?.id}>
-            <button onClick={() => navigate({ to: g?.id })}>{g?.name}</button>
+            <button type='button' onClick={() => navigate({ to: g?.id })}>
+              {g?.name}
+            </button>
           </li>
         ))}
       </ul>

@@ -1,20 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { RelayEnvironment } from '@/RelayEnvironment';
 import graphql from 'babel-plugin-relay/macro';
 import freeice from 'freeice';
-
-import { useEffect, useRef, useCallback } from 'react';
 import { Disposable, requestSubscription, useMutation } from 'react-relay';
 
+import { useEffect, useRef, useCallback } from 'react';
+
+// TODO: Remove useStateWithCallback usage, move to useState
 import useStateWithCallback from './useStateWithCallback';
-import type { useWebRTC_interactWebRTCMutation } from './__generated__/useWebRTC_interactWebRTCMutation.graphql';
-import type { useWebRTC_WebRTCSubscription } from './__generated__/useWebRTC_WebRTCSubscription.graphql';
+
+import type { useWebRTC_WebRTC_Subscription } from './__generated__/useWebRTC_WebRTC_Subscription.graphql';
+import type { useWebRTC_interactWebRTC_Mutation } from './__generated__/useWebRTC_interactWebRTC_Mutation.graphql';
+
+import { RelayEnvironment } from '@/RelayEnvironment';
 
 export const LOCAL_VIDEO = 'LOCAL_VIDEO';
 
 const voiceChatSubscription = graphql`
-  subscription useWebRTC_WebRTCSubscription($roomId: String!) {
+  subscription useWebRTC_WebRTC_Subscription($roomId: String!) {
     webRTC(roomId: $roomId) {
         actionType
       data
@@ -23,25 +26,25 @@ const voiceChatSubscription = graphql`
 `;
 
 const interactWebRTCMutation = graphql`
-  mutation useWebRTC_interactWebRTCMutation($actionType: ActionType!, $data: String!){   
-    interactWebRTC(actionType: $actionType, data: $data) 
+  mutation useWebRTC_interactWebRTC_Mutation($actionType: ActionType!, $data: String!){
+    interactWebRTC(actionType: $actionType, data: $data)
   }
 `;
 
-type PeerDict = { [key: string]: RTCPeerConnection }
+type PeerDict = { [key: string]: RTCPeerConnection };
 
-type SessionDescriptionDict = { [key: string]: RTCSessionDescriptionInit }
+type SessionDescriptionDict = { [key: string]: RTCSessionDescriptionInit };
 
-type IceCandidateDict = { [key: string]: RTCIceCandidate }
+type IceCandidateDict = { [key: string]: RTCIceCandidate };
 
 type MediaObjectDict = {
   [key: string]: {
-    srcObject: MediaStream,
-    volume: number,
-  } | null
+    srcObject: MediaStream;
+    volume: number;
+  } | null;
 };
 
-export default function useWebRTC(roomID: string) {
+export default function useWebRTC (roomID: string) {
   const [clients, updateClients] = useStateWithCallback([]);
   const userId = localStorage.getItem('userId') || '';
 
@@ -61,7 +64,7 @@ export default function useWebRTC(roomID: string) {
     [LOCAL_VIDEO]: null,
   });
 
-  const [interactWebRTC] = useMutation<useWebRTC_interactWebRTCMutation>(
+  const [interactWebRTC] = useMutation<useWebRTC_interactWebRTC_Mutation>(
     interactWebRTCMutation,
   );
 
@@ -94,7 +97,7 @@ export default function useWebRTC(roomID: string) {
   };
 
   const subscriptionResolvers: { [key: string]: (data: any) => void} = {
-    ['ADD_PEER']: async ({ offerCreator, to }: { offerCreator: string, to: string[] }) => {
+    'ADD_PEER': async ({ offerCreator, to }: { offerCreator: string; to: string[] }) => {
       const createRTCPeerConnection = (acceptor: string) => {
         peerConnections.current[acceptor] = new RTCPeerConnection({
           iceServers: freeice(),
@@ -135,7 +138,7 @@ export default function useWebRTC(roomID: string) {
         };
 
         localMediaStream.current?.getTracks().forEach((track: MediaStreamTrack) => {
-          peerConnections.current[acceptor].addTrack(track, localMediaStream.current!);
+          peerConnections.current[acceptor].addTrack(track, localMediaStream.current);
         });
       };
 
@@ -158,7 +161,7 @@ export default function useWebRTC(roomID: string) {
       }
     },
 
-    ['SESSION_DESCRIPTION']: async ({ creator, sdd }: { creator: string, sdd: SessionDescriptionDict }) => {
+    'SESSION_DESCRIPTION': async ({ creator, sdd }: { creator: string; sdd: SessionDescriptionDict }) => {
       const sd: RTCSessionDescriptionInit | undefined = sdd[userId];
 
       if (sd) {
@@ -176,7 +179,7 @@ export default function useWebRTC(roomID: string) {
       }
     },
 
-    ['ICE_CANDIDATE']: ({ creator, icd }: { creator: string, icd: IceCandidateDict }) => {
+    'ICE_CANDIDATE': ({ creator, icd }: { creator: string; icd: IceCandidateDict }) => {
       const ic = icd[userId];
       if (ic) {
         const some = new RTCIceCandidate(ic);
@@ -186,7 +189,7 @@ export default function useWebRTC(roomID: string) {
       }
     },
 
-    ['REMOVE_PEER']: ({ disconnected }: { disconnected: string}) => {
+    'REMOVE_PEER': ({ disconnected }: { disconnected: string}) => {
       if (userId === disconnected) {
         console.warn(`REMOVE_PEER: Can't disconnect myself ${disconnected}`);
         return;
@@ -202,7 +205,7 @@ export default function useWebRTC(roomID: string) {
   };
 
   useEffect(() => {
-    async function startCapture() {
+    async function startCapture () {
       localMediaStream.current = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: {
@@ -225,7 +228,7 @@ export default function useWebRTC(roomID: string) {
 
     startCapture()
       .then(() => {
-        subscription = requestSubscription<useWebRTC_WebRTCSubscription>(
+        subscription = requestSubscription<useWebRTC_WebRTC_Subscription>(
           RelayEnvironment,
           {
             subscription: voiceChatSubscription,
@@ -247,7 +250,7 @@ export default function useWebRTC(roomID: string) {
       .catch(e => console.error('Error getting userMedia:', e));
 
     return () => {
-      localMediaStream.current.getTracks().forEach((track: { stop: () => any; }) => track.stop());
+      localMediaStream.current.getTracks().forEach((track: { stop: () => any }) => track.stop());
       subscription?.dispose();
     };
   }, [roomID]);

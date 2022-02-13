@@ -6,12 +6,10 @@ import { RelayEnvironment } from './RelayEnvironment';
 
 import './App.css';
 
-const RelayApp = () => {
-  return (
-    <RelayEnvironmentProvider environment={RelayEnvironment}>
-      <App />
-    </RelayEnvironmentProvider>
-  );
-};
+const RelayApp = () => (
+  <RelayEnvironmentProvider environment={RelayEnvironment}>
+    <App />
+  </RelayEnvironmentProvider>
+);
 
 render(<RelayApp />, document.getElementById('app'));

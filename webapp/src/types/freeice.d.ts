@@ -1,3 +1,4 @@
 declare module 'freeice' {
-  export default () => any;
+  const content: RTCIceServer[];
+  export default (): RTCIceServer[] => content;
 }

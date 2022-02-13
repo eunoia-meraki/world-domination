@@ -11,22 +11,23 @@ import {
   Typography,
   Container,
 } from '@mui/material';
-
-import type { FC } from 'react';
-
-import { Footer } from '@/components/Footer';
 import graphql from 'babel-plugin-relay/macro';
-import { Routes } from '@/enumerations';
 import { useNavigate } from 'react-location';
 import { useMutation } from 'react-relay';
-import type { SignIn_signInMutation } from './__generated__/SignIn_signInMutation.graphql';
+
+import type { FC, SyntheticEvent } from 'react';
+
+import type { SignIn_signIn_Mutation } from './__generated__/SignIn_signIn_Mutation.graphql';
+
+import { Footer } from '@/components/Footer';
+import { Routes } from '@/enumerations';
 
 export const SignIn: FC = () => {
   const navigate = useNavigate();
 
-  const [signIn] = useMutation<SignIn_signInMutation>(
+  const [signIn] = useMutation<SignIn_signIn_Mutation>(
     graphql`
-      mutation SignIn_signInMutation($login: String!, $password: String!) {
+      mutation SignIn_signIn_Mutation($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
           id
           token
@@ -35,9 +36,11 @@ export const SignIn: FC = () => {
     `,
   );
 
-  const onSignIn = (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const onSignIn = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
+
     signIn({
       variables: {
         login: data.get('login') as string,
@@ -51,78 +54,77 @@ export const SignIn: FC = () => {
 
         navigate({ to: Routes.Games });
       },
-      onError: error => {
-        // TODO
-        console.log('error', error);
+      onError: () => {
       },
     });
   };
 
   return (
     <>
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlined />
-        </Avatar>
+      <Container component="main" maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlined />
+          </Avatar>
 
-        <Typography variant="h5">Sign in</Typography>
+          <Typography variant="h5">Sign in</Typography>
 
-        <Box onSubmit={onSignIn} component="form" noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="login"
-            label="Login"
-            name="login"
-            autoComplete="login"
-            autoFocus
-          />
+          <Box onSubmit={onSignIn} component="form" noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="login"
+              label="Login"
+              name="login"
+              autoComplete="login"
+              autoFocus
+            />
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
 
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
             Sign In
-          </Button>
+            </Button>
 
-          <Grid container>
-            <Grid item>
-              <Link href={Routes.SignUp} variant="body2">
-                {'Don\'t have an account? Sign Up'}
-              </Link>
+            <Grid container>
+              <Grid item>
+                <Link href={Routes.SignUp} variant="body2">
+                  {'Don\'t have an account? Sign Up'}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
 
-    <Footer />
-  </>
-);
+      <Footer />
+    </>
+  );
+};

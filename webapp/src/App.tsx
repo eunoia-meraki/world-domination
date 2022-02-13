@@ -11,7 +11,7 @@ export const App: FC = () => {
 
   return (
     <Router location={location} routes={routes}>
-      <Suspense fallback={'<FullPageLoading/>'}>
+      <Suspense fallback="<FullPageLoading/>">
         <Outlet/>
       </Suspense>
 

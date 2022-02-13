@@ -85,7 +85,16 @@
       "error",
       "as-needed"
     ],
-    "camelcase": "error",
+    "camelcase": [
+      "error",
+      {
+        "allow": [
+          "_Mutation$",
+          "_Subscription$",
+          "_Query$"
+        ]
+      }
+    ],
     "comma-dangle": [
       "error",
       "always-multiline"
@@ -180,7 +189,7 @@
       "extensions": [".ts", ".tsx"]
       }
     ],
-    "react/jsx-fragments" : ["error", "element"],
+    "react/jsx-fragments" : ["error", "syntax"],
     "react/jsx-props-no-spreading": "off",
     "react/function-component-definition": "off",
     "react/require-default-props": "off",

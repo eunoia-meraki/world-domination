@@ -1,5 +1,5 @@
 import _ from 'lodash';
-
+import { meros } from 'meros';
 import {
   Store,
   Network,
@@ -7,6 +7,7 @@ import {
   RecordSource,
   Observable as ReactObservable,
 } from 'relay-runtime';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 import type {
   Variables,
@@ -15,15 +16,10 @@ import type {
   SubscribeFunction,
   RequestParameters,
 } from 'relay-runtime';
-
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-
 import type {
   Observer,
   Observable,
 } from 'subscriptions-transport-ws';
-
-import { meros } from 'meros';
 
 const GRAPHQL_ENDPOINT = 'localhost:8002/';
 
@@ -66,7 +62,8 @@ const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variabl
           if ('hasNext' in result) {
             /* eslint-disable */
             // @ts-ignore
-            if (!result.extensions) result.extensions = {};
+            if (!result.extensions)
+              result.extensions = {};
             // @ts-ignore
             result.extensions.is_final = !result.hasNext;
             // @ts-ignore
@@ -95,7 +92,7 @@ const fetchQuery: FetchFunction = (params: RequestParameters, variables: Variabl
   });
 };
 
-function isAsyncIterable(input: unknown): input is AsyncIterable<unknown> {
+function isAsyncIterable (input: unknown): input is AsyncIterable<unknown> {
   return (
     typeof input === 'object' &&
 		input !== null &&
@@ -112,9 +109,7 @@ const subscriptionClient = new SubscriptionClient(
   `ws://${GRAPHQL_ENDPOINT}`,
   {
     reconnect: true,
-    connectionParams: () => {
-      return { Authorization: `Bearer ${localStorage.getItem('token')}` };
-    },
+    connectionParams: () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
   },
 );
 
@@ -125,7 +120,7 @@ interface RelayObservableFixed <T = Record<string, unknown>> extends Observable<
   subscribe(observer: Observer<T>): {
     unsubscribe: () => void;
     closed: boolean;
-  },
+  };
 }
 
 const subscribe: SubscribeFunction = (request: RequestParameters, variables: Variables) => {
@@ -142,7 +137,7 @@ const network = Network.create(fetchQuery, subscribe);
 
 // Export a singleton instance of Relay Environment configured with our network layer:
 export const RelayEnvironment = new Environment({
-  network: network,
+  network,
   store: new Store(new RecordSource(), {
     // This property tells Relay to not immediately clear its cache when the user
     // navigates around the app. Relay will hold onto the specified number of
