@@ -117,7 +117,3 @@ dist
 
 build
 __generated__
-
-yarn.lock
-package-lock.json
-pnpm-lock.yaml
