@@ -1,4 +1,3 @@
-// import { Navigation } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { Outlet, useMatch } from 'react-location';
 
@@ -6,6 +5,7 @@ import type { FC } from 'react';
 import { useState } from 'react';
 
 import { Header } from './Header';
+import { Navigation } from './Navigation';
 
 import { Contents } from '@/enumerations';
 import useWebRTC, { LOCAL_VIDEO } from '@/hooks/useWebRTC';
@@ -62,7 +62,7 @@ export const Game: FC = () => {
         height: '100%',
       }}
     >
-      {/* <Navigation open={open} setContent={setContent} content={content}/> */}
+      <Navigation open={open} setContent={setContent} content={content}/>
 
       <Header open={open} toggleOpen={toggleOpen} content={content} />
 

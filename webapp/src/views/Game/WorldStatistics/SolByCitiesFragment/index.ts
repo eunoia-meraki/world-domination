@@ -1,0 +1,1 @@
+export { SolByCitiesFragment } from './SolByCitiesFragment';
