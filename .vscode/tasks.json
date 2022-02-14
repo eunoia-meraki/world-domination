@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "isBackground": true,
+  "presentation": {
+    "reveal": "never",
+    "panel": "dedicated"
+  },
+  "options": {
+    "shell": {
+      "args": [
+        "-i",
+        "-c"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "label": "start: webapp",
+      "type": "shell",
+      "command": "pnpm start",
+      "options": {
+        "cwd": "${workspaceFolder}/webapp/"
+      }
+    },
+    {
+      "label": "start: server",
+      "type": "shell",
+      "command": "pnpm start",
+      "options": {
+        "cwd": "${workspaceFolder}/server/"
+      }
+    },
+    {
+      "label": "start",
+      "dependsOn": [
+        "start: server",
+        "start: webapp"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
