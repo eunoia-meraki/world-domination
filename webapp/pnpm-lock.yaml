@@ -75,8 +75,6 @@ specifiers:
   webpack: ^5.68.0
 
 dependencies:
-  '@babel/plugin-syntax-flow': 7.16.7_@babel+core@7.17.2
-  '@babel/plugin-transform-react-jsx': 7.16.7_@babel+core@7.17.2
   '@craco/craco': 7.0.0-alpha.0_4aef827ed9408f3bef5dbb4ba3abd1a2
   '@emotion/react': 11.7.1_fc4e507d6fc62ba90bf4c3bd6f9bea2e
   '@emotion/styled': 11.6.0_a51866bf50a93ed7f513072525b1f415
@@ -92,7 +90,6 @@ dependencies:
   meros: 1.2.0-next.4_@types+node@17.0.17
   postcss: 8.4.6
   prop-types: 15.8.1
-  react: 17.0.2
   react-data-grid: 7.0.0-beta.11_react-dom@17.0.2+react@17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-flow-renderer: 9.7.4_react-dom@17.0.2+react@17.0.2
@@ -109,6 +106,8 @@ dependencies:
 
 devDependencies:
   '@babel/core': 7.17.2
+  '@babel/plugin-syntax-flow': 7.16.7_@babel+core@7.17.2
+  '@babel/plugin-transform-react-jsx': 7.16.7_@babel+core@7.17.2
   '@ch1ffa/relay-compiler-webpack-plugin': 0.1.5_relay-compiler@13.1.1
   '@types/babel__core': 7.1.18
   '@types/lodash': 4.14.178
@@ -143,6 +142,7 @@ devDependencies:
   lint-staged: 12.3.4
   mini-css-extract-plugin: 2.5.3_webpack@5.68.0
   prettier: 2.5.1
+  react: 17.0.2
   relay-compiler: 13.1.1
   style-loader: 3.3.1_webpack@5.68.0
   svgo: 2.8.0
@@ -229,7 +229,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/types': 7.17.0
-    dev: false
 
   /@babel/helper-builder-binary-assignment-operator-visitor/7.16.7:
     resolution: {integrity: sha512-C6FdbRaxYjwVu/geKW4ZeQ0Q31AftgRcdSnZ5/jsH6BzCJbtvXvhpfkbkThYSuutZA7nCXpPR6AD9zd1dprMkA==}
@@ -369,7 +368,6 @@ packages:
   /@babel/helper-plugin-utils/7.16.7:
     resolution: {integrity: sha512-Qg3Nk7ZxpgMrsox6HreY1ZNKdBq7K72tDSliA6dCl5f007jR4ne8iD5UzuNnCJH2xBf2BEEVGr+/OL6Gdp7RxA==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/helper-remap-async-to-generator/7.16.8:
     resolution: {integrity: sha512-fm0gH7Flb8H51LqJHy3HJ3wnE1+qtYR2A99K06ahwrawLdOFsCEWjZOrYricXJHoPSudNKxrMBUPEIPxiIIvBw==}
@@ -751,7 +749,6 @@ packages:
     dependencies:
       '@babel/core': 7.17.2
       '@babel/helper-plugin-utils': 7.16.7
-    dev: false
 
   /@babel/plugin-syntax-import-meta/7.10.4_@babel+core@7.17.2:
     resolution: {integrity: sha512-Yqfm+XDx0+Prh3VSeEQCPU81yC+JWZ2pDPFSS4ZdpfZhp4MkFMaDC1UqseovEKwSUpnIL7+vK+Clp7bfh0iD7g==}
@@ -779,7 +776,6 @@ packages:
     dependencies:
       '@babel/core': 7.17.2
       '@babel/helper-plugin-utils': 7.16.7
-    dev: false
 
   /@babel/plugin-syntax-logical-assignment-operators/7.10.4_@babel+core@7.17.2:
     resolution: {integrity: sha512-d8waShlpFDinQ5MtvGU9xDAOzKH47+FFoney2baFIoMr952hKOLp1HR7VszoZvOsV/4+RRszNY7D17ba0te0ig==}
@@ -1186,7 +1182,6 @@ packages:
       '@babel/helper-plugin-utils': 7.16.7
       '@babel/plugin-syntax-jsx': 7.16.7_@babel+core@7.17.2
       '@babel/types': 7.17.0
-    dev: false
 
   /@babel/plugin-transform-react-pure-annotations/7.16.7_@babel+core@7.17.2:
     resolution: {integrity: sha512-hs71ToC97k3QWxswh2ElzMFABXHvGiJ01IB1TbYQDGeWRKWz/MPUTh5jGExdHvosYKpnJW5Pm3S4+TA3FyX+GA==}
@@ -9126,7 +9121,7 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-    dev: false
+    dev: true
 
   /readable-stream/2.3.7:
     resolution: {integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==}
