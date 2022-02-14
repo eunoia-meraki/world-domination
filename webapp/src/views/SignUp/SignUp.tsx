@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 
 import type { FC } from 'react';
-import React from 'react';
 
 import { Footer } from '@/components/Footer';
 import { Routes } from '@/enumerations';
