@@ -57,7 +57,7 @@ type Mutation {
   createGame(gameName: String!): Game!
   interactWebRTC(actionType: ActionType!, data: String!): Boolean!
   signIn(login: String!, password: String!): SignInPayload!
-  signUp(login: String!, password: String!): String!
+  signUp(login: String!, password: String!): SignUpPayload!
 }
 
 enum Nation {
@@ -158,6 +158,11 @@ type ShieldCreationAction implements Node {
 }
 
 type SignInPayload {
+  id: String!
+  token: String!
+}
+
+type SignUpPayload {
   id: String!
   token: String!
 }

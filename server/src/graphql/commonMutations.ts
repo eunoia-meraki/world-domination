@@ -16,6 +16,8 @@ const includeCommonMutations = () => {
     }
   }
 
+  class SignUpPayload extends SignInPayload {}
+
   const SignInPayloadGqlType = builder.objectType(SignInPayload, {
     name: 'SignInPayload',
     fields: (t) => ({
@@ -34,8 +36,27 @@ const includeCommonMutations = () => {
     }),
   });
 
+  const SignUpPayloadGqlType = builder.objectType(SignUpPayload, {
+    name: 'SignUpPayload',
+    fields: (t) => ({
+      id: t.field({
+        type: 'String',
+        resolve: (payload) => {
+          return payload.id;
+        },
+      }),
+      token: t.field({
+        type: 'String',
+        resolve: (payload) => {
+          return payload.token;
+        },
+      }),
+    }),
+  });
+
   builder.mutationField('signUp', (t) =>
-    t.string({
+    t.field({
+      type: SignUpPayloadGqlType,
       args: {
         login: t.arg.string({ required: true }),
         password: t.arg.string({ required: true }),
@@ -59,7 +80,7 @@ const includeCommonMutations = () => {
           },
         });
 
-        return generateJwtToken(user);
+        return { id: user.id, token: generateJwtToken(user) };
       },
     }),
   );
