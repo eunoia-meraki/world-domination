@@ -15,10 +15,13 @@ import includeNodeTownLevel from './nodes/townLevel';
 import includeCommonQueries from './commonQueries';
 import includeNodeStage from './nodes/stage';
 import includeNodeTown from './nodes/town';
-import { GameStatus, Nation, RoleType } from '@prisma/client';
-import includeNodeSendDiplomatAction from './nodes/sendDiplomatAction';
+import { GameActionType, GameStatus, Nation, RoleType } from '@prisma/client';
 import { includeCommonSubscriptions } from './commonSubscriptions';
 import { includeWebRTC } from './webRTC';
+import includeAction from './nodes/action';
+import includeNodeDevelopNuclearTechnologyAction from './nodes/developNuclearTechnologyAction';
+import includeNodeEcologyDepositAction from './nodes/ecologyDepositAction';
+import includeNodeSanctionsAction from './nodes/sanctionsAction';
 
 const getGraphQLSchema = (): GraphQLSchema => {
   // TODO uncomment later
@@ -38,23 +41,30 @@ const getGraphQLSchema = (): GraphQLSchema => {
     name: 'RoleType',
   });
 
+  builder.enumType(GameActionType, {
+    name: 'GameActionType',
+  });
+
   includeNodeUser();
   includeNodePlayer();
-  includeNodeCreateBombAction();
-  includeNodeEconomicDepositAction();
   includeNodeGame();
   includeNodeStage();
   includeNodeRound();
+  includeAction();
   includeNodeSendBombAction();
-  includeNodeSendDiplomatAction();
   includeNodeShieldCreationAction();
+  includeNodeCreateBombAction();
+  includeNodeEconomicDepositAction();
+  includeNodeDevelopNuclearTechnologyAction();
+  includeNodeEcologyDepositAction();
+  includeNodeSanctionsAction();
   includeNodeTeam();
   includeNodeTeamRoom();
   includeNodeTown();
   includeNodeTownLevel();
 
-  includeCommonMutations();
   includeCommonQueries();
+  includeCommonMutations();
   includeCommonSubscriptions();
 
   includeWebRTC();

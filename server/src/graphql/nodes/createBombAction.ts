@@ -9,8 +9,7 @@ const includeNodeCreateBombAction = () => {
     },
     fields: (t) => ({
       creator: t.relation('creator'),
-      player: t.relation('player'),
-      round: t.relation('round'),
+      action: t.relation('action'),
     }),
   });
 };

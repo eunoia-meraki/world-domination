@@ -9,8 +9,7 @@ const includeNodeEconomicDepositAction = () => {
     },
     fields: (t) => ({
       town: t.relation('town'),
-      player: t.relation('player'),
-      round: t.relation('round'),
+      action: t.relation('action'),
     }),
   });
 };

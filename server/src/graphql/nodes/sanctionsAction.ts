@@ -1,18 +1,17 @@
 import { builder } from '../schemaBuilder';
 
-const includeNodeSendBombAction = () => {
-  builder.prismaNode('SendBombAction', {
+const includeNodeSanctionsAction = () => {
+  builder.prismaNode('SanctionsAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },
     authScopes: {
       public: true,
     },
     fields: (t) => ({
-      town: t.relation('town'),
-      sender: t.relation('sender'),
+      victim: t.relation('victim'),
       action: t.relation('action'),
     }),
   });
 };
 
-export default includeNodeSendBombAction;
+export default includeNodeSanctionsAction;

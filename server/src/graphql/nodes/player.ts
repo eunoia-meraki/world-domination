@@ -11,11 +11,6 @@ const includeNodePlayer = () => {
     fields: (t) => ({
       users: t.relation('user'),
       roles: t.expose('role', { type: RoleType }),
-      economicDepositActions: t.relation('economicDepositActions'),
-      shieldCreationActionActions: t.relation('shieldCreationActionActions'),
-      sendBombActions: t.relation('sendBombActions'),
-      createBombActions: t.relation('createBombActions'),
-      sendDiplomatActions: t.relation('sendDiplomatActions'),
     }),
   });
 };

@@ -22,16 +22,22 @@ enum ActionType {
 }
 
 type CreateBombAction implements Node {
+  action: GameAction!
   creator: Team!
   id: ID!
-  player: Player!
-  round: Round!
+}
+
+type DevelopNuclearTechnologyAction implements Node {
+  id: ID!
+}
+
+type EcologyDepositAction implements Node {
+  id: ID!
 }
 
 type EconomicDepositAction implements Node {
+  action: GameAction!
   id: ID!
-  player: Player!
-  round: Round!
   town: Town!
 }
 
@@ -45,6 +51,29 @@ type Game implements Node {
   rounds: [Round!]!
   status: GameStatus!
   teams: [Team!]!
+}
+
+type GameAction implements Node {
+  createBombAction: CreateBombAction!
+  developNuclearTechnologyAction: DevelopNuclearTechnologyAction!
+  ecologyDepositAction: EcologyDepositAction!
+  economicDepositAction: EconomicDepositAction!
+  id: ID!
+  round: Round!
+  sanctionsAction: SanctionsAction!
+  sendBombAction: SendBombAction!
+  shieldCreationAction: ShieldCreationAction!
+  team: Team!
+  type: GameActionType!
+}
+
+enum GameActionType {
+  CREATE_BOMB
+  DEVELOP_NUCLEAR_TECHNOLOGY
+  ECOLOGY_DEPOSIT
+  ECONOMIC_DEPOSIT
+  SEND_BOMB
+  SHILED_CREATION
 }
 
 enum GameStatus {
@@ -79,13 +108,8 @@ type PageInfo {
 }
 
 type Player implements Node {
-  createBombActions: [CreateBombAction!]!
-  economicDepositActions: [EconomicDepositAction!]!
   id: ID!
   roles: RoleType!
-  sendBombActions: [SendBombAction!]!
-  sendDiplomatActions: [SendDiplomatAction!]!
-  shieldCreationActionActions: [ShieldCreationAction!]!
   users: User!
 }
 
@@ -122,38 +146,30 @@ enum RoleType {
 }
 
 type Round implements Node {
-  createBombActions: [CreateBombAction!]!
+  actions: [GameAction!]!
   currentStage: Int!
-  economicDepositActions: [EconomicDepositAction!]!
   game: Game!
   id: ID!
   order: Int!
-  sendBombActions: [SendBombAction!]!
-  sendDiplomatActions: [SendDiplomatAction!]!
-  shieldCreationActionActions: [ShieldCreationAction!]!
   stages: [Stage!]!
 }
 
-type SendBombAction implements Node {
+type SanctionsAction implements Node {
+  action: GameAction!
   id: ID!
-  player: Player!
-  round: Round!
+  victim: Team!
+}
+
+type SendBombAction implements Node {
+  action: GameAction!
+  id: ID!
   sender: Team!
   town: Town!
 }
 
-type SendDiplomatAction implements Node {
-  destination: Team!
-  id: ID!
-  player: Player!
-  round: Round!
-  sender: Team!
-}
-
 type ShieldCreationAction implements Node {
+  action: GameAction!
   id: ID!
-  player: Player!
-  round: Round!
   town: Town!
 }
 
@@ -179,17 +195,18 @@ type Subscription {
 }
 
 type Team implements Node {
+  actions: [GameAction!]!
   createBombActions: [CreateBombAction!]!
-  destinationDiplomatActions: [SendDiplomatAction!]!
   game: Game!
+  hasNuclearTechnology: Boolean!
   id: ID!
   maxBombCount: Int!
   maxPlayersCount: Int!
   money: Int!
   nation: Nation!
   players: [Player!]!
+  sanctionsActions: [SanctionsAction!]!
   sendBombActions: [SendBombAction!]!
-  sendDiplomatActions: [SendDiplomatAction!]!
   teamRoom: TeamRoom!
 }
 

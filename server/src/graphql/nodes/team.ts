@@ -11,6 +11,7 @@ const includeNodeTeam = () => {
     fields: (t) => ({
       players: t.relation('players'),
       nation: t.expose('nation', { type: Nation }),
+      hasNuclearTechnology: t.exposeBoolean('hasNuclearTechnology'),
       money: t.exposeInt('money'),
       maxPlayersCount: t.exposeInt('maxPlayersCount'),
       maxBombCount: t.exposeInt('maxBombCount'),
@@ -18,8 +19,8 @@ const includeNodeTeam = () => {
       teamRoom: t.relation('teamRoom'),
       sendBombActions: t.relation('sendBombActions'),
       createBombActions: t.relation('createBombActions'),
-      sendDiplomatActions: t.relation('sendDiplomatActions'),
-      destinationDiplomatActions: t.relation('destinationDiplomatActions'),
+      sanctionsActions: t.relation('sanctionsActions'),
+      actions: t.relation('actions'),
     }),
   });
 };

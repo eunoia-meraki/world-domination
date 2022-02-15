@@ -12,11 +12,7 @@ const includeNodeRound = () => {
       order: t.exposeInt('order'),
       stages: t.relation('stages'),
       game: t.relation('game'),
-      economicDepositActions: t.relation('economicDepositActions'),
-      shieldCreationActionActions: t.relation('shieldCreationActionActions'),
-      sendBombActions: t.relation('sendBombActions'),
-      createBombActions: t.relation('createBombActions'),
-      sendDiplomatActions: t.relation('sendDiplomatActions'),
+      actions: t.relation('actions'),
     }),
   });
 };
