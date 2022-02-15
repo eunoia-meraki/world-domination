@@ -1,57 +1,72 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { Mic, MicOff, Videocam, VideocamOff } from '@mui/icons-material';
 import { Paper, Box, Toolbar, IconButton } from '@mui/material';
+import { useMatch } from 'react-location';
 
 import type { FC } from 'react';
 import { useState } from 'react';
 
+import type { GameLocation } from '../GameLocation';
+
 import { Participant } from '@/components/Participant';
 import { useColor } from '@/hooks/useColor';
+import useWebRTC from '@/hooks/useWebRTC';
 
-const participants: {
-  firstName: string;
-  lastName: string;
-  speaking: boolean;
-}[] = [
-  {
-    firstName: 'Alexey',
-    lastName: 'Koren',
-    speaking: true,
-  },
-  {
-    firstName: 'Roman',
-    lastName: 'Fomin',
-    speaking: false,
-  },
-  {
-    firstName: 'Dima',
-    lastName: 'Chuhlyaev',
-    speaking: false,
-  },
-  {
-    firstName: 'Ivan',
-    lastName: 'Kuricyn',
-    speaking: false,
-  },
-  {
-    firstName: 'Vadim',
-    lastName: 'Evseev',
-    speaking: true,
-  },
-  {
-    firstName: 'Ivan',
-    lastName: 'Tur',
-    speaking: false,
-  },
-  {
-    firstName: 'David',
-    lastName: 'Kuchukidze',
-    speaking: false,
-  },
-];
+// const participants: {
+//   firstName: string;
+//   lastName: string;
+//   speaking: boolean;
+// }[] = [
+//   {
+//     firstName: 'Alexey',
+//     lastName: 'Koren',
+//     speaking: true,
+//   },
+//   {
+//     firstName: 'Roman',
+//     lastName: 'Fomin',
+//     speaking: false,
+//   },
+//   {
+//     firstName: 'Dima',
+//     lastName: 'Chuhlyaev',
+//     speaking: false,
+//   },
+//   {
+//     firstName: 'Ivan',
+//     lastName: 'Kuricyn',
+//     speaking: false,
+//   },
+//   {
+//     firstName: 'Vadim',
+//     lastName: 'Evseev',
+//     speaking: true,
+//   },
+//   {
+//     firstName: 'Ivan',
+//     lastName: 'Tur',
+//     speaking: false,
+//   },
+//   {
+//     firstName: 'David',
+//     lastName: 'Kuchukidze',
+//     speaking: false,
+//   },
+// ];
 
 export const ConferenceHall: FC = () => {
+  const {
+    params: { gameId },
+  } = useMatch<GameLocation>();
+  const userId = sessionStorage.getItem('userId') || '';
+
   const [micOn, setMicOn] = useState<boolean>(false);
   const [camOn, setCamOn] = useState<boolean>(false);
+
+  const { clients: participants, provideMediaRef } = useWebRTC(gameId);
+
+  console.log(participants);
 
   const onMicClick = (): void => {
     setMicOn(!micOn);
@@ -96,14 +111,14 @@ export const ConferenceHall: FC = () => {
           {participants.map((participant, index) => {
             const key = index.toString();
             const color = getColor();
-            const { firstName, lastName, speaking } = participant;
             return (
               <Participant
                 key={key}
+                userId={participant}
                 color={color}
-                firstName={firstName}
-                lastName={lastName}
-                speaking={speaking}
+                myself={participant === userId}
+                speaking={Math.random() > 0.5}
+                provideMediaRef={provideMediaRef}
               />
             );
           })}

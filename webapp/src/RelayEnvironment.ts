@@ -35,7 +35,7 @@ const fetchQuery: FetchFunction = (
   (async () => {
 
     // Check that the auth token is configured
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     const response = await fetch(`http://${GRAPHQL_ENDPOINT}`, {
       body: JSON.stringify({
@@ -112,7 +112,7 @@ const subscriptionClient = new SubscriptionClient(
   `ws://${GRAPHQL_ENDPOINT}`,
   {
     reconnect: true,
-    connectionParams: () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
+    connectionParams: () => ({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }),
   },
 );
 
