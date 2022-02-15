@@ -3,19 +3,19 @@ import {
   Avatar,
   Button,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Grid,
   Box,
   Typography,
   Container,
+  Alert,
 } from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
 import { useNavigate } from 'react-location';
 import { useMutation } from 'react-relay';
 
 import type { FC, SyntheticEvent } from 'react';
+import { useState } from 'react';
 
 import type { SignIn_signIn_Mutation } from './__generated__/SignIn_signIn_Mutation.graphql';
 
@@ -24,6 +24,8 @@ import { Routes } from '@/enumerations';
 
 export const SignIn: FC = () => {
   const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [signIn] = useMutation<SignIn_signIn_Mutation>(
     graphql`
@@ -47,6 +49,8 @@ export const SignIn: FC = () => {
         password: data.get('password') as string,
       },
       onCompleted: response => {
+        setErrorMessage('');
+
         const { id, token } = response.signIn;
 
         sessionStorage.setItem('userId', id);
@@ -54,7 +58,8 @@ export const SignIn: FC = () => {
 
         navigate({ to: Routes.Lobbies });
       },
-      onError: () => {
+      onError: err => {
+        setErrorMessage(err.message);
       },
     });
   };
@@ -77,6 +82,8 @@ export const SignIn: FC = () => {
           <Typography variant="h5">Sign in</Typography>
 
           <Box onSubmit={onSignIn} component="form" noValidate sx={{ mt: 1 }}>
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+
             <TextField
               margin="normal"
               required
@@ -99,18 +106,8 @@ export const SignIn: FC = () => {
               autoComplete="current-password"
             />
 
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-            Sign In
+            <Button sx={{ mt: 3, mb: 2 }} type="submit" fullWidth variant="contained">
+              Sign In
             </Button>
 
             <Grid container>
