@@ -1,10 +1,21 @@
 import { LockOutlined } from '@mui/icons-material';
-import { Avatar, Button, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Alert,
+} from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
 import { useNavigate } from 'react-location';
 import { useMutation } from 'react-relay';
 
 import type { FC, SyntheticEvent } from 'react';
+import { useState } from 'react';
 
 import type { SignUp_signUp_Mutation } from './__generated__/SignUp_signUp_Mutation.graphql';
 
@@ -13,6 +24,8 @@ import { Routes } from '@/enumerations';
 
 export const SignUp: FC = () => {
   const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [signUp] = useMutation<SignUp_signUp_Mutation>(
     graphql`
@@ -36,6 +49,8 @@ export const SignUp: FC = () => {
         password: data.get('password') as string,
       },
       onCompleted: response => {
+        setErrorMessage('');
+
         const { id, token } = response.signUp;
 
         localStorage.setItem('userId', id);
@@ -43,7 +58,8 @@ export const SignUp: FC = () => {
 
         navigate({ to: Routes.Lobbies });
       },
-      onError: () => {
+      onError: err => {
+        setErrorMessage(err.message);
       },
     });
   };
@@ -65,33 +81,30 @@ export const SignUp: FC = () => {
 
           <Typography variant="h5">Sign up</Typography>
 
-          <Box onSubmit={onSignUp} component="form" noValidate sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="login"
-                  label="Login"
-                  name="login"
-                  autoComplete="login"
-                  autoFocus
-                />
-              </Grid>
+          <Box onSubmit={onSignUp} component="form" noValidate sx={{ mt: 1 }}>
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="login"
+              label="Login"
+              name="login"
+              autoComplete="login"
+              autoFocus
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="new-password"
+            />
 
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
