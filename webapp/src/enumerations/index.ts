@@ -1,9 +1,9 @@
 export enum Routes {
   SignIn = '/signin',
   SignUp = '/signup',
-  Start = '/start',
-  Game = '/games/:gameid',
-  Games = '/games',
+  Lobbies = '/lobbies',
+  Lobby = '/lobby',
+  Game = '/game',
 }
 
 export enum Contents {

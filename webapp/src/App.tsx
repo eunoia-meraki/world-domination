@@ -1,4 +1,4 @@
-import { Outlet, ReactLocation, Router } from 'react-location';
+import { Outlet, ReactLocation, Route, Router } from 'react-location';
 import { ReactLocationDevtools } from 'react-location-devtools';
 
 import { FC, Suspense } from 'react';
@@ -10,7 +10,7 @@ export const App: FC = () => {
   const location = new ReactLocation();
 
   return (
-    <Router location={location} routes={routes}>
+    <Router location={location} routes={routes as Route[]}>
       <Suspense fallback="<FullPageLoading/>">
         <Outlet/>
       </Suspense>

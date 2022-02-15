@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Box } from '@mui/material';
 import { Outlet, useMatch } from 'react-location';
 
@@ -13,7 +16,7 @@ import useWebRTC, { LOCAL_VIDEO } from '@/hooks/useWebRTC';
 const layout = (clientsNumber = 1) => {
   const pairs = Array.from({ length: clientsNumber })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .reduce<any>((acc, next, index, arr) => {
+    .reduce<any>((acc: any[], next, index, arr) => {
     if (index % 2 === 0) {
       acc.push(arr.slice(index, index + 2));
     }

@@ -9,7 +9,7 @@ import type { Route } from 'react-location';
 import { Routes } from '@/enumerations';
 
 export const GameRoutes: Route = {
-  path: Routes.Game,
+  path: `${Routes.Game}/:gameId`,
   element: <Game />,
   children: [
     {

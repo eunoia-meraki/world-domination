@@ -52,7 +52,7 @@ export const SignIn: FC = () => {
         localStorage.setItem('userId', id);
         localStorage.setItem('token', token);
 
-        navigate({ to: Routes.Games });
+        navigate({ to: Routes.Lobbies });
       },
       onError: () => {
       },
