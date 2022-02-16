@@ -2,10 +2,9 @@ import * as bcrypt from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server';
 import { generateJwtToken } from '../auth';
 import { db } from '../database/db';
-import { GameStatus, Nation } from '@prisma/client';
 import { builder } from './schemaBuilder';
 
-const includeCommonMutations = () => {
+const includeAuthMutations = () => {
   class SignInPayload {
     id: string;
     token: string;
@@ -109,102 +108,6 @@ const includeCommonMutations = () => {
       },
     }),
   );
-
-  builder.mutationField('createGame', (t) =>
-    t.prismaField({
-      authScopes: {
-        public: true,
-      },
-      type: 'Game',
-      args: {
-        gameName: t.arg.string({ required: true }),
-        // gameStatus: t.arg({
-        //   type: GameStatus,
-        // }),
-      },
-      resolve: async (_, __, args, context) => {
-        const user = await context.user;
-
-        return await db.game.create({
-          data: {
-            name: args.gameName,
-            status: GameStatus.NOT_STARTED,
-            owner: {
-              connect: {
-                id: user?.id,
-              },
-            },
-            teams: {
-              create: [
-                {
-                  nation: Nation.RUSSIA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-                {
-                  nation: Nation.UKRAINE,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-                {
-                  nation: Nation.USA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-                {
-                  nation: Nation.CHINA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-              ],
-            },
-            currentRound: 1,
-            ecologyValue: 10,
-            rounds: {
-              create: [
-                {
-                  currentStage: 0,
-                  order: 0,
-                  stages: {
-                    create: [
-                      {
-                        order: 0,
-                        livetime: 60,
-                      },
-                      {
-                        order: 1,
-                        livetime: 60,
-                      },
-                    ],
-                  },
-                },
-                {
-                  currentStage: 0,
-                  order: 1,
-                  stages: {
-                    create: [
-                      {
-                        order: 0,
-                        livetime: 60,
-                      },
-                      {
-                        order: 1,
-                        livetime: 60,
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        });
-      },
-    }),
-  );
 };
 
-export default includeCommonMutations;
+export default includeAuthMutations;

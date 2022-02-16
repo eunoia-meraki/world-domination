@@ -1,8 +1,14 @@
+import { GraphQLSchema } from 'graphql';
+
+import { GameActionType, GameStatus, Nation, RoleType } from '@prisma/client';
+
+import includeAuthMutations from './authMutations';
+import { includeCommonSubscriptions } from './commonSubscriptions';
+
 import { builder } from './schemaBuilder';
 import includeNodeUser from './nodes/user';
+import includeGameMutations from './gameMutations';
 import includeNodePlayer from './nodes/player';
-import includeCommonMutations from './commonMutations';
-import { GraphQLSchema } from 'graphql';
 import includeNodeCreateBombAction from './nodes/createBombAction';
 import includeNodeEconomicDepositAction from './nodes/economicDepositAction';
 import includeNodeGame from './nodes/game';
@@ -15,13 +21,11 @@ import includeNodeTownLevel from './nodes/townLevel';
 import includeCommonQueries from './commonQueries';
 import includeNodeStage from './nodes/stage';
 import includeNodeTown from './nodes/town';
-import { GameActionType, GameStatus, Nation, RoleType } from '@prisma/client';
-import { includeCommonSubscriptions } from './commonSubscriptions';
-import { includeWebRTC } from './webRTC';
 import includeAction from './nodes/action';
 import includeNodeDevelopNuclearTechnologyAction from './nodes/developNuclearTechnologyAction';
 import includeNodeEcologyDepositAction from './nodes/ecologyDepositAction';
 import includeNodeSanctionsAction from './nodes/sanctionsAction';
+import { includeWebRTC } from './webRTC';
 
 const getGraphQLSchema = (): GraphQLSchema => {
   // TODO uncomment later
@@ -64,7 +68,8 @@ const getGraphQLSchema = (): GraphQLSchema => {
   includeNodeTownLevel();
 
   includeCommonQueries();
-  includeCommonMutations();
+  includeAuthMutations();
+  includeGameMutations();
   includeCommonSubscriptions();
 
   includeWebRTC();
