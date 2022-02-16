@@ -53,8 +53,8 @@ export const SignUp: FC = () => {
 
         const { id, token } = response.signUp;
 
-        localStorage.setItem('userId', id);
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('userId', id);
+        sessionStorage.setItem('token', token);
 
         navigate({ to: Routes.Lobbies });
       },
