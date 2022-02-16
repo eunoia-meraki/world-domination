@@ -58,6 +58,7 @@ export const ConferenceHall: FC = () => {
   const {
     params: { gameId },
   } = useMatch<GameLocation>();
+
   const userId = sessionStorage.getItem('userId') || '';
 
   const [micOn, setMicOn] = useState<boolean>(false);
@@ -66,16 +67,6 @@ export const ConferenceHall: FC = () => {
   const { clients: participants, provideMediaRef } = useWebRTC(gameId, userId);
 
   console.log(participants);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      participants.forEach(client => {
-        console.log(client.clientId, client.audioIndicationGetter());
-      });
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [participants]);
 
   const onMicClick = (): void => {
     setMicOn(!micOn);
@@ -120,13 +111,13 @@ export const ConferenceHall: FC = () => {
           {participants.map((participant, index) => {
             const key = index.toString();
             const color = getColor();
+
             return (
               <Participant
                 key={key}
-                userId={participant.clientId}
+                client={participant}
                 color={color}
                 myself={participant.clientId === userId}
-                speaking={Math.random() > 0.5}
                 provideMediaRef={provideMediaRef}
               />
             );

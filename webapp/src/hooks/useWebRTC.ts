@@ -92,10 +92,6 @@ const getAudioIndicationGetter = (media: MediaStream) => {
   return getIndication;
 };
 
-// export interface AudioIndicationGetters {
-//   [key: string]: () => number;
-// }
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const debugPrint = (op:string, data: any) => {
   // eslint-disable-next-line no-console
@@ -195,7 +191,7 @@ const useWebRTC = (roomID: string, userId: string) => {
           }) => {
             tracksNumber += 1;
             // video & audio tracks received
-            if (tracksNumber === 2) {
+            if (tracksNumber === 1) {// TODO set 2 in next version
               tracksNumber = 0;
               addOneClient(
                 {
@@ -274,7 +270,7 @@ const useWebRTC = (roomID: string, userId: string) => {
 
     navigator.mediaDevices.getUserMedia({
       audio: true,
-      video: true,
+      video: false, // TODO pass true in next version
     }).then(mediaStream => {
       selfMediaStream.current = mediaStream;
       addOneClient(
