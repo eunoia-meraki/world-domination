@@ -4,8 +4,7 @@ import { Mic, MicOff, Videocam, VideocamOff } from '@mui/icons-material';
 import { Paper, Box, Toolbar, IconButton } from '@mui/material';
 import { useMatch } from 'react-location';
 
-import type { FC } from 'react';
-import { useState } from 'react';
+import { FC, useEffect , useState } from 'react';
 
 import type { GameLocation } from '../GameLocation';
 
@@ -64,9 +63,19 @@ export const ConferenceHall: FC = () => {
   const [micOn, setMicOn] = useState<boolean>(false);
   const [camOn, setCamOn] = useState<boolean>(false);
 
-  const { clients: participants, provideMediaRef } = useWebRTC(gameId);
+  const { clients: participants, provideMediaRef } = useWebRTC(gameId, userId);
 
   console.log(participants);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      participants.forEach(client => {
+        console.log(client.clientId, client.audioIndicationGetter());
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [participants]);
 
   const onMicClick = (): void => {
     setMicOn(!micOn);
@@ -114,9 +123,9 @@ export const ConferenceHall: FC = () => {
             return (
               <Participant
                 key={key}
-                userId={participant}
+                userId={participant.clientId}
                 color={color}
-                myself={participant === userId}
+                myself={participant.clientId === userId}
                 speaking={Math.random() > 0.5}
                 provideMediaRef={provideMediaRef}
               />

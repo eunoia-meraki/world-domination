@@ -8,7 +8,7 @@ interface IParticipant {
   userId: string;
   speaking: boolean;
   myself: boolean;
-  provideMediaRef: (id: string, node: HTMLElement | null) => void;
+  provideMediaRef: (peerId: string, htmlElement: HTMLMediaElement) => void;
 }
 
 export const Participant: FC<IParticipant> = ({
@@ -46,11 +46,13 @@ export const Participant: FC<IParticipant> = ({
         width='100%'
         height='100%'
         ref={instance => {
-          provideMediaRef(userId, instance);
+          if (instance) {
+            provideMediaRef(userId, instance);
+          }
         }}
         autoPlay
         playsInline
-        muted={!myself}
+        muted={myself}
       />
     </Box>
   </Paper>
