@@ -1,37 +1,17 @@
-import { Box, Button, Container, CssBaseline } from '@mui/material';
-import { useMatch, useNavigate } from 'react-location';
+import { Outlet } from 'react-location';
 
 import type { FC } from 'react';
 
-import type { LobbyLocation } from './LobbyLocation';
+import { Header } from './Header';
 
-import { Routes } from '@/enumerations';
+import { Footer } from '@/components/Footer';
 
-export const Lobby: FC = () => {
-  const {
-    params: { lobbyId },
-  } = useMatch<LobbyLocation>();
+export const Lobby: FC = () => (
+  <>
+    <Header />
 
-  const navigate = useNavigate();
+    <Outlet />
 
-  const onClick = (): void => {
-    navigate({ to: `${Routes.Game}/${lobbyId}` } );
-  };
-
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          mt: '40vh',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <Button variant="contained" onClick={onClick}>
-          Start
-        </Button>
-      </Box>
-    </Container>
-  );
-};
+    <Footer />
+  </>
+);

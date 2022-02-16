@@ -56,7 +56,7 @@ export const SignIn: FC = () => {
         sessionStorage.setItem('userId', id);
         sessionStorage.setItem('token', token);
 
-        navigate({ to: Routes.Lobbies });
+        navigate({ to: Routes.Lobby });
       },
       onError: err => {
         setErrorMessage(err.message);

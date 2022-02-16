@@ -1,7 +1,6 @@
 export enum Routes {
   SignIn = '/signin',
   SignUp = '/signup',
-  Lobbies = '/lobbies',
   Lobby = '/lobby',
   Game = '/game',
 }
