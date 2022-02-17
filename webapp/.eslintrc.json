@@ -81,6 +81,7 @@
     ],
     "@typescript-eslint/dot-notation": "off",
     "import/prefer-default-export": "off",
+    "import/no-named-as-default": 0,
     "arrow-parens": [
       "error",
       "as-needed"
@@ -145,7 +146,7 @@
         "order": "asc",
         "caseInsensitive": false
       }
-    }],
+      }],
     "max-len": [
       "error",
       {
