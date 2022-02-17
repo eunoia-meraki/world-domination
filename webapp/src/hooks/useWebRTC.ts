@@ -92,8 +92,7 @@ const getAudioIndicationGetter = (media: MediaStream) => {
   return getIndication;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debugPrint = (op:string, data: any) => {
+const debugPrint = (op:string, data: unknown) => {
   // eslint-disable-next-line no-console
   console.log(data);
 };

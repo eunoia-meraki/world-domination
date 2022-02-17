@@ -11,9 +11,8 @@ import {
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import graphql from 'babel-plugin-relay/macro';
-import _ from 'lodash';
 import { useMatch, useNavigate } from 'react-location';
-import { usePreloadedQuery } from 'react-relay';
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
 
 import type { FC } from 'react';
 
@@ -37,10 +36,6 @@ export const GamesList: FC = () => {
     data: { gamesListRef },
   } = useMatch<LobbyLocation>();
 
-  if (_.isUndefined(gamesListRef)) {
-    return null;
-  }
-
   const data = usePreloadedQuery<GamesList_games_Query>(
     graphql`
       query GamesList_games_Query {
@@ -54,7 +49,7 @@ export const GamesList: FC = () => {
         }
       }
     `,
-    gamesListRef,
+    gamesListRef as PreloadedQuery<GamesList_games_Query, Record<string, unknown>>,
   );
 
   const games = data.games.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
