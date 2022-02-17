@@ -1,4 +1,5 @@
 import { Box, Toolbar } from '@mui/material';
+
 import type { FC } from 'react';
 
 export const ConferenceHall: FC = () => {

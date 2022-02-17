@@ -7,6 +7,13 @@ import {
   DEVELOP_NUCLEAR_TECHNOLOGY_PRICE,
   IMPLEMENT_ENVIROMENTAL_PROGRAM_PRICE,
   INVEST_CITY_PRICE,
+  MAX_BOMB_COUNT,
+  ROUNDS_AMOUNT,
+  STAGES_PER_ROUND,
+  STAGE_LIFETIME,
+  START_ECOLOGY,
+  START_MONEY,
+  TEAM_MAX_PLAYERS,
 } from './constants';
 
 const includeGameMutations = () => {
@@ -20,7 +27,7 @@ const includeGameMutations = () => {
         gameName: t.arg.string({ required: true }),
       },
       resolve: async (_, __, args, context) => {
-        const user = await context.user;
+        const user = context.user;
 
         return await db.game.create({
           data: {
@@ -35,67 +42,41 @@ const includeGameMutations = () => {
               create: [
                 {
                   nation: Nation.RUSSIA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-                {
-                  nation: Nation.UKRAINE,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
-                },
-                {
-                  nation: Nation.USA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
+                  maxBombCount: MAX_BOMB_COUNT,
+                  money: START_MONEY,
+                  maxPlayersCount: TEAM_MAX_PLAYERS,
                 },
                 {
                   nation: Nation.CHINA,
-                  maxBombCount: 2,
-                  money: 100,
-                  maxPlayersCount: 5,
+                  maxBombCount: MAX_BOMB_COUNT,
+                  money: START_MONEY,
+                  maxPlayersCount: TEAM_MAX_PLAYERS,
+                },
+                {
+                  nation: Nation.USA,
+                  maxBombCount: MAX_BOMB_COUNT,
+                  money: START_MONEY,
+                  maxPlayersCount: TEAM_MAX_PLAYERS,
                 },
               ],
             },
             currentRound: 1,
-            ecologyValue: 10,
+            ecologyValue: START_ECOLOGY,
             rounds: {
-              create: [
-                {
+              create: Array(ROUNDS_AMOUNT)
+                .fill(0)
+                .map((_, idx) => ({
+                  order: idx,
                   currentStage: 0,
-                  order: 0,
                   stages: {
-                    create: [
-                      {
-                        order: 0,
-                        livetime: 60,
-                      },
-                      {
-                        order: 1,
-                        livetime: 60,
-                      },
-                    ],
+                    create: Array(STAGES_PER_ROUND)
+                      .fill(0)
+                      .map((_, idx) => ({
+                        order: idx,
+                        livetime: STAGE_LIFETIME,
+                      })),
                   },
-                },
-                {
-                  currentStage: 0,
-                  order: 1,
-                  stages: {
-                    create: [
-                      {
-                        order: 0,
-                        livetime: 60,
-                      },
-                      {
-                        order: 1,
-                        livetime: 60,
-                      },
-                    ],
-                  },
-                },
-              ],
+                })),
             },
           },
         });

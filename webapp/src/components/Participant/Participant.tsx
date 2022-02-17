@@ -1,14 +1,12 @@
-/* eslint-disable jsx-a11y/media-has-caption */
-import { Paper, Box, IconButton, Card, CardContent, Typography, CardMedia } from "@mui/material";
+import { Mic, MicOff } from '@mui/icons-material';
+import { Box, IconButton, Card, CardContent, Typography, CardMedia } from '@mui/material';
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from 'react';
 
-import type { Client } from "@/hooks/useWebRTC";
-import { Mic, MicOff } from "@mui/icons-material";
+import type { Client } from '@/hooks/useWebRTC';
 
 interface IParticipant {
   name: string;
-  color: string;
   client: Client;
   myself: boolean;
   provideMediaRef: (peerId: string, htmlElement: HTMLMediaElement) => void;
@@ -19,7 +17,6 @@ const INDICATION_POLLING_PERIOD = 100;
 
 export const Participant: FC<IParticipant> = ({
   name,
-  color,
   client,
   myself,
   provideMediaRef,
@@ -47,11 +44,11 @@ export const Participant: FC<IParticipant> = ({
   return (
     <Card sx={{
       display: 'flex',
-      borderWidth: "3px",
-      borderStyle: "solid",
+      borderWidth: '3px',
+      borderStyle: 'solid',
       alignItems: 'center',
       height: '50px',
-      borderColor: isActive ? "red" : "transparent",
+      borderColor: isActive ? 'red' : 'transparent',
     }}>
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <IconButton color="inherit" onClick={onMicClick}>
@@ -59,7 +56,7 @@ export const Participant: FC<IParticipant> = ({
         </IconButton>
         <CardContent>
           <Typography variant="subtitle2" color="text.secondary" component="span">
-          {name}
+            {name}
           </Typography>
         </CardContent>
       </Box>

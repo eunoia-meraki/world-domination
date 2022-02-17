@@ -197,7 +197,10 @@ const useWebRTC = (roomID: string, userId: string) => {
                 {
                   clientId: acceptor,
                   audioIndicationGetter: getAudioIndicationGetter(remoteMediaStream),
-                  setMuted: (muted) => remoteMediaStream.getAudioTracks().forEach(track => track.enabled = muted),
+                  setMuted: muted => remoteMediaStream.getAudioTracks().forEach(track => {
+                    const audio = track;
+                    audio.enabled = muted;
+                  }),
                 },
                 () => addSrcToPeerHTMLMediaElement(acceptor, remoteMediaStream),
               );
@@ -278,7 +281,10 @@ const useWebRTC = (roomID: string, userId: string) => {
         {
           clientId: userId,
           audioIndicationGetter: getAudioIndicationGetter(mediaStream),
-          setMuted: (muted) => mediaStream.getAudioTracks().forEach(track => track.enabled = muted),
+          setMuted: muted => mediaStream.getAudioTracks().forEach(track => {
+            const audio = track;
+            audio.enabled = muted;
+          }),
         },
         () => addSrcToPeerHTMLMediaElement(userId, mediaStream),
       );

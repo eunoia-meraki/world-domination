@@ -3,25 +3,24 @@ import graphql from 'babel-plugin-relay/macro';
 import { Outlet, useMatch } from 'react-location';
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
 
-import { FC, useCallback } from 'react';
-import { useState } from 'react';
+import { FC, useCallback , useState } from 'react';
 
 import { Header } from './Header';
 import { Navigation } from './Navigation';
+import { VoiceChat } from './VoiceChat';
 
 import type { GameLocation } from './GameLocation';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
+import type { ClientData } from './types';
 
 import { Contents } from '@/enumerations';
-import { VoiceChat } from './VoiceChat';
-import type { ClientData } from './types';
 
 interface IGame {
   userId: string;
 }
 
 export const Game: FC<IGame> = ({
-  userId
+  userId,
 }) => {
   const {
     data: { gameRef },
@@ -51,9 +50,13 @@ export const Game: FC<IGame> = ({
     setOpen(!open);
   };
 
-  const getClientsData = useCallback((): ClientData => {
-    return data.node?.clients?.reduce((acc: ClientData, client) => ({...acc, [client.id]: client.login}), {}) || {};
-  }, [data]);
+  const getClientsData = useCallback((): ClientData =>
+    data.node?.clients?.reduce(
+      (acc: ClientData, client) => ({
+        ...acc, [client.id]: client.login,
+      }),
+      {}) || {},
+  [data]);
 
   return (
     <Box
