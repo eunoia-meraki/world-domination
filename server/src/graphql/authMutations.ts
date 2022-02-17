@@ -3,15 +3,18 @@ import { AuthenticationError } from 'apollo-server';
 import { generateJwtToken } from '../auth';
 import { db } from '../database/db';
 import { builder } from './schemaBuilder';
+import { Game } from '@prisma/client';
 
 const includeAuthMutations = () => {
   class SignInPayload {
     id: string;
     token: string;
+    currentGame: Game | null;
 
-    constructor(id: string, token: string) {
+    constructor(id: string, token: string, currentGame: Game | null) {
       this.id = id;
       this.token = token;
+      this.currentGame = currentGame;
     }
   }
 
@@ -20,16 +23,22 @@ const includeAuthMutations = () => {
   const SignInPayloadGqlType = builder.objectType(SignInPayload, {
     name: 'SignInPayload',
     fields: (t) => ({
-      id: t.field({
-        type: 'String',
+      id: t.globalID({
         resolve: (payload) => {
-          return payload.id;
+          return { type: 'User', id: payload.id };
         },
       }),
       token: t.field({
         type: 'String',
         resolve: (payload) => {
           return payload.token;
+        },
+      }),
+      currentGame: t.prismaField({
+        type: 'Game',
+        nullable: true,
+        resolve: (_, payload) => {
+          return payload.currentGame;
         },
       }),
     }),
@@ -38,16 +47,22 @@ const includeAuthMutations = () => {
   const SignUpPayloadGqlType = builder.objectType(SignUpPayload, {
     name: 'SignUpPayload',
     fields: (t) => ({
-      id: t.field({
-        type: 'String',
+      id: t.globalID({
         resolve: (payload) => {
-          return payload.id;
+          return { type: 'User', id: payload.id };
         },
       }),
       token: t.field({
         type: 'String',
         resolve: (payload) => {
           return payload.token;
+        },
+      }),
+      currentGame: t.prismaField({
+        type: 'Game',
+        nullable: true,
+        resolve: (payload) => {
+          return (payload?.include || null) as Game | null;
         },
       }),
     }),
@@ -79,7 +94,11 @@ const includeAuthMutations = () => {
           },
         });
 
-        return { id: user.id, token: generateJwtToken(user) };
+        return {
+          id: user.id,
+          token: generateJwtToken(user),
+          currentGame: null,
+        };
       },
     }),
   );
@@ -94,6 +113,7 @@ const includeAuthMutations = () => {
       resolve: async (_, { login, password }) => {
         const user = await db.user.findUnique({
           where: { login: login },
+          include: { currentGame: true },
         });
         const passwordEquals = await bcrypt.compare(
           password,
@@ -104,7 +124,11 @@ const includeAuthMutations = () => {
           throw new AuthenticationError('Неверный логин или пароль');
         }
 
-        return { id: user.id, token: generateJwtToken(user) };
+        return {
+          id: user.id,
+          token: generateJwtToken(user),
+          currentGame: user.currentGame,
+        };
       },
     }),
   );

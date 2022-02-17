@@ -1,5 +1,5 @@
 import { db } from '../database/db';
-import { GameStatus, Nation, RoleType } from '@prisma/client';
+import { Game, GameStatus, Nation, RoleType, User } from '@prisma/client';
 import { builder } from './schemaBuilder';
 import {
   CREATE_BOMB_PRICE,
@@ -80,6 +80,64 @@ const includeGameMutations = () => {
             },
           },
         });
+      },
+    }),
+  );
+
+  class JoinGamePayload {
+    id: string;
+    currentGame: Game | null;
+
+    constructor(user: string, currentGame: Game | null) {
+      this.id = user;
+      this.currentGame = currentGame;
+    }
+  }
+
+  const JoinGamePayloadGqlType = builder.objectType(JoinGamePayload, {
+    name: 'JoinGamePayload',
+    fields: (t) => ({
+      id: t.globalID({
+        resolve: (payload) => {
+          return { type: 'User', id: payload.id };
+        },
+      }),
+      currentGame: t.prismaField({
+        type: 'Game',
+        nullable: true,
+        resolve: (_, payload) => {
+          return payload.currentGame;
+        },
+      }),
+    }),
+  });
+
+  builder.mutationField('joinGame', (t) =>
+    t.field({
+      authScopes: {
+        public: true,
+      },
+      type: JoinGamePayloadGqlType,
+      args: {
+        gameId: t.arg.globalID({ required: true }),
+      },
+      resolve: async (_, { gameId }, context) => {
+        const user = context.user as User;
+        const game = await db.game.findUnique({ where: { id: gameId.id } });
+
+        if (!game) {
+          throw new Error('Игра не найнена');
+        }
+
+        const updated = await db.user.update({
+          where: { id: user.id },
+          include: { currentGame: true },
+          data: {
+            currentGameId: game.id,
+          },
+        });
+
+        return { id: updated.id, currentGame: updated.currentGame };
       },
     }),
   );

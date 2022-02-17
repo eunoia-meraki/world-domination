@@ -52,6 +52,9 @@ export const GamesList: FC = () => {
                 id
                 login
               }
+              teams {
+                maxPlayersCount
+              }
             }
           }
         }
@@ -90,6 +93,29 @@ export const GamesList: FC = () => {
     });
   };
 
+  const gamesRows = games.map(game => {
+    const connectedClients = game.clients.length;
+    const availablePositions = game.teams.reduce(
+      (acc, team) => (acc + team.maxPlayersCount), 0,
+    );
+
+    return (
+      <TableRow
+        sx={{
+          cursor: 'pointer',
+        }}
+        hover
+        role="checkbox"
+        tabIndex={-1}
+        key={game.id}
+        onClick={() => joinLobby(game.id)}
+      >
+        <TableCell>{game.name}</TableCell>
+        <TableCell>{`${connectedClients}/${availablePositions}`}</TableCell>
+      </TableRow>
+    );
+  });
+
   return (
     <Container
       component="main"
@@ -126,21 +152,7 @@ export const GamesList: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {games.map((game, index) => (
-                <TableRow
-                  sx={{
-                    cursor: 'pointer',
-                  }}
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={index.toString()}
-                  onClick={() => joinLobby(game.id)}
-                >
-                  <TableCell>{game.name}</TableCell>
-                  <TableCell>{0}</TableCell>
-                </TableRow>
-              ))}
+              {gamesRows}
             </TableBody>
           </Table>
         </TableContainer>
