@@ -15,6 +15,7 @@ export const SortingRoom: FC = () => {
   const navigate = useNavigate();
 
   const onClick = (): void => {
+    sessionStorage.setItem('currentGameId', gameId);
     navigate({ to: `${Routes.Game}/${gameId}` } );
   };
 

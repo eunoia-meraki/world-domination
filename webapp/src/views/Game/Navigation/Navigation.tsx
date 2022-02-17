@@ -10,9 +10,11 @@ import {
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-location';
+import { useMatch, useNavigate } from 'react-location';
 
 import type { FC } from 'react';
+
+import type { GameLocation } from '../GameLocation';
 
 import { Contents, Routes } from '@/enumerations';
 
@@ -50,25 +52,29 @@ interface INavigation {
 }
 
 export const Navigation: FC<INavigation> = ({ open, setContent, content }) => {
+  const {
+    params: { gameId },
+  } = useMatch<GameLocation>();
+
   const navigate = useNavigate();
 
   const onMainClick = (): void => {
-    navigate({ to: Routes.Game });
+    navigate({ to: `${Routes.Game}/${gameId}` });
     setContent(Contents.ConferenceHall);
   };
 
   const onWorldStatisticsClick = (): void => {
-    navigate({ to: `${Routes.Game}/worldstatistics` });
+    navigate({ to: `${Routes.Game}/${gameId}/worldstatistics` });
     setContent(Contents.WorldStatistics);
   };
 
   const onCountryStatisticsClick = (): void => {
-    navigate({ to: `${Routes.Game}/countrystatistics` });
+    navigate({ to: `${Routes.Game}/${gameId}/countrystatistics` });
     setContent(Contents.CountryStatistics);
   };
 
   const onActionsClick = (): void => {
-    navigate({ to: `${Routes.Game}/actions` });
+    navigate({ to: `${Routes.Game}/${gameId}/actions` });
     setContent(Contents.Actions);
   };
 

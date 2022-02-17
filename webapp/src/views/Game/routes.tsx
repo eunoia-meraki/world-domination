@@ -1,33 +1,45 @@
-import { Actions } from './Actions';
-import { ConferenceHall } from './ConferenceHall';
-import { CountryStatistics } from './CountryStatistics';
-import { Game } from './Game';
-import { WorldStatistics } from './WorldStatistics';
+import { Navigate, Route } from 'react-location';
 
 import type { GameLocation } from './GameLocation';
-import type { Route } from 'react-location';
 
 import { Routes } from '@/enumerations';
 
 export const GameRoutes: Route<GameLocation> = {
-  path: `${Routes.Game}/:gameId`,
-  element: <Game />,
+  path: Routes.Game,
   children: [
     {
       path: '/',
-      element: <ConferenceHall />,
+      element: <Navigate to={sessionStorage.getItem('currentGameId')}/>,
     },
     {
-      path: 'worldstatistics',
-      element: <WorldStatistics />,
-    },
-    {
-      path: 'countrystatistics',
-      element: <CountryStatistics />,
-    },
-    {
-      path: 'actions',
-      element: <Actions />,
+      path: ':gameId',
+      element: () => import('./Game').then(({ Game }) => <Game />),
+      children: [
+        {
+          path: '/',
+          element: () => import('./ConferenceHall')
+            .then(({ ConferenceHall }) => <ConferenceHall />),
+        },
+        {
+          path: 'worldstatistics',
+          element: () => import('./WorldStatistics')
+            .then(({ WorldStatistics }) => <WorldStatistics />),
+        },
+        {
+          path: 'countrystatistics',
+          element: () => import('./CountryStatistics')
+            .then(({ CountryStatistics }) => <CountryStatistics />),
+        },
+        {
+          path: 'actions',
+          element: () => import('./Actions')
+            .then(({ Actions }) => <Actions />),
+        },
+        {
+          path: '*',
+          element: <Navigate to={Routes.Game}/>,
+        },
+      ],
     },
   ],
 };
