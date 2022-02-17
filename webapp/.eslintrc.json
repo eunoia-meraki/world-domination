@@ -144,7 +144,8 @@
       "alphabetize": {
         "order": "asc",
         "caseInsensitive": false
-      }
+      },
+      "import/no-named-as-default": false
     }],
     "max-len": [
       "error",

@@ -1,58 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
 import { Mic, MicOff, Videocam, VideocamOff } from '@mui/icons-material';
 import { Paper, Box, Toolbar, IconButton } from '@mui/material';
 import { useMatch } from 'react-location';
 
-import { FC, useEffect , useState } from 'react';
+import { FC, useState } from 'react';
 
 import type { GameLocation } from '../GameLocation';
 
 import { Participant } from '@/components/Participant';
 import { useColor } from '@/hooks/useColor';
 import useWebRTC from '@/hooks/useWebRTC';
-
-// const participants: {
-//   firstName: string;
-//   lastName: string;
-//   speaking: boolean;
-// }[] = [
-//   {
-//     firstName: 'Alexey',
-//     lastName: 'Koren',
-//     speaking: true,
-//   },
-//   {
-//     firstName: 'Roman',
-//     lastName: 'Fomin',
-//     speaking: false,
-//   },
-//   {
-//     firstName: 'Dima',
-//     lastName: 'Chuhlyaev',
-//     speaking: false,
-//   },
-//   {
-//     firstName: 'Ivan',
-//     lastName: 'Kuricyn',
-//     speaking: false,
-//   },
-//   {
-//     firstName: 'Vadim',
-//     lastName: 'Evseev',
-//     speaking: true,
-//   },
-//   {
-//     firstName: 'Ivan',
-//     lastName: 'Tur',
-//     speaking: false,
-//   },
-//   {
-//     firstName: 'David',
-//     lastName: 'Kuchukidze',
-//     speaking: false,
-//   },
-// ];
 
 export const ConferenceHall: FC = () => {
   const {
@@ -61,11 +17,15 @@ export const ConferenceHall: FC = () => {
 
   const userId = sessionStorage.getItem('userId') || '';
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [voiceRoom, setVoiceRoom] = useState<string>(gameId);
+
   const [micOn, setMicOn] = useState<boolean>(false);
   const [camOn, setCamOn] = useState<boolean>(false);
 
-  const { clients: participants, provideMediaRef } = useWebRTC(gameId, userId);
+  const { clients: participants, provideMediaRef } = useWebRTC(voiceRoom, userId);
 
+  // eslint-disable-next-line no-console
   console.log(participants);
 
   const onMicClick = (): void => {
