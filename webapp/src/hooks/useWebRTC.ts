@@ -100,6 +100,7 @@ const debugPrint = (op:string, data: unknown) => {
 export interface Client {
   clientId: string;
   audioIndicationGetter: () => number;
+  setMuted: (muted: boolean) => void;
 }
 
 const useWebRTC = (roomID: string, userId: string) => {
@@ -196,6 +197,7 @@ const useWebRTC = (roomID: string, userId: string) => {
                 {
                   clientId: acceptor,
                   audioIndicationGetter: getAudioIndicationGetter(remoteMediaStream),
+                  setMuted: (muted) => remoteMediaStream.getAudioTracks().forEach(track => track.enabled = muted),
                 },
                 () => addSrcToPeerHTMLMediaElement(acceptor, remoteMediaStream),
               );
@@ -276,6 +278,7 @@ const useWebRTC = (roomID: string, userId: string) => {
         {
           clientId: userId,
           audioIndicationGetter: getAudioIndicationGetter(mediaStream),
+          setMuted: (muted) => mediaStream.getAudioTracks().forEach(track => track.enabled = muted),
         },
         () => addSrcToPeerHTMLMediaElement(userId, mediaStream),
       );

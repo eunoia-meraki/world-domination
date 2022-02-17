@@ -13,6 +13,8 @@ import type { GameLocation } from './GameLocation';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
 
 import { Contents } from '@/enumerations';
+import { ConferenceHall } from './ConferenceHall';
+import { VoiceChat } from './VoiceChat';
 
 export const Game: FC = () => {
   const {
@@ -36,6 +38,8 @@ export const Game: FC = () => {
     gameRef as PreloadedQuery<Game_game_Query, Record<string, unknown>>,
   );
 
+  const userId = sessionStorage.getItem('userId') || '';
+
   const [open, setOpen] = useState<boolean>(true);
   const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
 
@@ -47,6 +51,7 @@ export const Game: FC = () => {
     <Box
       sx={{
         display: 'flex',
+        justifyContent: 'space-between',
         height: '100%',
       }}
     >
@@ -55,6 +60,8 @@ export const Game: FC = () => {
       <Header open={open} toggleOpen={toggleOpen} content={content} />
 
       <Outlet />
+
+      <VoiceChat userId={userId}/>
     </Box>
   );
 };
