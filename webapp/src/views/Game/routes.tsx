@@ -8,6 +8,8 @@ import type { GameLocation } from './GameLocation';
 import { RelayEnvironment } from '@/RelayEnvironment';
 import { Routes } from '@/enumerations';
 
+const userId = sessionStorage.getItem('userId') || '';
+
 export const GameRoutes: Route<GameLocation> = {
   path: Routes.Game,
   children: [
@@ -17,7 +19,7 @@ export const GameRoutes: Route<GameLocation> = {
     },
     {
       path: ':gameId',
-      element: () => import('./Game').then(({ Game }) => <Game />),
+      element: () => import('./Game').then(({ Game }) => <Game userId={userId} />),
       loader: ({ params: { gameId } }) => ({
         gameRef: loadQuery(RelayEnvironment, Game_game_Query, {
           gameId,

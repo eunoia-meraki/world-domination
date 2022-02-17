@@ -3,7 +3,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { Outlet, useMatch } from 'react-location';
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
 
-import type { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { useState } from 'react';
 
 import { Header } from './Header';
@@ -13,15 +13,21 @@ import type { GameLocation } from './GameLocation';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
 
 import { Contents } from '@/enumerations';
-import { ConferenceHall } from './ConferenceHall';
 import { VoiceChat } from './VoiceChat';
+import type { ClientData } from './types';
 
-export const Game: FC = () => {
+interface IGame {
+  userId: string;
+}
+
+export const Game: FC<IGame> = ({
+  userId
+}) => {
   const {
     data: { gameRef },
   } = useMatch<GameLocation>();
 
-  usePreloadedQuery<Game_game_Query>(
+  const data = usePreloadedQuery<Game_game_Query>(
     graphql`
       query Game_game_Query($gameId: ID!) {
         node(id: $gameId) {
@@ -38,14 +44,16 @@ export const Game: FC = () => {
     gameRef as PreloadedQuery<Game_game_Query, Record<string, unknown>>,
   );
 
-  const userId = sessionStorage.getItem('userId') || '';
-
   const [open, setOpen] = useState<boolean>(true);
   const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
 
   const toggleOpen = (): void => {
     setOpen(!open);
   };
+
+  const getClientsData = useCallback((): ClientData => {
+    return data.node?.clients?.reduce((acc: ClientData, client) => ({...acc, [client.id]: client.login}), {}) || {};
+  }, [data]);
 
   return (
     <Box
@@ -61,7 +69,7 @@ export const Game: FC = () => {
 
       <Outlet />
 
-      <VoiceChat userId={userId}/>
+      <VoiceChat userId={userId} clientData={getClientsData()}/>
     </Box>
   );
 };

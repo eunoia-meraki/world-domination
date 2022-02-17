@@ -9,13 +9,16 @@ import type { GameLocation } from '../GameLocation';
 import { Participant } from '@/components/Participant';
 import { useColor } from '@/hooks/useColor';
 import useWebRTC from '@/hooks/useWebRTC';
+import type { ClientData } from '../types';
 
 interface IVoiceChat {
   userId: string;
+  clientData: ClientData;
 }
 
 export const VoiceChat: FC<IVoiceChat> = ({
-  userId
+  userId,
+  clientData,
 }) => {
   const {
     params: { gameId },
@@ -38,7 +41,7 @@ export const VoiceChat: FC<IVoiceChat> = ({
 
     return (
       <Participant
-        name={userId}
+        name={clientData[userId]}
         key={key}
         client={participant}
         color={color}
