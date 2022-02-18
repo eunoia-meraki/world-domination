@@ -24,7 +24,7 @@ import includeNodeTown from './nodes/town';
 import includeAction from './nodes/action';
 import includeNodeDevelopNuclearTechnologyAction from './nodes/developNuclearTechnologyAction';
 import includeNodeEcologyDepositAction from './nodes/ecologyDepositAction';
-import includeNodeSanctionsAction from './nodes/sanctionsAction';
+import includeNodeSanctionAction from './nodes/sanctionAction';
 import { includeWebRTC } from './webRTC';
 
 const getGraphQLSchema = (): GraphQLSchema => {
@@ -61,7 +61,7 @@ const getGraphQLSchema = (): GraphQLSchema => {
   includeNodeEconomicDepositAction();
   includeNodeDevelopNuclearTechnologyAction();
   includeNodeEcologyDepositAction();
-  includeNodeSanctionsAction();
+  includeNodeSanctionAction();
   includeNodeTeam();
   includeNodeTeamRoom();
   includeNodeTown();

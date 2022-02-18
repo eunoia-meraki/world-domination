@@ -20,7 +20,7 @@ const includeAction = () => {
       developNuclearTechnologyAction: t.relation(
         'developNuclearTechnologyAction',
       ),
-      sanctionsAction: t.relation('sanctionsAction'),
+      sanctionsAction: t.relation('sanctionAction'),
     }),
   });
 };

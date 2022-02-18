@@ -1,7 +1,7 @@
 import { builder } from '../schemaBuilder';
 
-const includeNodeSanctionsAction = () => {
-  builder.prismaNode('SanctionsAction', {
+const includeNodeSanctionAction = () => {
+  builder.prismaNode('SanctionAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },
     authScopes: {
@@ -14,4 +14,4 @@ const includeNodeSanctionsAction = () => {
   });
 };
 
-export default includeNodeSanctionsAction;
+export default includeNodeSanctionAction;

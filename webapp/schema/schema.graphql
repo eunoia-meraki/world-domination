@@ -65,7 +65,7 @@ type GameAction implements Node {
   economicDepositAction: EconomicDepositAction!
   id: ID!
   round: Round!
-  sanctionsAction: SanctionsAction!
+  sanctionsAction: SanctionAction!
   sendBombAction: SendBombAction!
   shieldCreationAction: ShieldCreationAction!
   team: Team!
@@ -77,6 +77,7 @@ enum GameActionType {
   DEVELOP_NUCLEAR_TECHNOLOGY
   ECOLOGY_DEPOSIT
   ECONOMIC_DEPOSIT
+  SANCTION
   SEND_BOMB
   SHILED_CREATION
 }
@@ -162,7 +163,7 @@ type Round implements Node {
   stages: [Stage!]!
 }
 
-type SanctionsAction implements Node {
+type SanctionAction implements Node {
   action: GameAction!
   id: ID!
   victim: Team!
@@ -173,10 +174,10 @@ input SendActionsInput {
   developNuclearTechnologyAction: Boolean!
   gameId: String!
   implementEnvironmentalProgram: Boolean!
-  investCitiesIds: [String!]!
+  investTownsIds: [String!]!
   sanctionsTeamIds: [String!]!
-  sendBombsCitiesIds: [String!]!
-  shieldCitiesIds: [String!]!
+  sendBombsTownsIds: [String!]!
+  shieldTownsIds: [String!]!
   teamId: String!
 }
 
@@ -215,9 +216,10 @@ type Team implements Node {
   money: Int!
   nation: Nation!
   players: [Player!]!
-  sanctionsActions: [SanctionsAction!]!
+  sanctionsActions: [SanctionAction!]!
   sendBombActions: [SendBombAction!]!
   teamRoom: TeamRoom!
+  towns: [Town!]!
 }
 
 type TeamRoom implements Node {
@@ -234,6 +236,7 @@ type Town implements Node {
   sendBombActions: [SendBombAction!]!
   shield: Boolean!
   shieldCreationActions: [ShieldCreationAction!]!
+  team: Team!
   townLevel: TownLevel!
 }
 

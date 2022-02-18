@@ -10,6 +10,7 @@ const includeNodeTownLevel = () => {
     fields: (t) => ({
       name: t.exposeString('name'),
       townLevel: t.relation('townLevel'),
+      team: t.relation('team'),
       shield: t.exposeBoolean('shield'),
       destroyed: t.exposeBoolean('destroyed'),
       economicDepositActions: t.relation('economicDepositActions'),

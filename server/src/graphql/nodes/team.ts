@@ -17,9 +17,10 @@ const includeNodeTeam = () => {
       maxBombCount: t.exposeInt('maxBombCount'),
       game: t.relation('game'),
       teamRoom: t.relation('teamRoom'),
+      towns: t.relation('towns'),
       sendBombActions: t.relation('sendBombActions'),
       createBombActions: t.relation('createBombActions'),
-      sanctionsActions: t.relation('sanctionsActions'),
+      sanctionsActions: t.relation('sanctionActions'),
       actions: t.relation('actions'),
     }),
   });

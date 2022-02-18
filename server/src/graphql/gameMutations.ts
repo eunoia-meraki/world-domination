@@ -1,12 +1,21 @@
 import { db } from '../database/db';
-import { Game, GameStatus, Nation, RoleType, User } from '@prisma/client';
+
+import {
+  GameActionType,
+  GameStatus,
+  Nation,
+  RoleType,
+  User,
+} from '@prisma/client';
+
 import { builder } from './schemaBuilder';
+
 import {
   CREATE_BOMB_PRICE,
   CREATE_SHIELD_PRICE,
   DEVELOP_NUCLEAR_TECHNOLOGY_PRICE,
   IMPLEMENT_ENVIROMENTAL_PROGRAM_PRICE,
-  INVEST_CITY_PRICE,
+  INVEST_TOWN_PRICE,
   MAX_BOMB_COUNT,
   ROUNDS_AMOUNT,
   STAGES_PER_ROUND,
@@ -15,6 +24,18 @@ import {
   START_MONEY,
   TEAM_MAX_PLAYERS,
 } from './constants';
+
+import { inputTypeFromNonListParam } from '@pothos/core';
+
+interface iSendActionsInput {
+  investTownsIds: string[];
+  shieldTownsIds: string[];
+  implementEnvironmentalProgram: boolean;
+  developNuclearTechnologyAction: boolean;
+  sendBombsTownsIds: string[];
+  sanctionsTeamIds: string[];
+  createBombsCount: number;
+}
 
 const includeGameMutations = () => {
   builder.mutationField('createGame', (t) =>
@@ -118,12 +139,12 @@ const includeGameMutations = () => {
     fields: (t) => ({
       gameId: t.string({ required: true }),
       teamId: t.string({ required: true }),
-      investCitiesIds: t.stringList({ required: true }),
-      shieldCitiesIds: t.stringList({ required: true }),
+      investTownsIds: t.stringList({ required: true }),
+      shieldTownsIds: t.stringList({ required: true }),
       implementEnvironmentalProgram: t.boolean({ required: true }),
       developNuclearTechnologyAction: t.boolean({ required: true }),
       createBombsCount: t.int({ required: true }),
-      sendBombsCitiesIds: t.stringList({ required: true }),
+      sendBombsTownsIds: t.stringList({ required: true }),
       sanctionsTeamIds: t.stringList({ required: true }),
     }),
   });
@@ -164,21 +185,29 @@ const includeGameMutations = () => {
           throw new Error('Комманда игрока не найдена.');
         }
 
-        interface iSendActionsInput {
-          investCitiesIds: string[];
-          shieldCitiesIds: string[];
-          implementEnvironmentalProgram: boolean;
-          developNuclearTechnologyAction: boolean;
-          sendBombsCitiesIds: string[];
-          sanctionsTeamIds: string[];
+        const curGame = await db.game.findFirst({
+          where: { id: curTeam.gameId },
+          include: { rounds: true },
+        });
+
+        if (!curGame) {
+          throw new Error('Текущая игра не найдена');
+        }
+
+        const curRound = await db.round.findFirst({
+          where: { order: curGame.currentRound },
+        });
+
+        if (!curRound) {
+          throw new Error('Текущая раунд не найдена');
         }
 
         const money = curTeam.money;
 
         const calculatePrice = (input: iSendActionsInput) => {
           let sum = 0;
-          sum += input.investCitiesIds.length * INVEST_CITY_PRICE;
-          sum += input.shieldCitiesIds.length * CREATE_SHIELD_PRICE;
+          sum += input.investTownsIds.length * INVEST_TOWN_PRICE;
+          sum += input.shieldTownsIds.length * CREATE_SHIELD_PRICE;
 
           if (input.developNuclearTechnologyAction) {
             sum += DEVELOP_NUCLEAR_TECHNOLOGY_PRICE;
@@ -188,7 +217,7 @@ const includeGameMutations = () => {
             sum += IMPLEMENT_ENVIROMENTAL_PROGRAM_PRICE;
           }
 
-          sum += input.sendBombsCitiesIds.length * CREATE_BOMB_PRICE;
+          sum += input.sendBombsTownsIds.length * CREATE_BOMB_PRICE;
 
           return sum;
         };
@@ -199,7 +228,152 @@ const includeGameMutations = () => {
           throw new Error('Недостаточно денег.');
         }
 
-        const validateInput = (input: iSendActionsInput) => {};
+        // validation --
+        args.input.investTownsIds.forEach((townId) => {
+          const town = db.town.findFirst({
+            where: { teamId: curPlayer.teamId, id: townId },
+          });
+          // TODO only team owner town?
+
+          if (!town) {
+            throw new Error('Город для улучшения не найден.');
+          }
+        });
+
+        args.input.shieldTownsIds.forEach((townId) => {
+          const town = db.town.findFirst({
+            where: { teamId: curPlayer.teamId, id: townId },
+          });
+          // TODO only team owner town?
+
+          if (!town) {
+            throw new Error('Город для установки щита не найден.');
+          }
+        });
+
+        if (
+          args.input.developNuclearTechnologyAction &&
+          curTeam.hasNuclearTechnology
+        ) {
+          throw new Error('Ядерная технология уже развита');
+        }
+
+        if (args.input.createBombsCount > 3) {
+          throw new Error('Вы не можете произвести более 3х бомб');
+        }
+
+        if (
+          args.input.sendBombsTownsIds.length !=
+          args.input.sendBombsTownsIds.filter((v, i, a) => a.indexOf(v) === i)
+            .length
+        )
+          throw new Error(
+            'Вы можете нанести только один удар по одному городу',
+          );
+
+        args.input.investTownsIds.forEach((townId) => {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.ECONOMIC_DEPOSIT,
+              economicDepositAction: {
+                create: {
+                  townId: townId,
+                },
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        });
+        // validation !
+
+        args.input.shieldTownsIds.forEach((townId) => {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.SHILED_CREATION,
+              shieldCreationAction: {
+                create: {
+                  townId: townId,
+                },
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        });
+
+        if (args.input.implementEnvironmentalProgram) {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.ECOLOGY_DEPOSIT,
+              ecologyDepositAction: {
+                create: {},
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        }
+
+        if (args.input.developNuclearTechnologyAction) {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.DEVELOP_NUCLEAR_TECHNOLOGY,
+              developNuclearTechnologyAction: {
+                create: {},
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        }
+
+        if (args.input.createBombsCount > 0) {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.CREATE_BOMB,
+              createBombAction: {
+                create: {
+                  count: args.input.createBombsCount,
+                  creatorId: curTeam.id,
+                },
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        }
+
+        args.input.sendBombsTownsIds.forEach((townId) => {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.SEND_BOMB,
+              sendBombAction: {
+                create: {
+                  townId,
+                  senderId: curTeam.id,
+                },
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        });
+
+        args.input.sanctionsTeamIds.forEach((teamId) => {
+          db.gameAction.create({
+            data: {
+              type: GameActionType.SANCTION,
+              sanctionAction: {
+                create: {
+                  victimId: teamId,
+                },
+              },
+              roundId: curRound.id,
+              teamId: curTeam.id,
+            },
+          });
+        });
 
         return true;
       },

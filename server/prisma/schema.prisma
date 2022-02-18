@@ -56,10 +56,11 @@ model Team {
   maxBombCount         Int
   gameId               String             @db.ObjectId
   game                 Game               @relation(fields: [gameId], references: [id])
+  towns                Town[]
   teamRoom             TeamRoom?
   sendBombActions      SendBombAction[]
   createBombActions    CreateBombAction[]
-  sanctionsActions     SanctionsAction[]
+  sanctionActions     SanctionAction[]
   actions              GameAction[]
 }
 
@@ -75,7 +76,7 @@ model Game {
   ownerId      String     @unique @db.ObjectId
   owner        User       @relation(name: "ownerGame", fields: [ownerId], references: [id])
   status       GameStatus @default(NOT_STARTED)
-  currentRound Int
+  currentRound Int        @default(0)
   ecologyValue Int
   clients      User[]     @relation("currentGame")
   teams        Team[]
@@ -117,6 +118,8 @@ model Town {
   economicDepositActions EconomicDepositAction[]
   shieldCreationActions  ShieldCreationAction[]
   sendBombActions        SendBombAction[]
+  team                   Team?                   @relation(fields: [teamId], references: [id])
+  teamId                 String?                 @db.ObjectId
 }
 
 model TownLevel {
@@ -135,6 +138,7 @@ enum GameActionType {
   CREATE_BOMB
   ECOLOGY_DEPOSIT
   DEVELOP_NUCLEAR_TECHNOLOGY
+  SANCTION
 }
 
 model GameAction {
@@ -150,7 +154,7 @@ model GameAction {
   createBombAction               CreateBombAction?
   ecologyDepositAction           EcologyDepositAction?
   developNuclearTechnologyAction DevelopNuclearTechnologyAction?
-  sanctionsAction                SanctionsAction?
+  sanctionAction                SanctionAction?
 }
 
 model EconomicDepositAction {
@@ -181,6 +185,7 @@ model SendBombAction {
 
 model CreateBombAction {
   id        String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  count     Int
   creatorId String     @db.ObjectId
   creator   Team       @relation(fields: [creatorId], references: [id])
   actionId  String     @unique @db.ObjectId
@@ -199,7 +204,7 @@ model DevelopNuclearTechnologyAction {
   action   GameAction @relation(fields: [actionId], references: [id])
 }
 
-model SanctionsAction {
+model SanctionAction {
   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
   actionId String     @unique @db.ObjectId
   action   GameAction @relation(fields: [actionId], references: [id])
