@@ -32,11 +32,6 @@ export const SignIn: FC = () => {
       mutation SignIn_signIn_Mutation($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
           token
-          user {
-            currentGame {
-              id
-            }
-          }
         }
       }
     `,
@@ -57,16 +52,11 @@ export const SignIn: FC = () => {
         password: data.get('password') as string,
       },
       onCompleted: response => {
-        const { token, user } = response.signIn;
+        const { token } = response.signIn;
 
         sessionStorage.setItem('token', token);
 
-        if(user.currentGame) {
-          navigate({ to: `${Routes.Lobby}/${user.currentGame.id}` });
-        } else {
-          navigate({ to: Routes.Lobby });
-        }
-
+        navigate({ to: Routes.Lobby });
       },
       onError: err => {
         setErrorMessage(err.message);

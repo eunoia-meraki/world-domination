@@ -92,6 +92,7 @@ type Mutation {
   createGame(gameName: String!): Game!
   interactWebRTC(actionType: ActionType!, data: String!): Boolean!
   joinGame(gameId: ID!): User!
+  leaveGame(gameId: ID!): User!
   sendActions(input: SendActionsInput!): Boolean!
   signIn(login: String!, password: String!): AuthorizationPayload!
   signUp(login: String!, password: String!): AuthorizationPayload!

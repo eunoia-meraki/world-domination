@@ -25,8 +25,6 @@ import {
   TEAM_MAX_PLAYERS,
 } from './constants';
 
-import { inputTypeFromNonListParam } from '@pothos/core';
-
 interface iSendActionsInput {
   investTownsIds: string[];
   shieldTownsIds: string[];
@@ -119,7 +117,7 @@ const includeGameMutations = () => {
         const game = await db.game.findUnique({ where: { id: gameId.id } });
 
         if (!game) {
-          throw new Error('Игра не найнена');
+          throw new Error('Игра не найдена');
         }
 
         const updated = await db.user.update({
@@ -127,6 +125,36 @@ const includeGameMutations = () => {
           include: { currentGame: true },
           data: {
             currentGameId: game.id,
+          },
+        });
+
+        return updated;
+      },
+    }),
+  );
+
+  builder.mutationField('leaveGame', (t) =>
+    t.prismaField({
+      authScopes: {
+        public: true,
+      },
+      type: 'User',
+      args: {
+        gameId: t.arg.globalID({ required: true }),
+      },
+      resolve: async (_, __, { gameId }, context) => {
+        const user = context.user as User;
+        const game = await db.game.findUnique({ where: { id: gameId.id } });
+
+        if (!game) {
+          throw new Error('Игра не найдена');
+        }
+
+        const updated = await db.user.update({
+          where: { id: user.id },
+          include: { currentGame: true },
+          data: {
+            currentGameId: null,
           },
         });
 

@@ -21,6 +21,7 @@ import type { FC, SyntheticEvent } from 'react';
 
 import type { GamesList_createGame_Mutation } from './__generated__/GamesList_createGame_Mutation.graphql';
 import type { GamesList_games_Fragment$key } from './__generated__/GamesList_games_Fragment.graphql';
+import type { GamesList_joinGame_Mutation } from './__generated__/GamesList_joinGame_Mutation.graphql';
 
 import { Routes } from '@/enumerations';
 
@@ -65,10 +66,6 @@ export const GamesList: FC<IGamesList> = ({
 
   const games = gamesData.availableGames.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
 
-  const joinLobby = (gameId: string): void => {
-    navigate({ to: `${Routes.Lobby}/${gameId}` });
-  };
-
   const [createLobby] = useMutation<GamesList_createGame_Mutation>(
     graphql`
       mutation GamesList_createGame_Mutation($gameName: String!) {
@@ -78,6 +75,32 @@ export const GamesList: FC<IGamesList> = ({
       }
     `,
   );
+
+  const [joinGame] = useMutation<GamesList_joinGame_Mutation>(
+    graphql`
+      mutation GamesList_joinGame_Mutation($gameId: ID!) {
+        joinGame(gameId: $gameId) {
+          currentGame {
+            id
+            name
+            owner {
+              login
+            }
+          }
+          id
+        }
+      }
+    `,
+  );
+
+  const joinLobby = (gameId: string): void => {
+    joinGame({
+      variables: {
+        gameId,
+      },
+      onCompleted: () => navigate({ to: `${Routes.Lobby}/${gameId}` }),
+    });
+  };
 
   const onCreateLobby = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
