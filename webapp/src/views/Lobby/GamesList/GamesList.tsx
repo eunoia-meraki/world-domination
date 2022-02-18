@@ -19,10 +19,14 @@ import { PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay';
 
 import type { FC, SyntheticEvent } from 'react';
 
-import type { LobbyLocation } from '../routes';
+import { Header } from '../Header';
+
+import type { LobbyLocation } from '../LobbyLocations';
+import type { GamesList_authorizedUser_Query } from './__generated__/GamesList_authorizedUser_Query.graphql';
 import type { GamesList_createGame_Mutation } from './__generated__/GamesList_createGame_Mutation.graphql';
 import type { GamesList_games_Query } from './__generated__/GamesList_games_Query.graphql';
 
+import { Footer } from '@/components/Footer';
 import { Routes } from '@/enumerations';
 
 const HeaderTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,7 +41,7 @@ export const GamesList: FC = () => {
   const navigate = useNavigate();
 
   const {
-    data: { gamesListRef },
+    data: { gamesListRef, userRef },
   } = useMatch<LobbyLocation>();
 
   const gamesData = usePreloadedQuery<GamesList_games_Query>(
@@ -63,6 +67,22 @@ export const GamesList: FC = () => {
     gamesListRef as PreloadedQuery<GamesList_games_Query, Record<string, unknown>>,
   );
 
+  const authorizedUser = usePreloadedQuery<GamesList_authorizedUser_Query>(
+    graphql`
+      query GamesList_authorizedUser_Query {
+        authorizedUser {
+          id
+          login
+          currentGame {
+            id
+          }
+        }
+      }
+    `,
+    userRef as PreloadedQuery<GamesList_authorizedUser_Query, Record<string, unknown>>,
+  );
+
+  const userLogin = authorizedUser.authorizedUser.login;
   const games = gamesData.games.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
 
   const joinLobby = (gameId: string): void => {
@@ -117,46 +137,53 @@ export const GamesList: FC = () => {
   });
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        flexGrow: 1,
-      }}
-    >
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <Box
-          component="form"
-          sx={{
-            '& > :not(style)': { m: 1, width: '25ch' },
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: '10px',
-          }}
-          onSubmit={onCreateLobby}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField id="outlined-basic" label="Lobby name" variant="outlined" name='lobbyName' sx={{ flex: '1 1 auto' }} />
-          <Button type="submit" variant="outlined">Create lobby</Button>
-        </Box>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <HeaderTableCell>Name</HeaderTableCell>
-                <HeaderTableCell>Number of clients</HeaderTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {gamesRows}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </Container>
+    <>
+      <Header userLogin={userLogin} />
+
+      <Container
+        component="main"
+        maxWidth="md"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          flexGrow: 1,
+        }}
+      >
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <Box
+            component="form"
+            sx={{
+              '& > :not(style)': { m: 1, width: '25ch' },
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '10px',
+            }}
+            onSubmit={onCreateLobby}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField id="outlined-basic" label="Lobby name" variant="outlined" name='lobbyName' sx={{ flex: '1 1 auto' }} />
+            <Button type="submit" variant="outlined">Create lobby</Button>
+          </Box>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <HeaderTableCell>Name</HeaderTableCell>
+                  <HeaderTableCell>Number of clients</HeaderTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {gamesRows}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Container>
+
+      <Footer />
+    </>
+
   );
 };

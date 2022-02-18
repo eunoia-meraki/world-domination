@@ -87,15 +87,10 @@ enum GameStatus {
   ON_GOING
 }
 
-type JoinGamePayload {
-  currentGame: Game
-  id: ID!
-}
-
 type Mutation {
   createGame(gameName: String!): Game!
   interactWebRTC(actionType: ActionType!, data: String!): Boolean!
-  joinGame(gameId: ID!): JoinGamePayload!
+  joinGame(gameId: ID!): User!
   sendActions(input: SendActionsInput!): Boolean!
   signIn(login: String!, password: String!): AuthorizationPayload!
   signUp(login: String!, password: String!): AuthorizationPayload!
@@ -126,6 +121,7 @@ type Player implements Node {
 }
 
 type Query {
+  authorizedUser: User!
   games(after: String, before: String, first: Int, last: Int): QueryGamesConnection!
   node(id: ID!): Node
   nodes(ids: [ID!]!): [Node]!
@@ -251,7 +247,7 @@ type TownLevel implements Node {
 }
 
 type User implements Node {
-  currentGame: Game!
+  currentGame: Game
   id: ID!
   login: String!
 }

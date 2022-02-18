@@ -9,7 +9,7 @@ const includeNodeUser = () => {
     },
     fields: (t) => ({
       login: t.exposeString('login'),
-      currentGame: t.relation('currentGame'),
+      currentGame: t.relation('currentGame', { nullable: true }),
     }),
   });
 };

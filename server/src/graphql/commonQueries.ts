@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import { db } from '../database/db';
 import { builder } from './schemaBuilder';
 
@@ -26,6 +27,15 @@ const includeCommonQueries = () => {
           return db.game.findMany({
             ...query,
           });
+        },
+      }),
+      authorizedUser: t.prismaField({
+        authScopes: {
+          public: true,
+        },
+        type: 'User',
+        resolve: async (_, __, ___, ctx) => {
+          return ctx.user as User;
         },
       }),
     }),

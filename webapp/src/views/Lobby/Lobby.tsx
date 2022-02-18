@@ -8,10 +8,6 @@ import { Footer } from '@/components/Footer';
 
 export const Lobby: FC = () => (
   <>
-    <Header />
 
-    <Outlet />
-
-    <Footer />
   </>
 );

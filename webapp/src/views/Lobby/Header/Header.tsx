@@ -10,7 +10,13 @@ import type { FC } from 'react';
 
 import { Routes } from '@/enumerations';
 
-export const Header: FC = () => {
+interface IHeader {
+  userLogin: string;
+}
+
+export const Header: FC<IHeader> = ({
+  userLogin,
+}) => {
   const navigate = useNavigate();
 
   const onLogoutClick = (): void => {
@@ -23,6 +29,9 @@ export const Header: FC = () => {
       <Language />
       <Typography component="h2" variant="h6" color="inherit" noWrap sx={{ flex: 1, pl: 1 }}>
         World domination
+      </Typography>
+      <Typography component="h2" variant="h6" color="inherit" noWrap sx={{ flex: 1, pl: 1 }}>
+        {userLogin}
       </Typography>
       <Button variant="outlined" size="small" onClick={onLogoutClick}>
         Log out

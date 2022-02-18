@@ -3,7 +3,7 @@ import { useMatch, useNavigate } from 'react-location';
 
 import type { FC } from 'react';
 
-import type { LobbyLocation } from '../routes';
+import type { LobbyLocation } from '../LobbyLocations';
 
 import { Routes } from '@/enumerations';
 
@@ -17,7 +17,7 @@ export const SortingRoom: FC = () => {
   const onClick = (): void => {
     // TODO think
     // sessionStorage.setItem('currentGameId', gameId);
-    navigate({ to: `${Routes.Game}/${gameId}` } );
+    navigate({ to: `${Routes.Lobby}/${gameId}` } );
   };
 
   return (

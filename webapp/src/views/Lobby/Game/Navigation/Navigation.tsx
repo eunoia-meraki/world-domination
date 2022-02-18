@@ -14,7 +14,7 @@ import { useMatch, useNavigate } from 'react-location';
 
 import type { FC } from 'react';
 
-import type { GameLocation } from '../GameLocation';
+import type { LobbyLocation } from '../../LobbyLocations';
 
 import { Contents, Routes } from '@/enumerations';
 
@@ -54,27 +54,27 @@ interface INavigation {
 export const Navigation: FC<INavigation> = ({ open, setContent, content }) => {
   const {
     params: { gameId },
-  } = useMatch<GameLocation>();
+  } = useMatch<LobbyLocation>();
 
   const navigate = useNavigate();
 
   const onMainClick = (): void => {
-    navigate({ to: `${Routes.Game}/${gameId}` });
+    navigate({ to: `${Routes.Lobby}/${gameId}` });
     setContent(Contents.ConferenceHall);
   };
 
   const onWorldStatisticsClick = (): void => {
-    navigate({ to: `${Routes.Game}/${gameId}/worldstatistics` });
+    navigate({ to: `${Routes.Lobby}/${gameId}/worldstatistics` });
     setContent(Contents.WorldStatistics);
   };
 
   const onCountryStatisticsClick = (): void => {
-    navigate({ to: `${Routes.Game}/${gameId}/countrystatistics` });
+    navigate({ to: `${Routes.Lobby}/${gameId}/countrystatistics` });
     setContent(Contents.CountryStatistics);
   };
 
   const onActionsClick = (): void => {
-    navigate({ to: `${Routes.Game}/${gameId}/actions` });
+    navigate({ to: `${Routes.Lobby}/${gameId}/actions` });
     setContent(Contents.Actions);
   };
 

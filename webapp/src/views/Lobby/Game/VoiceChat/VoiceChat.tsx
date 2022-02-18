@@ -3,7 +3,7 @@ import { useMatch } from 'react-location';
 
 import { FC, useState } from 'react';
 
-import type { GameLocation } from '../GameLocation';
+import type { LobbyLocation } from '../../LobbyLocations';
 import type { ClientData } from '../types';
 
 import { Participant } from '@/components/Participant';
@@ -20,7 +20,7 @@ export const VoiceChat: FC<IVoiceChat> = ({
 }) => {
   const {
     params: { gameId },
-  } = useMatch<GameLocation>();
+  } = useMatch<LobbyLocation>();
 
   const [voiceRoom] = useState<string>(gameId);
 

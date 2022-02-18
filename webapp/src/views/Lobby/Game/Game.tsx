@@ -9,22 +9,16 @@ import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { VoiceChat } from './VoiceChat';
 
-import type { GameLocation } from './GameLocation';
+import type { LobbyLocation } from '../LobbyLocations';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
 import type { ClientData } from './types';
 
 import { Contents } from '@/enumerations';
 
-interface IGame {
-  userId: string;
-}
-
-export const Game: FC<IGame> = ({
-  userId,
-}) => {
+export const Game: FC = () => {
   const {
     data: { gameRef },
-  } = useMatch<GameLocation>();
+  } = useMatch<LobbyLocation>();
 
   const data = usePreloadedQuery<Game_game_Query>(
     graphql`
@@ -71,8 +65,8 @@ export const Game: FC<IGame> = ({
       <Header open={open} toggleOpen={toggleOpen} content={content} />
 
       <Outlet />
-
-      <VoiceChat userId={userId} clientData={getClientsData()}/>
+      {/* TODO handle it */}
+      <VoiceChat userId="qwe" clientData={getClientsData()}/>
     </Box>
   );
 };
