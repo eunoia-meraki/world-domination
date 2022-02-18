@@ -19,7 +19,6 @@ export const App: FC = () => {
       <Suspense fallback={<FullPageLoading />}>
         <Outlet />
       </Suspense>
-
       <ReactLocationDevtools initialIsOpen={false} />
     </Router>
   );

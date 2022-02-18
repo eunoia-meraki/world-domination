@@ -31,7 +31,6 @@ export const SignUp: FC = () => {
     graphql`
       mutation SignUp_signUp_Mutation($login: String!, $password: String!) {
         signUp(login: $login, password: $password) {
-          id
           token
         }
       }
@@ -49,11 +48,8 @@ export const SignUp: FC = () => {
         password: data.get('password') as string,
       },
       onCompleted: response => {
-        setErrorMessage('');
+        const { token } = response.signUp;
 
-        const { id, token } = response.signUp;
-
-        sessionStorage.setItem('userId', id);
         sessionStorage.setItem('token', token);
 
         navigate({ to: Routes.Lobby });

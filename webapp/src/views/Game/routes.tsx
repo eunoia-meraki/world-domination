@@ -15,7 +15,8 @@ export const GameRoutes: Route<GameLocation> = {
   children: [
     {
       path: '/',
-      element: <Navigate to={sessionStorage.getItem('currentGameId') ?? Routes.Lobby}/>,
+      element: <Navigate to={Routes.Lobby}/>,
+      // element: <Navigate to={sessionStorage.getItem('currentGameId') ?? Routes.Lobby}/>,
     },
     {
       path: ':gameId',

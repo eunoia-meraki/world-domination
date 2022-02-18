@@ -10,6 +10,7 @@ import type { PreloadedQuery } from 'react-relay';
 import { RelayEnvironment } from '@/RelayEnvironment';
 import { Routes } from '@/enumerations';
 
+// TODO separate this
 export type LobbyLocation = MakeGenerics<{
   LoaderData: {
     gamesListRef: PreloadedQuery<GamesListGamesQueryType>;
@@ -19,6 +20,7 @@ export type LobbyLocation = MakeGenerics<{
   };
 }>;
 
+// TODO add onMatch dispose
 export const LobbyRoutes: Route<LobbyLocation> = {
   path: Routes.Lobby,
   element: <Lobby />,

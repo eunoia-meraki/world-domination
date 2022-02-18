@@ -21,6 +21,11 @@ enum ActionType {
   SHARE_ROOMS
 }
 
+type AuthorizationPayload {
+  token: String!
+  user: User!
+}
+
 type CreateBombAction implements Node {
   action: GameAction!
   creator: Team!
@@ -82,11 +87,18 @@ enum GameStatus {
   ON_GOING
 }
 
+type JoinGamePayload {
+  currentGame: Game
+  id: ID!
+}
+
 type Mutation {
   createGame(gameName: String!): Game!
   interactWebRTC(actionType: ActionType!, data: String!): Boolean!
-  signIn(login: String!, password: String!): SignInPayload!
-  signUp(login: String!, password: String!): SignUpPayload!
+  joinGame(gameId: ID!): JoinGamePayload!
+  sendActions(input: SendActionsInput!): Boolean!
+  signIn(login: String!, password: String!): AuthorizationPayload!
+  signUp(login: String!, password: String!): AuthorizationPayload!
 }
 
 enum Nation {
@@ -160,6 +172,18 @@ type SanctionsAction implements Node {
   victim: Team!
 }
 
+input SendActionsInput {
+  createBombsCount: Int!
+  developNuclearTechnologyAction: Boolean!
+  gameId: String!
+  implementEnvironmentalProgram: Boolean!
+  investCitiesIds: [String!]!
+  sanctionsTeamIds: [String!]!
+  sendBombsCitiesIds: [String!]!
+  shieldCitiesIds: [String!]!
+  teamId: String!
+}
+
 type SendBombAction implements Node {
   action: GameAction!
   id: ID!
@@ -171,16 +195,6 @@ type ShieldCreationAction implements Node {
   action: GameAction!
   id: ID!
   town: Town!
-}
-
-type SignInPayload {
-  id: String!
-  token: String!
-}
-
-type SignUpPayload {
-  id: String!
-  token: String!
 }
 
 type Stage implements Node {
@@ -237,9 +251,8 @@ type TownLevel implements Node {
 }
 
 type User implements Node {
+  currentGame: Game!
   id: ID!
   login: String!
-  passwordHash: String!
-  players: [Player!]!
 }
 

@@ -9,10 +9,7 @@ const includeNodeUser = () => {
     },
     fields: (t) => ({
       login: t.exposeString('login'),
-      passwordHash: t.exposeString('passwordHash', {
-        authScopes: {},
-      }),
-      players: t.relation('players'),
+      currentGame: t.relation('currentGame'),
     }),
   });
 };

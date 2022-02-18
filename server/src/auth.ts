@@ -5,10 +5,10 @@ import { db } from './database/db';
 type AuthUserId = Pick<User, 'id'>;
 
 const BEARER = 'Bearer ';
-const SECRET = process.env.SECRET || 'SECRET';
+const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
 const generateJwtToken = (user: User): string => {
-  return jwt.sign({ id: user.id }, SECRET);
+  return jwt.sign({ id: user.id }, JWT_SECRET);
 };
 
 const getAuthorizedUserAsync = async (
@@ -21,7 +21,7 @@ const getAuthorizedUserAsync = async (
   const token = authorization.substring(BEARER.length, authorization.length);
 
   try {
-    const { id } = jwt.verify(token, SECRET) as AuthUserId;
+    const { id } = jwt.verify(token, JWT_SECRET) as AuthUserId;
     return await db.user.findFirst({ where: { id } });
   } catch {
     return null;

@@ -31,12 +31,20 @@ export const SignIn: FC = () => {
     graphql`
       mutation SignIn_signIn_Mutation($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
-          id
           token
+          user {
+            currentGame {
+              id
+            }
+          }
         }
       }
     `,
   );
+
+  if (sessionStorage.getItem('token')) {
+    navigate({ to: Routes.Lobby });
+  }
 
   const onSignIn = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,14 +57,17 @@ export const SignIn: FC = () => {
         password: data.get('password') as string,
       },
       onCompleted: response => {
-        setErrorMessage('');
+        const { token, user } = response.signIn;
 
-        const { id, token } = response.signIn;
-
-        sessionStorage.setItem('userId', id);
         sessionStorage.setItem('token', token);
 
-        navigate({ to: Routes.Lobby });
+        if(user.currentGame) {
+          // sessionStorage.setItem('currentGameId', user.currentGame.id);
+          navigate({ to: `${Routes.Lobby}/${user.currentGame.id}` });
+        } else {
+          navigate({ to: Routes.Lobby });
+        }
+
       },
       onError: err => {
         setErrorMessage(err.message);

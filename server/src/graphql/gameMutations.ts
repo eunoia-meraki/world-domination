@@ -84,44 +84,16 @@ const includeGameMutations = () => {
     }),
   );
 
-  class JoinGamePayload {
-    id: string;
-    currentGame: Game | null;
-
-    constructor(user: string, currentGame: Game | null) {
-      this.id = user;
-      this.currentGame = currentGame;
-    }
-  }
-
-  const JoinGamePayloadGqlType = builder.objectType(JoinGamePayload, {
-    name: 'JoinGamePayload',
-    fields: (t) => ({
-      id: t.globalID({
-        resolve: (payload) => {
-          return { type: 'User', id: payload.id };
-        },
-      }),
-      currentGame: t.prismaField({
-        type: 'Game',
-        nullable: true,
-        resolve: (_, payload) => {
-          return payload.currentGame;
-        },
-      }),
-    }),
-  });
-
   builder.mutationField('joinGame', (t) =>
-    t.field({
+    t.prismaField({
       authScopes: {
         public: true,
       },
-      type: JoinGamePayloadGqlType,
+      type: 'User',
       args: {
         gameId: t.arg.globalID({ required: true }),
       },
-      resolve: async (_, { gameId }, context) => {
+      resolve: async (_, __, { gameId }, context) => {
         const user = context.user as User;
         const game = await db.game.findUnique({ where: { id: gameId.id } });
 
@@ -137,7 +109,7 @@ const includeGameMutations = () => {
           },
         });
 
-        return { id: updated.id, currentGame: updated.currentGame };
+        return updated;
       },
     }),
   );

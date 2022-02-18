@@ -40,7 +40,7 @@ export const GamesList: FC = () => {
     data: { gamesListRef },
   } = useMatch<LobbyLocation>();
 
-  const data = usePreloadedQuery<GamesList_games_Query>(
+  const gamesData = usePreloadedQuery<GamesList_games_Query>(
     graphql`
       query GamesList_games_Query {
         games {
@@ -63,7 +63,7 @@ export const GamesList: FC = () => {
     gamesListRef as PreloadedQuery<GamesList_games_Query, Record<string, unknown>>,
   );
 
-  const games = data.games.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
+  const games = gamesData.games.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
 
   const joinLobby = (gameId: string): void => {
     navigate({ to: `${Routes.Lobby}/${gameId}` });

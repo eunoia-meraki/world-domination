@@ -3,66 +3,32 @@ import { AuthenticationError } from 'apollo-server';
 import { generateJwtToken } from '../auth';
 import { db } from '../database/db';
 import { builder } from './schemaBuilder';
-import { Game } from '@prisma/client';
+import { User } from '@prisma/client';
 
 const includeAuthMutations = () => {
-  class SignInPayload {
-    id: string;
+  class AuthorizationPayload {
     token: string;
-    currentGame: Game | null;
+    user: User;
 
-    constructor(id: string, token: string, currentGame: Game | null) {
-      this.id = id;
+    constructor(token: string, user: User) {
       this.token = token;
-      this.currentGame = currentGame;
+      this.user = user;
     }
   }
 
-  class SignUpPayload extends SignInPayload {}
-
-  const SignInPayloadGqlType = builder.objectType(SignInPayload, {
-    name: 'SignInPayload',
+  const AuthorizationPayloadGqlType = builder.objectType(AuthorizationPayload, {
+    name: 'AuthorizationPayload',
     fields: (t) => ({
-      id: t.globalID({
-        resolve: (payload) => {
-          return { type: 'User', id: payload.id };
-        },
-      }),
       token: t.field({
         type: 'String',
         resolve: (payload) => {
           return payload.token;
         },
       }),
-      currentGame: t.prismaField({
-        type: 'Game',
-        nullable: true,
+      user: t.prismaField({
+        type: 'User',
         resolve: (_, payload) => {
-          return payload.currentGame;
-        },
-      }),
-    }),
-  });
-
-  const SignUpPayloadGqlType = builder.objectType(SignUpPayload, {
-    name: 'SignUpPayload',
-    fields: (t) => ({
-      id: t.globalID({
-        resolve: (payload) => {
-          return { type: 'User', id: payload.id };
-        },
-      }),
-      token: t.field({
-        type: 'String',
-        resolve: (payload) => {
-          return payload.token;
-        },
-      }),
-      currentGame: t.prismaField({
-        type: 'Game',
-        nullable: true,
-        resolve: (payload) => {
-          return (payload?.include || null) as Game | null;
+          return payload.user;
         },
       }),
     }),
@@ -70,12 +36,12 @@ const includeAuthMutations = () => {
 
   builder.mutationField('signUp', (t) =>
     t.field({
-      type: SignUpPayloadGqlType,
+      type: AuthorizationPayloadGqlType,
       args: {
         login: t.arg.string({ required: true }),
         password: t.arg.string({ required: true }),
       },
-      resolve: async (_, { login, password }) => {
+      resolve: async (_, { login, password }, ctx) => {
         const candidate = await db.user.findUnique({
           where: { login: login },
         });
@@ -86,7 +52,10 @@ const includeAuthMutations = () => {
           );
         }
 
-        const hashPassword = await bcrypt.hash(password, 5);
+        const hashPassword = await bcrypt.hash(
+          password,
+          process.env.JWT_SECRET || 'JWT_SECRET',
+        );
         const user = await db.user.create({
           data: {
             login: login,
@@ -94,10 +63,12 @@ const includeAuthMutations = () => {
           },
         });
 
+        // need to allow query 'user' field
+        ctx.user = user;
+
         return {
-          id: user.id,
           token: generateJwtToken(user),
-          currentGame: null,
+          user: user,
         };
       },
     }),
@@ -105,12 +76,12 @@ const includeAuthMutations = () => {
 
   builder.mutationField('signIn', (t) =>
     t.field({
-      type: SignInPayloadGqlType,
+      type: AuthorizationPayloadGqlType,
       args: {
         login: t.arg.string({ required: true }),
         password: t.arg.string({ required: true }),
       },
-      resolve: async (_, { login, password }) => {
+      resolve: async (_, { login, password }, ctx) => {
         const user = await db.user.findUnique({
           where: { login: login },
           include: { currentGame: true },
@@ -124,10 +95,12 @@ const includeAuthMutations = () => {
           throw new AuthenticationError('Неверный логин или пароль');
         }
 
+        // need to allow query 'user' field
+        ctx.user = user;
+
         return {
-          id: user.id,
           token: generateJwtToken(user),
-          currentGame: user.currentGame,
+          user: user,
         };
       },
     }),
