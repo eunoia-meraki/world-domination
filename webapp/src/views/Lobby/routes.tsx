@@ -20,6 +20,10 @@ export const LobbyRoutes: Route<LobbyLocation> = {
   },
   children: [
     {
+      path: '/',
+      element: <Navigate to={Routes.Lobby}/>,
+    },
+    {
       path: ':gameId',
       element: () => import('./Game').then(({ Game }) => <Game />),
       loader: ({ params: { gameId } }) => ({
@@ -31,6 +35,7 @@ export const LobbyRoutes: Route<LobbyLocation> = {
       children: [
         {
           path: '/',
+          // errorElement: <Navigate to={Routes.Lobby}/>,
         },
         {
           path: 'worldstatistics',

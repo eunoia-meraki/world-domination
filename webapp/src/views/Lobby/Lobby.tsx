@@ -1,5 +1,5 @@
 import graphql from 'babel-plugin-relay/macro';
-import { MatchRoute, Outlet, useMatch } from 'react-location';
+import { MatchRoute, Outlet, useMatch, useNavigate } from 'react-location';
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
 
 import type { FC } from 'react';
@@ -11,11 +11,15 @@ import type { LobbyLocation } from './LobbyLocations';
 import type { Lobby_authorizedUser_Query } from './__generated__/Lobby_authorizedUser_Query.graphql';
 
 import { Footer } from '@/components/Footer';
+import { Routes } from '@/enumerations';
 
 export const Lobby: FC = () => {
   const {
-    data: { authorizedUserRef: userRef },
+    data: { authorizedUserRef },
+    params: { gameId },
   } = useMatch<LobbyLocation>();
+
+  const navigate = useNavigate();
 
   const userData = usePreloadedQuery<Lobby_authorizedUser_Query>(
     graphql`
@@ -30,8 +34,12 @@ export const Lobby: FC = () => {
         }
       }
     `,
-    userRef as PreloadedQuery<Lobby_authorizedUser_Query, Record<string, unknown>>,
+    authorizedUserRef as PreloadedQuery<Lobby_authorizedUser_Query, Record<string, unknown>>,
   );
+
+  if (userData.authorizedUser.currentGame && !gameId) {
+    navigate({ to: `${Routes.Lobby}/${userData.authorizedUser.currentGame.id}` });
+  }
 
   return (
     <>
