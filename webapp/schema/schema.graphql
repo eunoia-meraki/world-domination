@@ -250,8 +250,19 @@ type TownLevel implements Node {
 }
 
 type User implements Node {
+  availableGames(after: String, before: String, first: Int, last: Int): UserAvailableGamesConnection!
   currentGame: Game
   id: ID!
   login: String!
+}
+
+type UserAvailableGamesConnection {
+  edges: [UserAvailableGamesConnectionEdge]!
+  pageInfo: PageInfo!
+}
+
+type UserAvailableGamesConnectionEdge {
+  cursor: String!
+  node: Game!
 }
 

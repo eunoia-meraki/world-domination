@@ -62,7 +62,6 @@ export const SignIn: FC = () => {
         sessionStorage.setItem('token', token);
 
         if(user.currentGame) {
-          // sessionStorage.setItem('currentGameId', user.currentGame.id);
           navigate({ to: `${Routes.Lobby}/${user.currentGame.id}` });
         } else {
           navigate({ to: Routes.Lobby });

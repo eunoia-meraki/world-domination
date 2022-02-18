@@ -93,7 +93,9 @@
         "allow": [
           "_Mutation$",
           "_Subscription$",
-          "_Query$"
+          "_Query$",
+          "_Fragment\\$key",
+          "_Query\\$data"
         ]
       }
     ],

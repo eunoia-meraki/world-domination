@@ -1,13 +1,18 @@
 import { Box } from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
-import { Outlet, useMatch } from 'react-location';
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay';
+import { MatchRoute, useMatch } from 'react-location';
+import { usePreloadedQuery } from 'react-relay';
 
-import { FC, useCallback , useState } from 'react';
+import { FC , useState } from 'react';
 
+import { Actions } from './Actions';
+import { CountryStatistics } from './CountryStatistics';
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { VoiceChat } from './VoiceChat';
+import { WorldStatistics } from './WorldStatistics';
+
+import { SortingRoom } from '../SortingRoom';
 
 import type { LobbyLocation } from '../LobbyLocations';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
@@ -20,6 +25,9 @@ export const Game: FC = () => {
     data: { gameRef },
   } = useMatch<LobbyLocation>();
 
+  const [open, setOpen] = useState<boolean>(true);
+  const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
+
   const data = usePreloadedQuery<Game_game_Query>(
     graphql`
       query Game_game_Query($gameId: ID!) {
@@ -30,27 +38,31 @@ export const Game: FC = () => {
               id
               login
             }
+            teams {
+              players {
+                roles
+              }
+              nation
+            }
           }
+        }
+        authorizedUser {
+          id
         }
       }
     `,
-    gameRef as PreloadedQuery<Game_game_Query, Record<string, unknown>>,
+    gameRef!,
   );
-
-  const [open, setOpen] = useState<boolean>(true);
-  const [content, setContent] = useState<Contents>(Contents.ConferenceHall);
 
   const toggleOpen = (): void => {
     setOpen(!open);
   };
 
-  const getClientsData = useCallback((): ClientData =>
-    data.node?.clients?.reduce(
-      (acc: ClientData, client) => ({
-        ...acc, [client.id]: client.login,
-      }),
-      {}) || {},
-  [data]);
+  const clientsData = data.node?.clients?.reduce(
+    (acc: ClientData, client) => ({
+      ...acc, [client.id]: client.login,
+    }),
+    {}) || {};
 
   return (
     <Box
@@ -64,9 +76,24 @@ export const Game: FC = () => {
 
       <Header open={open} toggleOpen={toggleOpen} content={content} />
 
-      <Outlet />
+      <MatchRoute to=".">
+        <SortingRoom />
+      </MatchRoute>
+
+      <MatchRoute to="countrystatistics">
+        <CountryStatistics />
+      </MatchRoute>
+
+      <MatchRoute to="worldstatistics">
+        <WorldStatistics />
+      </MatchRoute>
+
+      <MatchRoute to="actions">
+        <Actions />
+      </MatchRoute>
+
       {/* TODO handle it */}
-      <VoiceChat userId="qwe" clientData={getClientsData()}/>
+      <VoiceChat userId={data.authorizedUser.id} clientData={clientsData}/>
     </Box>
   );
 };

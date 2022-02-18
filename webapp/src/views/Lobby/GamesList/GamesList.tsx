@@ -14,19 +14,14 @@ import {
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import graphql from 'babel-plugin-relay/macro';
-import { useMatch, useNavigate } from 'react-location';
-import { PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay';
+import { useNavigate } from 'react-location';
+import { useFragment, useMutation } from 'react-relay';
 
 import type { FC, SyntheticEvent } from 'react';
 
-import { Header } from '../Header';
-
-import type { LobbyLocation } from '../LobbyLocations';
-import type { GamesList_authorizedUser_Query } from './__generated__/GamesList_authorizedUser_Query.graphql';
 import type { GamesList_createGame_Mutation } from './__generated__/GamesList_createGame_Mutation.graphql';
-import type { GamesList_games_Query } from './__generated__/GamesList_games_Query.graphql';
+import type { GamesList_games_Fragment$key } from './__generated__/GamesList_games_Fragment.graphql';
 
-import { Footer } from '@/components/Footer';
 import { Routes } from '@/enumerations';
 
 const HeaderTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,24 +32,25 @@ const HeaderTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export const GamesList: FC = () => {
+interface IGamesList {
+  gamesList: GamesList_games_Fragment$key;
+}
+
+export const GamesList: FC<IGamesList> = ({
+  gamesList,
+}) => {
   const navigate = useNavigate();
 
-  const {
-    data: { gamesListRef, userRef },
-  } = useMatch<LobbyLocation>();
-
-  const gamesData = usePreloadedQuery<GamesList_games_Query>(
+  const gamesData = useFragment(
     graphql`
-      query GamesList_games_Query {
-        games {
+      fragment GamesList_games_Fragment on User {
+        availableGames {
           edges {
             node {
               id
               name
               clients {
                 id
-                login
               }
               teams {
                 maxPlayersCount
@@ -64,26 +60,10 @@ export const GamesList: FC = () => {
         }
       }
     `,
-    gamesListRef as PreloadedQuery<GamesList_games_Query, Record<string, unknown>>,
+    gamesList,
   );
 
-  const authorizedUser = usePreloadedQuery<GamesList_authorizedUser_Query>(
-    graphql`
-      query GamesList_authorizedUser_Query {
-        authorizedUser {
-          id
-          login
-          currentGame {
-            id
-          }
-        }
-      }
-    `,
-    userRef as PreloadedQuery<GamesList_authorizedUser_Query, Record<string, unknown>>,
-  );
-
-  const userLogin = authorizedUser.authorizedUser.login;
-  const games = gamesData.games.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
+  const games = gamesData.availableGames.edges.filter(edge => edge).map(edge => edge!.node) ?? [];
 
   const joinLobby = (gameId: string): void => {
     navigate({ to: `${Routes.Lobby}/${gameId}` });
@@ -137,53 +117,47 @@ export const GamesList: FC = () => {
   });
 
   return (
-    <>
-      <Header userLogin={userLogin} />
-
-      <Container
-        component="main"
-        maxWidth="md"
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          flexGrow: 1,
-        }}
-      >
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1, width: '25ch' },
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '10px',
-            }}
-            onSubmit={onCreateLobby}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField id="outlined-basic" label="Lobby name" variant="outlined" name='lobbyName' sx={{ flex: '1 1 auto' }} />
-            <Button type="submit" variant="outlined">Create lobby</Button>
-          </Box>
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <HeaderTableCell>Name</HeaderTableCell>
-                  <HeaderTableCell>Number of clients</HeaderTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {gamesRows}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Container>
-
-      <Footer />
-    </>
+    <Container
+      component="main"
+      maxWidth="md"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        flexGrow: 1,
+      }}
+    >
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Box
+          component="form"
+          sx={{
+            '& > :not(style)': { m: 1, width: '25ch' },
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '10px',
+          }}
+          onSubmit={onCreateLobby}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField id="outlined-basic" label="Lobby name" variant="outlined" name='lobbyName' sx={{ flex: '1 1 auto' }} />
+          <Button type="submit" variant="outlined">Create lobby</Button>
+        </Box>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <HeaderTableCell>Name</HeaderTableCell>
+                <HeaderTableCell>Number of clients</HeaderTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {gamesRows}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </Container>
 
   );
 };
