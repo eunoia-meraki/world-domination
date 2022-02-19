@@ -40,12 +40,6 @@ type EcologyDepositAction implements Node {
   id: ID!
 }
 
-type EconomicDepositAction implements Node {
-  action: GameAction!
-  id: ID!
-  town: Town!
-}
-
 type Game implements Node {
   clients: [User!]!
   currentRound: Int!
@@ -62,7 +56,7 @@ type GameAction implements Node {
   createBombAction: CreateBombAction!
   developNuclearTechnologyAction: DevelopNuclearTechnologyAction!
   ecologyDepositAction: EcologyDepositAction!
-  economicDepositAction: EconomicDepositAction!
+  economicDepositAction: InvestTownAction!
   id: ID!
   round: Round!
   sanctionsAction: SanctionAction!
@@ -76,7 +70,7 @@ enum GameActionType {
   CREATE_BOMB
   DEVELOP_NUCLEAR_TECHNOLOGY
   ECOLOGY_DEPOSIT
-  ECONOMIC_DEPOSIT
+  INVEST_TOWN
   SANCTION
   SEND_BOMB
   SHILED_CREATION
@@ -86,6 +80,12 @@ enum GameStatus {
   ENDED
   NOT_STARTED
   ON_GOING
+}
+
+type InvestTownAction implements Node {
+  action: GameAction!
+  id: ID!
+  town: Town!
 }
 
 type Mutation {
@@ -231,8 +231,8 @@ type TeamRoom implements Node {
 
 type Town implements Node {
   destroyed: Boolean!
-  economicDepositActions: [EconomicDepositAction!]!
   id: ID!
+  investTownActions: [InvestTownAction!]!
   name: String!
   sendBombActions: [SendBombAction!]!
   shield: Boolean!

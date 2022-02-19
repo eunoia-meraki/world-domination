@@ -13,7 +13,7 @@ const includeNodeTownLevel = () => {
       team: t.relation('team'),
       shield: t.exposeBoolean('shield'),
       destroyed: t.exposeBoolean('destroyed'),
-      economicDepositActions: t.relation('economicDepositActions'),
+      investTownActions: t.relation('investTownActions'),
       shieldCreationActions: t.relation('shieldCreationActions'),
       sendBombActions: t.relation('sendBombActions'),
     }),

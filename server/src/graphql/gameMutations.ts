@@ -302,8 +302,8 @@ const includeGameMutations = () => {
         args.input.investTownsIds.forEach((townId) => {
           db.gameAction.create({
             data: {
-              type: GameActionType.ECONOMIC_DEPOSIT,
-              economicDepositAction: {
+              type: GameActionType.INVEST_TOWN,
+              investTownAction: {
                 create: {
                   townId: townId,
                 },

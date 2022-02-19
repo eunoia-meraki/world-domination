@@ -1,7 +1,7 @@
 import { builder } from '../schemaBuilder';
 
-const includeNodeEconomicDepositAction = () => {
-  builder.prismaNode('EconomicDepositAction', {
+const includeNodeInvestTownAction = () => {
+  builder.prismaNode('InvestTownAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },
     authScopes: {
@@ -14,4 +14,4 @@ const includeNodeEconomicDepositAction = () => {
   });
 };
 
-export default includeNodeEconomicDepositAction;
+export default includeNodeInvestTownAction;

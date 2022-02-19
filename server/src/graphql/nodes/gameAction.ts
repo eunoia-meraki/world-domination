@@ -1,7 +1,7 @@
 import { GameActionType } from '@prisma/client';
 import { builder } from '../schemaBuilder';
 
-const includeAction = () => {
+const includeGameAction = () => {
   builder.prismaNode('GameAction', {
     findUnique: (id) => ({ id }),
     id: { resolve: (action) => action.id },
@@ -12,7 +12,7 @@ const includeAction = () => {
       type: t.expose('type', { type: GameActionType }),
       round: t.relation('round'),
       team: t.relation('team'),
-      economicDepositAction: t.relation('economicDepositAction'),
+      economicDepositAction: t.relation('investTownAction'),
       shieldCreationAction: t.relation('shieldCreationAction'),
       sendBombAction: t.relation('sendBombAction'),
       createBombAction: t.relation('createBombAction'),
@@ -25,4 +25,4 @@ const includeAction = () => {
   });
 };
 
-export default includeAction;
+export default includeGameAction;

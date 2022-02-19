@@ -60,7 +60,7 @@ model Team {
   teamRoom             TeamRoom?
   sendBombActions      SendBombAction[]
   createBombActions    CreateBombAction[]
-  sanctionActions     SanctionAction[]
+  sanctionActions      SanctionAction[]
   actions              GameAction[]
 }
 
@@ -109,17 +109,17 @@ model TeamRoom {
 }
 
 model Town {
-  id                     String                  @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  name                   String
-  townLevelId            String                  @db.ObjectId
-  townLevel              TownLevel               @relation(fields: [townLevelId], references: [id])
-  shield                 Boolean
-  destroyed              Boolean
-  economicDepositActions EconomicDepositAction[]
-  shieldCreationActions  ShieldCreationAction[]
-  sendBombActions        SendBombAction[]
-  team                   Team?                   @relation(fields: [teamId], references: [id])
-  teamId                 String?                 @db.ObjectId
+  id                    String                 @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name                  String
+  townLevelId           String                 @db.ObjectId
+  townLevel             TownLevel              @relation(fields: [townLevelId], references: [id])
+  shield                Boolean
+  destroyed             Boolean
+  investTownActions     InvestTownAction[]
+  shieldCreationActions ShieldCreationAction[]
+  sendBombActions       SendBombAction[]
+  team                  Team?                  @relation(fields: [teamId], references: [id])
+  teamId                String?                @db.ObjectId
 }
 
 model TownLevel {
@@ -132,7 +132,7 @@ model TownLevel {
 }
 
 enum GameActionType {
-  ECONOMIC_DEPOSIT
+  INVEST_TOWN 
   SHILED_CREATION
   SEND_BOMB
   CREATE_BOMB
@@ -148,16 +148,16 @@ model GameAction {
   round                          Round                           @relation(fields: [roundId], references: [id])
   teamId                         String                          @unique @db.ObjectId
   team                           Team                            @relation(fields: [teamId], references: [id])
-  economicDepositAction          EconomicDepositAction?
+  investTownAction               InvestTownAction?
   shieldCreationAction           ShieldCreationAction?
   sendBombAction                 SendBombAction?
   createBombAction               CreateBombAction?
   ecologyDepositAction           EcologyDepositAction?
   developNuclearTechnologyAction DevelopNuclearTechnologyAction?
-  sanctionAction                SanctionAction?
+  sanctionAction                 SanctionAction?
 }
 
-model EconomicDepositAction {
+model InvestTownAction {
   id       String     @id @default(dbgenerated()) @map("_id") @db.ObjectId
   townId   String     @db.ObjectId
   town     Town       @relation(fields: [townId], references: [id])
