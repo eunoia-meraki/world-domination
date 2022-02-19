@@ -6,10 +6,10 @@ import { useEffect, useRef, useCallback } from 'react';
 
 import useStateWithCallback, { StateUpdatedCallback } from './useStateWithCallback';
 
+import { RelayEnvironment } from '../RelayEnvironment';
+
 import type { useWebRTC_WebRTC_Subscription } from './__generated__/useWebRTC_WebRTC_Subscription.graphql';
 import type { useWebRTC_interactWebRTC_Mutation } from './__generated__/useWebRTC_interactWebRTC_Mutation.graphql';
-
-import { RelayEnvironment } from '@/RelayEnvironment';
 
 const voiceChatSubscription = graphql`
   subscription useWebRTC_WebRTC_Subscription($roomId: String!) {

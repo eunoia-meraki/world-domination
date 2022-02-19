@@ -16,7 +16,6 @@ import { SortingRoom } from '../SortingRoom';
 
 import type { LobbyLocation } from '../LobbyLocations';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
-import type { ClientData } from './types';
 
 import { Contents } from '@/enumerations';
 
@@ -32,12 +31,15 @@ export const Game: FC = () => {
     graphql`
       query Game_game_Query($gameId: ID!) {
         node(id: $gameId) {
-          id
+          id 
           ... on Game {
+            ...VoiceChat_clients_Fragment
+
             clients {
               id
               login
             }
+        
             teams {
               players {
                 roles
@@ -61,12 +63,6 @@ export const Game: FC = () => {
   const toggleOpen = (): void => {
     setOpen(!open);
   };
-
-  const clientsData = data.node?.clients?.reduce(
-    (acc: ClientData, client) => ({
-      ...acc, [client.id]: client.login,
-    }),
-    {}) || {};
 
   return (
     <Box
@@ -97,7 +93,7 @@ export const Game: FC = () => {
       </MatchRoute>
 
       {/* TODO handle it */}
-      <VoiceChat userId={data.authorizedUser.id} clientData={clientsData}/>
+      <VoiceChat userId={data.authorizedUser.id} data={data.node!}/>
     </Box>
   );
 };
