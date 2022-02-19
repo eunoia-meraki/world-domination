@@ -94,7 +94,7 @@ const getAudioIndicationGetter = (media: MediaStream) => {
 
 const debugPrint = (op:string, data: unknown) => {
   // eslint-disable-next-line no-console
-  console.log(data);
+  console.log(op, data);
 };
 
 export interface Client {
@@ -108,7 +108,6 @@ const useWebRTC = (roomID: string, userId: string) => {
   const HTMLMediaElements = useRef<HTMLMediaElementDictionary>({});
   const RTCPeerConnections = useRef<RTCPeerConnectionDictionary>({});
   const selfMediaStream = useRef<MediaStream | null>(null);
-  // const audioIndicationGetters = useRef<AudioIndicationGetters>({});
 
   const addOneClient = useCallback((newClient: Client, cb: StateUpdatedCallback<Client[]>) => {
     updateClients(list => !list.includes(newClient) ? [...list, newClient] : list, cb);

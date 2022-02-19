@@ -29,13 +29,13 @@ export const VoiceChat: FC<IVoiceChat> = ({
   // eslint-disable-next-line no-console
   console.log(participants);
 
-  const participantCollection = participants.map((participant, index) => {
-    const key = index.toString();
+  const participantCollection = participants.map(participant => {
+    const clientName = clientData[participant.clientId];
 
     return (
       <Participant
-        name={clientData[userId]}
-        key={key}
+        name={clientName}
+        key={participant.clientId}
         client={participant}
         myself={participant.clientId === userId}
         provideMediaRef={provideMediaRef}

@@ -54,7 +54,7 @@ const includeAuthMutations = () => {
 
         const hashPassword = await bcrypt.hash(
           password,
-          process.env.JWT_SECRET || 'JWT_SECRET',
+          process.env.JWT_SECRET?.length || 5,
         );
         const user = await db.user.create({
           data: {

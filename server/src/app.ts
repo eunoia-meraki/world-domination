@@ -49,8 +49,17 @@ export const init = async (
         schema,
         execute,
         subscribe,
-        onConnect: async (params) =>
-          await makeContext(pubsub, params?.Authorization),
+        onConnect: async (params) => {
+          if (!params.Authorization) {
+            throw new Error('Unauthorized');
+          } else {
+            const context = await makeContext(pubsub, params.Authorization);
+            if (!context.user) {
+              throw new Error('Unauthorized');
+            }
+            return context;
+          }
+        },
       },
       {
         server,

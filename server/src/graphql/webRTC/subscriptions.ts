@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { GQLContext } from '../../app';
-import { builder } from '../schemaBuilder';
+import { builder, encodeGlobalID } from '../schemaBuilder';
 import { ActionEvent, ActionEventGqlType, ActionType } from './types';
 
 // TODO move to db
@@ -69,13 +69,14 @@ const addPeerEventHandler = (ctx: GQLContext, roomId: string) => {
 
     const to = rooms[roomId]
       .map((u) => u?.id)
-      .filter((id) => id && id !== user.id);
+      .filter((id) => id && id !== user.id)
+      .map((id) => encodeGlobalID('User', id));
 
     if (to.length !== 0) {
       broadcastWebRTCEvent(ctx, {
         actionType: ActionType.ADD_PEER,
         data: JSON.stringify({
-          offerCreator: user.id,
+          offerCreator: encodeGlobalID('User', user.id),
           to,
         }),
       });
@@ -90,7 +91,7 @@ const removePeerEventHandler = (ctx: GQLContext, roomId: string) => {
     broadcastWebRTCEvent(ctx, {
       actionType: ActionType.REMOVE_PEER,
       data: JSON.stringify({
-        disconnected: user.id,
+        disconnected: encodeGlobalID('User', user.id),
       }),
     });
 

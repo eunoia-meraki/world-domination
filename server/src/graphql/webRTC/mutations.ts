@@ -1,4 +1,4 @@
-import { builder } from '../schemaBuilder';
+import { builder, encodeGlobalID } from '../schemaBuilder';
 import { AuthenticationError } from 'apollo-server';
 import { ActionType, ActionTypeGql } from './types';
 import { broadcastWebRTCEvent } from './subscriptions';
@@ -15,7 +15,7 @@ const actionResolvers = {
       broadcastWebRTCEvent(ctx, {
         actionType: ActionType.ICE_CANDIDATE,
         data: JSON.stringify({
-          creator: user.id,
+          creator: encodeGlobalID('User', user.id),
           icd: icd,
         }),
       });
@@ -28,7 +28,7 @@ const actionResolvers = {
       broadcastWebRTCEvent(ctx, {
         actionType: ActionType.SESSION_DESCRIPTION,
         data: JSON.stringify({
-          creator: user.id,
+          creator: encodeGlobalID('User', user.id),
           sdd,
         }),
       });

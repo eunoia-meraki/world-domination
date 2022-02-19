@@ -41,6 +41,10 @@ export const Game: FC = () => {
             teams {
               players {
                 roles
+                users {
+                  login
+                  id
+                }
               }
               nation
             }
