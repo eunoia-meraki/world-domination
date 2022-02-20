@@ -44,7 +44,11 @@ export const init = async (
       return next();
     }
 
-    res.sendFile(__dirname + '/clientApp/index.html');
+    if (req.url.startsWith('/static')) {
+      res.sendFile(__dirname + `/clientApp${req.url}`);
+    } else {
+      res.sendFile(__dirname + '/clientApp/index.html');
+    }
   });
 
   apolloServer.applyMiddleware({ app, path: graphqlPath });
