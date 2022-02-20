@@ -1,9 +1,5 @@
 import { Language } from '@mui/icons-material';
-import {
-  Toolbar,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Toolbar, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-location';
 
 import type { FC } from 'react';
@@ -12,14 +8,18 @@ import { Routes } from '@/enumerations';
 
 interface IHeader {
   userLogin: string;
+  currentGame: boolean;
+  leaveGame: () => void;
 }
 
-export const Header: FC<IHeader> = ({
-  userLogin,
-}) => {
+export const Header: FC<IHeader> = ({ userLogin, currentGame, leaveGame }) => {
   const navigate = useNavigate();
 
-  const onLogoutClick = (): void => {
+  const onLeaveClick = () => {
+    leaveGame();
+  };
+
+  const onSignClick = (): void => {
     sessionStorage.clear();
     navigate({ to: Routes.SignIn });
   };
@@ -33,9 +33,15 @@ export const Header: FC<IHeader> = ({
       <Typography component="h2" variant="h6" color="inherit" noWrap sx={{ flex: 1, pl: 1 }}>
         {userLogin}
       </Typography>
-      <Button variant="outlined" size="small" onClick={onLogoutClick}>
-        Log out
-      </Button>
+      {currentGame ? (
+        <Button variant="outlined" size="small" onClick={onLeaveClick}>
+          Leave
+        </Button>
+      ) : (
+        <Button variant="outlined" size="small" onClick={onSignClick}>
+          Sign out
+        </Button>
+      )}
     </Toolbar>
   );
 };

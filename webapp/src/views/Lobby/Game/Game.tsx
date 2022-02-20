@@ -88,6 +88,9 @@ export const Game: FC = () => {
             id
             login
           }
+
+          ...SortingRoom_game_Fragment
+
           status
         }
       }
@@ -128,26 +131,50 @@ export const Game: FC = () => {
               borderColor: 'divider',
             }}
           >
-            <Tabs value={value} onChange={onChange} aria-label="tabs">
+            <Tabs
+              sx={{ minHeight: '42px' }}
+              value={value}
+              onChange={onChange}
+              aria-label="tabs">
               <Tab
+                sx={{
+                  minHeight: '42px',
+                  p: '9px',
+                }}
                 icon={<People />}
                 iconPosition="start"
                 label="Conference Hall"
                 {...a11yProps(0)}
               />
               <Tab
+                sx={{
+                  minHeight: '42px',
+                  p: '9px',
+                }}
                 icon={<Flag />}
                 iconPosition="start"
                 label="Country Statistics"
                 {...a11yProps(1)}
               />
               <Tab
+                sx={{
+                  minHeight: '42px',
+                  p: '9px',
+                }}
                 icon={<Public />}
                 iconPosition="start"
                 label="World Statistics"
                 {...a11yProps(2)}
               />
-              <Tab icon={<ThumbUp />} iconPosition="start" label="Actions" {...a11yProps(3)} />
+              <Tab
+                sx={{ minHeight: '30px',
+                  p: '9px',
+                }}
+                icon={<ThumbUp />}
+                iconPosition="start"
+                label="Actions"
+                {...a11yProps(3)}
+              />
             </Tabs>
           </Box>
 

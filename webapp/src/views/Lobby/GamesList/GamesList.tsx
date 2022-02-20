@@ -164,7 +164,7 @@ export const GamesList: FC<IGamesList> = ({
           autoComplete="off"
         >
           <TextField id="outlined-basic" label="Lobby name" variant="outlined" name='lobbyName' sx={{ flex: '1 1 auto' }} />
-          <Button type="submit" variant="outlined">Create lobby</Button>
+          <Button type="submit" variant="contained">Create lobby</Button>
         </Box>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">

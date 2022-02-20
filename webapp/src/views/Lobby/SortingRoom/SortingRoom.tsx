@@ -38,19 +38,6 @@ interface ISortingRoom {
 }
 
 export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
-  // TODO move to header
-
-  // const {
-  //   params: { gameId },
-  // } = useMatch<LobbyLocation>();
-
-  // const navigate = useNavigate();
-
-  // const onClick = (): void => {
-  // sessionStorage.setItem('currentGameId', gameId);
-  // navigate({ to: `${Routes.Lobby}/${gameId}` });
-  // };
-
   const data = useFragment(
     graphql`
       fragment SortingRoom_game_Fragment on Game {

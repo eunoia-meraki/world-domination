@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
 import { MatchRoute, Outlet, useMatch, useNavigate } from 'react-location';
 import { PreloadedQuery, useMutation, usePreloadedQuery } from 'react-relay';
@@ -57,26 +57,45 @@ export const Lobby: FC = () => {
 
   const leaveGame = () => {
     if (currentGame) {
-      leave({ variables: {} });
+      leave({
+        variables: {},
+        onCompleted: () => navigate({ to: `${Routes.Lobby}` }),
+        onError: () => {},
+      });
+    }
+  };
+
+  const onContinueClick = () => {
+    if (currentGame) {
+      navigate({ to: `${Routes.Lobby}/${currentGame.id}` });
     }
   };
 
   return (
     <>
-      <Header userLogin={userData.authorizedUser.login} />
+      <Header
+        userLogin={userData.authorizedUser.login}
+        currentGame={!!currentGame}
+        leaveGame={leaveGame}
+      />
 
       <MatchRoute to=".">
-        {currentGame
-          ? <>
-            <Button variant="outlined" onClick={() => navigate({ to: `${Routes.Lobby}/${currentGame.id}` })}>
+        {currentGame ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Button variant="contained" onClick={onContinueClick}>
               Continue
             </Button>
-            <Button variant="outlined" title='Leave' onClick={leaveGame}>
-              Leave
-            </Button>
-          </>
-          : <GamesList gamesList={userData.authorizedUser} />
-        }
+          </Box>
+        ) : (
+          <GamesList gamesList={userData.authorizedUser} />
+        )}
       </MatchRoute>
 
       <Outlet />
