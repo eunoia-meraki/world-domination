@@ -24,7 +24,7 @@ import type {
   Observable,
 } from 'subscriptions-transport-ws';
 
-const GRAPHQL_ENDPOINT = `${window.location.host}/graphql`;
+const GRAPHQL_ENDPOINT = 'localhost:8002/graphql';
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load

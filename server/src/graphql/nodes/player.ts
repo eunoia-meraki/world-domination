@@ -9,8 +9,8 @@ const includeNodePlayer = () => {
       public: true,
     },
     fields: (t) => ({
-      users: t.relation('user'),
-      roles: t.expose('role', { type: RoleType }),
+      user: t.relation('user'),
+      role: t.expose('role', { type: RoleType }),
     }),
   });
 };

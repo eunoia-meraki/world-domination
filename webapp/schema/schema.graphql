@@ -101,8 +101,8 @@ type PageInfo {
 
 type Player implements Node {
   id: ID!
-  roles: RoleType!
-  users: User!
+  role: RoleType!
+  user: User!
 }
 
 type Query {

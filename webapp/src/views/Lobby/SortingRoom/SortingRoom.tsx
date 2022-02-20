@@ -42,11 +42,12 @@ export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
     graphql`
       fragment SortingRoom_game_Fragment on Game {
         teams {
+          id
           players {
-            roles
-            users {
-              login
+            role
+            user {
               id
+              login
             }
           }
           nation
@@ -85,21 +86,22 @@ export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {teams.map(team =>
-                  team.players.map((player, playerIndex) =>
-                    playerIndex === 0 ? (
-                      <TableRow key={player.users.id}>
-                        <BodyTableCell rowSpan={team.players.length}>{team.nation}</BodyTableCell>
-                        <BodyTableCell>{player.roles}</BodyTableCell>
-                        <BodyTableCell>{player.users.login}</BodyTableCell>
-                      </TableRow>
-                    ) : (
-                      <TableRow key={player.users.id}>
-                        <BodyTableCell>{player.roles}</BodyTableCell>
-                        <BodyTableCell>{player.users.login}</BodyTableCell>
-                      </TableRow>
-                    ),
-                  ),
+                {teams.map(team => {
+                  const president = team.players.find(player => player.role === 'PRESIDENT');
+                  const diplomat = team.players.find(player => player.role === 'DIPLOMAT');
+
+                  return <>
+                    <TableRow key={president?.user?.id || `${team.id}_president`}>
+                      <BodyTableCell rowSpan={2}>{team.nation}</BodyTableCell>
+                      <BodyTableCell>PRESIDENT</BodyTableCell>
+                      <BodyTableCell>{president?.user?.login || ''}</BodyTableCell>
+                    </TableRow>
+                    <TableRow key={diplomat?.user?.id || `${team.id}_diplomat`}>
+                      <BodyTableCell>DIPLOMAT</BodyTableCell>
+                      <BodyTableCell>{diplomat?.user?.login || ''}</BodyTableCell>
+                    </TableRow>
+                  </>;
+                },
                 )}
               </TableBody>
             </Table>
