@@ -5,7 +5,12 @@ import { styled } from '@mui/material/styles';
 
 import type { FC } from 'react';
 
-import { Contents } from '@/enumerations';
+enum Contents {
+  ConferenceHall,
+  WorldStatistics,
+  CountryStatistics,
+  Actions,
+}
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;

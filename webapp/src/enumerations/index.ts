@@ -3,10 +3,3 @@ export enum Routes {
   SignUp = '/signup',
   Lobby = '/lobby',
 }
-
-export enum Contents {
-  ConferenceHall,
-  WorldStatistics,
-  CountryStatistics,
-  Actions,
-}

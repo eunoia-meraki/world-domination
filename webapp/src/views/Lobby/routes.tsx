@@ -38,15 +38,6 @@ export const LobbyRoutes: Route<LobbyLocation> = {
           // errorElement: <Navigate to={Routes.Lobby}/>,
         },
         {
-          path: 'worldstatistics',
-        },
-        {
-          path: 'countrystatistics',
-        },
-        {
-          path: 'actions',
-        },
-        {
           path: '*',
           element: <Navigate to={Routes.Lobby}/>,
         },

@@ -16,7 +16,14 @@ import type { FC } from 'react';
 
 import type { LobbyLocation } from '../../LobbyLocations';
 
-import { Contents, Routes } from '@/enumerations';
+import { Routes } from '@/enumerations';
+
+enum Contents {
+  ConferenceHall,
+  WorldStatistics,
+  CountryStatistics,
+  Actions,
+}
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })(
   ({ theme, open }) => ({

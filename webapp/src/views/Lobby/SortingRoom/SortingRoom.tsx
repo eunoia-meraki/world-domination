@@ -9,6 +9,7 @@ import {
   TableRow,
   styled,
   Button,
+  Box,
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { useMatch, useNavigate } from 'react-location';
@@ -93,48 +94,55 @@ export const SortingRoom: FC = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="md"
+    <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        flexGrow: 1,
+        height: '100%',
+        backgroundColor: theme =>
+          theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
       }}
     >
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <Button variant="contained">Start</Button>
-        <Button variant="contained" onClick={onClick}>
-          Leave
-        </Button>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <HeadTableCell>Country</HeadTableCell>
-                <HeadTableCell>Role</HeadTableCell>
-                <HeadTableCell>Player</HeadTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item, index) => (
-                <>
-                  <TableRow key={index.toString()}>
-                    <BodyTableCell rowSpan={2}>{item.country}</BodyTableCell>
-                    <BodyTableCell>{item.players[0].role}</BodyTableCell>
-                    <BodyTableCell>{item.players[0].login}</BodyTableCell>
-                  </TableRow>
-                  <TableRow>
-                    <BodyTableCell>{item.players[1].role}</BodyTableCell>
-                    <BodyTableCell>{item.players[1].login}</BodyTableCell>
-                  </TableRow>
-                </>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </Container>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: 'flex',
+          // flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+          <Button variant="contained">Start</Button>
+          <Button variant="contained" onClick={onClick}>
+            Leave
+          </Button>
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  <HeadTableCell>Country</HeadTableCell>
+                  <HeadTableCell>Role</HeadTableCell>
+                  <HeadTableCell>Player</HeadTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((item, index) => (
+                  <>
+                    <TableRow key={index.toString()}>
+                      <BodyTableCell rowSpan={2}>{item.country}</BodyTableCell>
+                      <BodyTableCell>{item.players[0].role}</BodyTableCell>
+                      <BodyTableCell>{item.players[0].login}</BodyTableCell>
+                    </TableRow>
+                    <TableRow>
+                      <BodyTableCell>{item.players[1].role}</BodyTableCell>
+                      <BodyTableCell>{item.players[1].login}</BodyTableCell>
+                    </TableRow>
+                  </>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Container>
+    </Box>
   );
 };

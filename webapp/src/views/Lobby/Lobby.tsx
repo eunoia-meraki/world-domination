@@ -67,8 +67,9 @@ export const Lobby: FC = () => {
 
   return (
     <>
+      <Header userLogin={userData.authorizedUser.login} />
+
       <MatchRoute to=".">
-        <Header userLogin={userData.authorizedUser.login}/>
         {currentGame
           ? <>
             <Button variant="outlined" onClick={() => navigate({ to: `${Routes.Lobby}/${currentGame.id}` })}>
@@ -78,11 +79,13 @@ export const Lobby: FC = () => {
               Leave
             </Button>
           </>
-          : <GamesList gamesList={userData.authorizedUser}/>
+          : <GamesList gamesList={userData.authorizedUser} />
         }
-        <Footer />
       </MatchRoute>
-      <Outlet/>
+
+      <Outlet />
+
+      <Footer />
     </>
   );
 };
