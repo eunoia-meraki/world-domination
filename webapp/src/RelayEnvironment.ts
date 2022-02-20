@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import _ from 'lodash';
 import { meros } from 'meros';
 import {
@@ -21,7 +24,7 @@ import type {
   Observable,
 } from 'subscriptions-transport-ws';
 
-const GRAPHQL_ENDPOINT = 'localhost:8002/';
+const GRAPHQL_ENDPOINT = `${window.location.host}/graphql`;
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
@@ -43,7 +46,7 @@ const fetchQuery: FetchFunction = (
         variables,
       }),
       headers: {
-        Authorization: `bearer ${token}`,
+        Authorization: `Bearer ${token || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'POST',
@@ -60,9 +63,9 @@ const fetchQuery: FetchFunction = (
 
         const result = part.body;
 
+/* eslint-disable */
         // Realyism
         if ('hasNext' in result) {
-          /* eslint-disable */
             // @ts-ignore
             if (!result.extensions) {
               // @ts-ignore
@@ -72,7 +75,6 @@ const fetchQuery: FetchFunction = (
             result.extensions.is_final = !result.hasNext;
             // @ts-ignore
             delete result.hasNext;
-            /* eslint-enable */
         }
 
         sink.next(result);
@@ -81,6 +83,7 @@ const fetchQuery: FetchFunction = (
 
       const json = await parts.json();
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (Array.isArray(json.errors)) {
         const errorsMessage: string = json.errors
           .filter((error: { message?: string }) => !_.isUndefined(error?.message))
@@ -107,6 +110,7 @@ function isAsyncIterable (input: unknown): input is AsyncIterable<unknown> {
 			Symbol.asyncIterator in input)
   );
 }
+/* eslint-enable */
 
 const subscriptionClient = new SubscriptionClient(
   `ws://${GRAPHQL_ENDPOINT}`,

@@ -1,9 +1,7 @@
 import { User } from '@prisma/client';
-import { WebSocketServer } from 'ws';
 import * as express from 'express';
 import { PubSub } from 'graphql-subscriptions';
 import { ApolloServer } from 'apollo-server-express';
-import { useServer } from 'graphql-ws/lib/use/ws';
 import { getAuthorizedUserAsync } from './auth';
 import { pubsub } from './pubsub';
 import getGraphQLSchema from './graphql/schema';
@@ -41,6 +39,14 @@ export const init = async (
 
   const app = express();
 
+  app.get('*', (req, res, next) => {
+    if (req.url === graphqlPath) {
+      return next();
+    }
+
+    res.sendFile(__dirname + '/clientApp/index.html');
+  });
+
   apolloServer.applyMiddleware({ app, path: graphqlPath });
 
   const server = app.listen(gqlPort, () => {
@@ -72,17 +78,6 @@ export const init = async (
         path: graphqlPath,
       },
     );
-
-    // useServer(
-    //   {
-    //     schema,
-    //     onConnect: () => console.log('ws: connected'),
-    //     onDisconnect: () => console.log('ws: disconnected'),
-    //     context: (ctx) =>
-    //       makeContext(pubsub, `${ctx.connectionParams?.Authorization}`),
-    //   },
-    //   wsServer,
-    // );
   });
 
   return apolloServer;

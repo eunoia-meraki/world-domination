@@ -1,12 +1,12 @@
 import { init } from './app';
 
 const PORT = process.env.PORT || '8001';
-const ENDPOINT = '/';
+const ENDPOINT = '/graphql';
 
 init(PORT, ENDPOINT)
   .then((server) => {
     console.log(
-      `GraphQL server started on: http://localhost:${PORT}${ENDPOINT}`,
+      `Server started on: http://localhost:${PORT}\nGraphQL endpoint: http://localhost:${PORT}${ENDPOINT}`,
     );
     return server;
   })

@@ -6,7 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "start": "rimraf ./dist && prisma generate && env-cmd tsc-watch --onSuccess \"node dist/index.js\" -p tsconfig.json",
+    "start": "rimraf ./dist && pnpm add-client-app && prisma generate && env-cmd tsc-watch --onSuccess \"node dist/index.js\" -p tsconfig.json",
+    "add-client-app": "mkdir -p ./dist/clientApp && cp -r ./clientApp ./dist",
+    "prod:build": "rimraf ./dist && prisma generate && pnpm add-client-app && tsc -p tsconfig.json",
+    "prod:start": "pnpm prod:build && env-cmd node dist/index.js",
+    "prod:start:heroku": "pnpm prod:build && node dist/index.js",
     "generate": "prisma generate"
   },
   "dependencies": {

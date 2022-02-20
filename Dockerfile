@@ -16,7 +16,7 @@ RUN pnpm install
 
 COPY ./server/ .
 
-RUN pnpm run build
+RUN pnpm prod:build
 
 ########################
 ###### PRODUCTION ######
