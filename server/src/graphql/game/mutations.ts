@@ -113,20 +113,81 @@ const includeGameMutations = () => {
       args: {
         gameId: t.arg.globalID({ required: true }),
       },
-      resolve: async (_, __, { gameId }, ctx) => {
-        const user = ctx.user as User;
+      resolve: async (_, __, { gameId }, context) => {
+        const user = context.user as User;
+
+        const game = await db.game.findUnique({
+          where: { id: gameId.id },
+          include: { teams: { include: { players: true } } },
+        });
+
+        if (!game) {
+          throw new Error('Игра не найдена');
+        }
+
+        const player = await db.player.findFirst({
+          where: { userId: user.id, team: { gameId: game.id } },
+        });
+
+        if (player) {
+          throw new Error('Игрок уже существует');
+        }
+
+        for (const team of game.teams) {
+          const players = team.players;
+
+          if (
+            players.filter((player) => player.role == RoleType.PRESIDENT)
+              .length == 0
+          ) {
+            await db.player.create({
+              data: {
+                userId: user.id,
+                teamId: team.id,
+                role: RoleType.PRESIDENT,
+              },
+            });
+
+            break;
+          }
+
+          if (
+            players.filter((player) => player.role == RoleType.DIPLOMAT)
+              .length == 0
+          ) {
+            await db.player.create({
+              data: {
+                userId: user.id,
+                teamId: team.id,
+                role: RoleType.DIPLOMAT,
+              },
+            });
+
+            break;
+          }
+        }
+
+        const curPlayer = await db.player.findFirst({
+          where: { userId: user.id, team: { gameId: game.id } },
+        });
+
+        if (!curPlayer) {
+          throw new Error('Игра переполнена');
+        }
 
         const updatedUser = await db.user.update({
           where: { id: user.id },
-          data: { currentGameId: gameId.id },
-          include: { currentGame: true },
+          include: { currentGame: { include: { teams: true } } },
+          data: {
+            currentGameId: game.id,
+          },
         });
 
         if (!updatedUser.currentGame) {
           throw new Error('Игра не найдена');
         }
 
-        broadcastGame(ctx, updatedUser.currentGame);
+        broadcastGame(context, updatedUser.currentGame);
 
         return updatedUser;
       },
@@ -142,17 +203,26 @@ const includeGameMutations = () => {
       resolve: async (_, __, ___, ctx) => {
         const user = ctx.user as User;
 
+        const game = await db.game.findUnique({
+          where: { id: user.currentGameId || undefined },
+        });
+
+        if (!game) {
+          throw new Error('Текущая игра не найдена');
+        }
+
+        broadcastGame(ctx, game);
+
+        const curPlayer = await db.player.findFirst({
+          where: { userId: user.id, team: { gameId: game.id } },
+        });
+
+        await db.player.delete({ where: { id: curPlayer!.id } });
+
         const updatedUser = await db.user.update({
           where: { id: user.id },
           data: { currentGameId: null },
         });
-
-        broadcastGame(
-          ctx,
-          await db.game.findUnique({
-            where: { id: user.currentGameId || undefined },
-          }),
-        );
 
         return updatedUser;
       },
