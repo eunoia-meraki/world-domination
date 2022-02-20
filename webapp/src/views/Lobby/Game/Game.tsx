@@ -1,5 +1,5 @@
-import { ThumbUp, Public, Flag, People } from '@mui/icons-material';
-import { Box, Tabs, Tab } from '@mui/material';
+import { ThumbUp, Public, Flag, People, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Box, Tabs, Tab, IconButton } from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
 import { useMatch } from 'react-location';
 import { usePreloadedQuery, useSubscription } from 'react-relay';
@@ -31,7 +31,7 @@ const TabPanel: FC<TabPanelProps> = ({ children, value, index }) => (
     hidden={value !== index}
     id={`simple-tabpanel-${index}`}
     aria-labelledby={`simple-tab-${index}`}
-    style={{ height: '100%' }}
+    style={{ minHeight: '100%' }}
   >
     {value === index && children}
   </div>
@@ -74,12 +74,6 @@ export const Game: FC = () => {
 
   const game = data?.node;
 
-  const [value, setValue] = useState(0);
-
-  const onChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
   useSubscription<Game_gameSubscription_Subscription>({
     subscription: graphql`
       subscription Game_gameSubscription_Subscription {
@@ -101,6 +95,17 @@ export const Game: FC = () => {
       console.log(`Game_gameSubscription_Subscription ${JSON.stringify(subscData)}`),
   });
 
+  const [value, setValue] = useState(0);
+
+  const onChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const [open, setOpen] = useState(true);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+
   const clientData =
     data.node?.clients?.reduce(
       (acc: ClientData, client) => ({
@@ -115,74 +120,85 @@ export const Game: FC = () => {
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           flexGrow: 1,
         }}
       >
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
+            justifyContent: 'space-between',
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
+        >
+          <Tabs
+            sx={{
+              minHeight: '42px',
+            }}
+            value={value}
+            onChange={onChange}
+            aria-label="tabs"
+          >
+            <Tab
+              sx={{
+                minHeight: '42px',
+                p: '9px',
+              }}
+              icon={<People />}
+              iconPosition="start"
+              label="Conference Hall"
+              {...a11yProps(0)}
+            />
+            <Tab
+              sx={{
+                minHeight: '42px',
+                p: '9px',
+              }}
+              icon={<Flag />}
+              iconPosition="start"
+              label="Country Statistics"
+              {...a11yProps(1)}
+            />
+            <Tab
+              sx={{
+                minHeight: '42px',
+                p: '9px',
+              }}
+              icon={<Public />}
+              iconPosition="start"
+              label="World Statistics"
+              {...a11yProps(2)}
+            />
+            <Tab
+              sx={{
+                minHeight: '42px',
+                p: '9px',
+              }}
+              icon={<ThumbUp />}
+              iconPosition="start"
+              label="Actions"
+              {...a11yProps(3)}
+            />
+          </Tabs>
+
+          <IconButton onClick={toggleDrawer}>
+            { open ? <ChevronRight/> : <ChevronLeft /> }
+          </IconButton>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flex: '1 1 0',
+            overflow: 'hidden',
           }}
         >
           <Box
             sx={{
-              borderBottom: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <Tabs
-              sx={{ minHeight: '42px' }}
-              value={value}
-              onChange={onChange}
-              aria-label="tabs">
-              <Tab
-                sx={{
-                  minHeight: '42px',
-                  p: '9px',
-                }}
-                icon={<People />}
-                iconPosition="start"
-                label="Conference Hall"
-                {...a11yProps(0)}
-              />
-              <Tab
-                sx={{
-                  minHeight: '42px',
-                  p: '9px',
-                }}
-                icon={<Flag />}
-                iconPosition="start"
-                label="Country Statistics"
-                {...a11yProps(1)}
-              />
-              <Tab
-                sx={{
-                  minHeight: '42px',
-                  p: '9px',
-                }}
-                icon={<Public />}
-                iconPosition="start"
-                label="World Statistics"
-                {...a11yProps(2)}
-              />
-              <Tab
-                sx={{ minHeight: '30px',
-                  p: '9px',
-                }}
-                icon={<ThumbUp />}
-                iconPosition="start"
-                label="Actions"
-                {...a11yProps(3)}
-              />
-            </Tabs>
-          </Box>
-
-          <Box
-            sx={{
               display: 'flex',
               flexDirection: 'column',
-              flex: '1 1 0',
+              flexGrow: 1,
               overflow: 'auto',
             }}
           >
@@ -199,10 +215,10 @@ export const Game: FC = () => {
               <Actions />
             </TabPanel>
           </Box>
-        </Box>
 
-        {/* TODO handle it */}
-        <VoiceChat userId={data.authorizedUser.id} clientData={clientData} />
+          {/* TODO handle it */}
+          <VoiceChat userId={data.authorizedUser.id} clientData={clientData} open={open} />
+        </Box>
       </Box>
     )
   );
