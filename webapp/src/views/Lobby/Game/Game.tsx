@@ -96,8 +96,8 @@ export const Game: FC = () => {
       }
     `,
     variables: {},
-    // eslint-disable-next-line no-console
     onNext: subscData =>
+      // eslint-disable-next-line no-console
       console.log(`Game_gameSubscription_Subscription ${JSON.stringify(subscData)}`),
   });
 
@@ -107,7 +107,7 @@ export const Game: FC = () => {
         ...acc,
         [client.id]: client.login,
       }),
-      { [data.authorizedUser.id]: data.authorizedUser.login }
+      { [data.authorizedUser.id]: data.authorizedUser.login },
     ) || {};
 
   return (
