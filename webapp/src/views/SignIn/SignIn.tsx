@@ -1,7 +1,7 @@
 import { LockOutlined } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   Avatar,
-  Button,
   TextField,
   Link,
   Grid,
@@ -27,7 +27,7 @@ export const SignIn: FC = () => {
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [signIn] = useMutation<SignIn_signIn_Mutation>(
+  const [signIn, loading] = useMutation<SignIn_signIn_Mutation>(
     graphql`
       mutation SignIn_signIn_Mutation($login: String!, $password: String!) {
         signIn(login: $login, password: $password) {
@@ -106,9 +106,9 @@ export const SignIn: FC = () => {
               autoComplete="current-password"
             />
 
-            <Button sx={{ mt: 3, mb: 2 }} type="submit" fullWidth variant="contained">
+            <LoadingButton loading={loading} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
-            </Button>
+            </LoadingButton>
 
             <Grid container>
               <Grid item>
