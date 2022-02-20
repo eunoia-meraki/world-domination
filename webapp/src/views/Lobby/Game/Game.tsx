@@ -60,16 +60,7 @@ export const Game: FC = () => {
               login
             }
 
-            teams {
-              players {
-                roles
-                users {
-                  login
-                  id
-                }
-              }
-              nation
-            }
+            ...SortingRoom_game_Fragment
           }
         }
         authorizedUser {
@@ -81,9 +72,11 @@ export const Game: FC = () => {
     gameRef!,
   );
 
+  const game = data?.node;
+
   const [value, setValue] = useState(0);
 
-  const onChange = (event: React.SyntheticEvent, newValue: number) => {
+  const onChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -99,79 +92,91 @@ export const Game: FC = () => {
         }
       }
     `,
-    variables: { },
+    variables: {},
     // eslint-disable-next-line no-console
-    onNext: subscData => console.log(`Game_gameSubscription_Subscription ${JSON.stringify(subscData)}`),
+    onNext: subscData =>
+      console.log(`Game_gameSubscription_Subscription ${JSON.stringify(subscData)}`),
   });
 
-  const clientData = data.node?.clients?.reduce(
-    (acc: ClientData, client) => ({
-      ...acc, [client.id]: client.login,
-    }),
-    { [data.authorizedUser.id]: data.authorizedUser.login }) || {};
+  const clientData =
+    data.node?.clients?.reduce(
+      (acc: ClientData, client) => ({
+        ...acc,
+        [client.id]: client.login,
+      }),
+      { [data.authorizedUser.id]: data.authorizedUser.login }
+    ) || {};
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexGrow: 1,
-      }}
-    >
+    game && (
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
           flexGrow: 1,
         }}
       >
         <Box
           sx={{
-            borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
-          <Tabs value={value} onChange={onChange} aria-label="tabs">
-            <Tab icon={<People />} iconPosition="start" label="Conference Hall" {...a11yProps(0)} />
-            <Tab
-              icon={<Flag  />}
-              iconPosition="start"
-              label="Country Statistics"
-              {...a11yProps(1)}
-            />
-            <Tab
-              icon={<Public />}
-              iconPosition="start"
-              label="World Statistics"
-              {...a11yProps(2)}
-            />
-            <Tab icon={<ThumbUp />} iconPosition="start" label="Actions" {...a11yProps(3)} />
-          </Tabs>
-        </Box>
-
-        <Box
-          sx={{
             display: 'flex',
             flexDirection: 'column',
-            flex: '1 1 0',
-            overflow: 'auto',
-          }}>
-          <TabPanel value={value} index={0}>
-            <SortingRoom />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <CountryStatistics />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <WorldStatistics />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <Actions />
-          </TabPanel>
-        </Box>
-      </Box>
+            flexGrow: 1,
+          }}
+        >
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: 'divider',
+            }}
+          >
+            <Tabs value={value} onChange={onChange} aria-label="tabs">
+              <Tab
+                icon={<People />}
+                iconPosition="start"
+                label="Conference Hall"
+                {...a11yProps(0)}
+              />
+              <Tab
+                icon={<Flag />}
+                iconPosition="start"
+                label="Country Statistics"
+                {...a11yProps(1)}
+              />
+              <Tab
+                icon={<Public />}
+                iconPosition="start"
+                label="World Statistics"
+                {...a11yProps(2)}
+              />
+              <Tab icon={<ThumbUp />} iconPosition="start" label="Actions" {...a11yProps(3)} />
+            </Tabs>
+          </Box>
 
-      {/* TODO handle it */}
-      <VoiceChat userId={data.authorizedUser.id} clientData={clientData}/>
-    </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: '1 1 0',
+              overflow: 'auto',
+            }}
+          >
+            <TabPanel value={value} index={0}>
+              <SortingRoom game={game} />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <CountryStatistics />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <WorldStatistics />
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              <Actions />
+            </TabPanel>
+          </Box>
+        </Box>
+
+        {/* TODO handle it */}
+        <VoiceChat userId={data.authorizedUser.id} clientData={clientData} />
+      </Box>
+    )
   );
 };

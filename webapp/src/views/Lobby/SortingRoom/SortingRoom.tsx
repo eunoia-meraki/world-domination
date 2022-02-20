@@ -8,62 +8,15 @@ import {
   Container,
   TableRow,
   styled,
-  Button,
   Box,
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
-import { useMatch, useNavigate } from 'react-location';
+import graphql from 'babel-plugin-relay/macro';
+import { useFragment } from 'react-relay';
 
 import type { FC } from 'react';
 
-import type { LobbyLocation } from '../LobbyLocations';
-
-import { Routes } from '@/enumerations';
-
-const data: {
-  country: string;
-  players: { role: string; login: string }[];
-}[] = [
-  {
-    country: 'Russia',
-    players: [
-      {
-        role: 'President',
-        login: 'Roman',
-      },
-      {
-        role: 'Citizen',
-        login: 'Dima',
-      },
-    ],
-  },
-  {
-    country: 'China',
-    players: [
-      {
-        role: 'President',
-        login: 'Roman',
-      },
-      {
-        role: 'Citizen',
-        login: 'Dima',
-      },
-    ],
-  },
-  {
-    country: 'USA',
-    players: [
-      {
-        role: 'President',
-        login: 'Roman',
-      },
-      {
-        role: 'Citizen',
-        login: 'Dima',
-      },
-    ],
-  },
-];
+import type { SortingRoom_game_Fragment$key } from './__generated__/SortingRoom_game_Fragment.graphql';
 
 const HeadTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -80,18 +33,43 @@ const BodyTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export const SortingRoom: FC = () => {
-  const {
-    params: { gameId },
-  } = useMatch<LobbyLocation>();
+interface ISortingRoom {
+  game: SortingRoom_game_Fragment$key;
+}
 
-  const navigate = useNavigate();
+export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
+  // TODO move to header
 
-  const onClick = (): void => {
-    // TODO think
-    // sessionStorage.setItem('currentGameId', gameId);
-    navigate({ to: `${Routes.Lobby}/${gameId}` });
-  };
+  // const {
+  //   params: { gameId },
+  // } = useMatch<LobbyLocation>();
+
+  // const navigate = useNavigate();
+
+  // const onClick = (): void => {
+  // sessionStorage.setItem('currentGameId', gameId);
+  // navigate({ to: `${Routes.Lobby}/${gameId}` });
+  // };
+
+  const data = useFragment(
+    graphql`
+      fragment SortingRoom_game_Fragment on Game {
+        teams {
+          players {
+            roles
+            users {
+              login
+              id
+            }
+          }
+          nation
+        }
+      }
+    `,
+    game,
+  );
+
+  const teams = data?.teams;
 
   return (
     <Box
@@ -106,15 +84,10 @@ export const SortingRoom: FC = () => {
         maxWidth="md"
         sx={{
           display: 'flex',
-          // flexDirection: 'column',
           alignItems: 'center',
         }}
       >
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <Button variant="contained">Start</Button>
-          <Button variant="contained" onClick={onClick}>
-            Leave
-          </Button>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
@@ -125,19 +98,22 @@ export const SortingRoom: FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((item, index) => (
-                  <>
-                    <TableRow key={index.toString()}>
-                      <BodyTableCell rowSpan={2}>{item.country}</BodyTableCell>
-                      <BodyTableCell>{item.players[0].role}</BodyTableCell>
-                      <BodyTableCell>{item.players[0].login}</BodyTableCell>
-                    </TableRow>
-                    <TableRow>
-                      <BodyTableCell>{item.players[1].role}</BodyTableCell>
-                      <BodyTableCell>{item.players[1].login}</BodyTableCell>
-                    </TableRow>
-                  </>
-                ))}
+                {teams.map(team =>
+                  team.players.map((player, playerIndex) =>
+                    playerIndex === 0 ? (
+                      <TableRow key={player.users.id}>
+                        <BodyTableCell rowSpan={team.players.length}>{team.nation}</BodyTableCell>
+                        <BodyTableCell>{player.roles}</BodyTableCell>
+                        <BodyTableCell>{player.users.login}</BodyTableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow key={player.users.id}>
+                        <BodyTableCell>{player.roles}</BodyTableCell>
+                        <BodyTableCell>{player.users.login}</BodyTableCell>
+                      </TableRow>
+                    ),
+                  ),
+                )}
               </TableBody>
             </Table>
           </TableContainer>
