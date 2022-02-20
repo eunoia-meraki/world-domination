@@ -117,8 +117,12 @@ const subscriptionClient = new SubscriptionClient(
 subscriptionClient.use([
   {
     applyMiddleware (operationOptions, next) {
+      // operationOptions['token'] = `Bearer ${sessionStorage.getItem('token')}`;
       // eslint-disable-next-line no-param-reassign
-      operationOptions['token'] = `Bearer ${sessionStorage.getItem('token')}`;
+      operationOptions.variables = {
+        ...(operationOptions.variables || []),
+        token: `Bearer ${sessionStorage.getItem('token') || ''}`,
+      };
       next();
     },
   },

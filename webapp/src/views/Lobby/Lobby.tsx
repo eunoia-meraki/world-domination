@@ -42,8 +42,8 @@ export const Lobby: FC = () => {
 
   const [leave] = useMutation<Lobby_leaveGame_Mutation>(
     graphql`
-      mutation Lobby_leaveGame_Mutation($gameId: ID!) {
-        leaveGame(gameId: $gameId) {
+      mutation Lobby_leaveGame_Mutation {
+        leaveGame {
           id
           login
           currentGame {
@@ -57,11 +57,7 @@ export const Lobby: FC = () => {
 
   const leaveGame = () => {
     if (currentGame) {
-      leave({
-        variables: {
-          gameId: currentGame.id,
-        },
-      });
+      leave({ variables: {} });
     }
   };
 

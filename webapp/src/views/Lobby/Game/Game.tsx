@@ -2,7 +2,7 @@ import { ThumbUp, Public, Flag, People } from '@mui/icons-material';
 import { Box, Tabs, Tab } from '@mui/material';
 import graphql from 'babel-plugin-relay/macro';
 import { useMatch } from 'react-location';
-import { usePreloadedQuery } from 'react-relay';
+import { usePreloadedQuery, useSubscription } from 'react-relay';
 
 import type { FC } from 'react';
 import { useState } from 'react';
@@ -15,7 +15,9 @@ import { WorldStatistics } from './WorldStatistics';
 import { SortingRoom } from '../SortingRoom';
 
 import type { LobbyLocation } from '../LobbyLocations';
+import type { Game_gameSubscription_Subscription } from './__generated__/Game_gameSubscription_Subscription.graphql';
 import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
+import type { ClientData } from './types';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,8 +55,6 @@ export const Game: FC = () => {
         node(id: $gameId) {
           id
           ... on Game {
-            ...VoiceChat_clients_Fragment
-
             clients {
               id
               login
@@ -74,6 +74,7 @@ export const Game: FC = () => {
         }
         authorizedUser {
           id
+          login
         }
       }
     `,
@@ -85,6 +86,29 @@ export const Game: FC = () => {
   const onChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  useSubscription<Game_gameSubscription_Subscription>({
+    subscription: graphql`
+      subscription Game_gameSubscription_Subscription {
+        gameSubscription {
+          clients {
+            id
+            login
+          }
+          status
+        }
+      }
+    `,
+    variables: { },
+    // eslint-disable-next-line no-console
+    onNext: subscData => console.log(`Game_gameSubscription_Subscription ${JSON.stringify(subscData)}`),
+  });
+
+  const clientData = data.node?.clients?.reduce(
+    (acc: ClientData, client) => ({
+      ...acc, [client.id]: client.login,
+    }),
+    { [data.authorizedUser.id]: data.authorizedUser.login }) || {};
 
   return (
     <Box
@@ -147,7 +171,7 @@ export const Game: FC = () => {
       </Box>
 
       {/* TODO handle it */}
-      <VoiceChat userId={data.authorizedUser.id} data={data.node!} />
+      <VoiceChat userId={data.authorizedUser.id} clientData={clientData}/>
     </Box>
   );
 };

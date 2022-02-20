@@ -113,24 +113,22 @@ const includeGameMutations = () => {
       args: {
         gameId: t.arg.globalID({ required: true }),
       },
-      resolve: async (_, __, { gameId }, context) => {
-        const user = context.user as User;
-        const game = await db.game.findUnique({ where: { id: gameId.id } });
+      resolve: async (_, __, { gameId }, ctx) => {
+        const user = ctx.user as User;
 
-        if (!game) {
+        const updatedUser = await db.user.update({
+          where: { id: user.id },
+          data: { currentGameId: gameId.id },
+          include: { currentGame: true },
+        });
+
+        if (!updatedUser.currentGame) {
           throw new Error('Игра не найдена');
         }
 
-        const updated = await db.user.update({
-          where: { id: user.id },
-          include: { currentGame: true },
-          data: {
-            currentGameId: game.id,
-          },
-        });
+        broadcastGame(ctx, updatedUser.currentGame);
 
-        broadcastGame(context);
-        return updated;
+        return updatedUser;
       },
     }),
   );
@@ -141,28 +139,22 @@ const includeGameMutations = () => {
         public: true,
       },
       type: 'User',
-      args: {
-        gameId: t.arg.globalID({ required: true }),
-      },
-      resolve: async (_, __, { gameId }, context) => {
-        const user = context.user as User;
-        const game = await db.game.findUnique({ where: { id: gameId.id } });
+      resolve: async (_, __, ___, ctx) => {
+        const user = ctx.user as User;
 
-        if (!game) {
-          throw new Error('Игра не найдена');
-        }
-
-        broadcastGame(context);
-
-        const updated = await db.user.update({
+        const updatedUser = await db.user.update({
           where: { id: user.id },
-          include: { currentGame: true },
-          data: {
-            currentGameId: null,
-          },
+          data: { currentGameId: null },
         });
 
-        return updated;
+        broadcastGame(
+          ctx,
+          await db.game.findUnique({
+            where: { id: user.currentGameId || undefined },
+          }),
+        );
+
+        return updatedUser;
       },
     }),
   );

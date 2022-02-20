@@ -37,7 +37,6 @@ export const webRtcSubscription = builder.subscriptionField('webRTC', (t) =>
     },
     subscribe: (_, { roomId }, ctx) => {
       const confId = `${roomId}_voiceChat`; // TODO: subcribe stage id
-      console.log(ctx);
       // need to wait until the new client subscribes (after current finction returns)
       setTimeout(() => {
         addPeerEventHandler(ctx, confId);

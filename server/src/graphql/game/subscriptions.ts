@@ -1,7 +1,6 @@
 import { Game } from '@prisma/client';
 import { GQLContext } from '../../app';
-import { db } from '../../database/db';
-import { builder, decodeGlobalID } from '../schemaBuilder';
+import { builder } from '../schemaBuilder';
 
 export const gameSubscription = builder.subscriptionField(
   'gameSubscription',
@@ -10,13 +9,17 @@ export const gameSubscription = builder.subscriptionField(
       authScopes: {
         public: true,
       },
-      args: {
-        gameId: t.arg.string({ required: true }),
-      },
       type: 'Game',
-      subscribe: (_, { gameId }, ctx) => {
-        console.log('gameSub', decodeGlobalID(gameId));
-        return ctx.pubsub.asyncIterator(decodeGlobalID(gameId).id) as any;
+      subscribe: (_, __, ctx) => {
+        if (!ctx.user?.currentGameId) {
+          throw new Error('Cannot subscribe on the game');
+        }
+
+        console.log(
+          `User ${ctx.user.login} subscribed on game ${ctx.user.currentGameId}`,
+        );
+
+        return ctx.pubsub.asyncIterator(ctx.user.currentGameId) as any;
       },
       resolve: (_, game) => {
         return game as Game;
@@ -24,26 +27,12 @@ export const gameSubscription = builder.subscriptionField(
     }),
 );
 
-export const broadcastGame = async (ctx: GQLContext) => {
-  const userId = ctx.user?.id;
-
-  if (!userId) {
-    throw new Error('Ctx user id is null');
+export const broadcastGame = async (ctx: GQLContext, game: Game | null) => {
+  if (!game) {
+    return;
   }
 
-  const dbUser = await db.user.findFirst({
-    where: { id: userId },
-    include: { currentGame: true },
-  });
+  console.log(`Broadcast game ${game.id} updates`);
 
-  if (!dbUser) {
-    throw new Error('Db user is null');
-  }
-
-  const game = dbUser?.currentGame;
-  console.log('broadcastGame', game?.id);
-
-  if (game) {
-    ctx.pubsub.publish(game.id, game);
-  }
+  ctx.pubsub.publish(game.id, game);
 };

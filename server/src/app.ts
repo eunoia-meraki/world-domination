@@ -50,19 +50,21 @@ export const init = async (
         execute,
         subscribe,
         onOperation: async (message, params) => {
-          if (!message.payload.token) {
-            throw new Error('Unauthorized');
-          } else {
-            const context = await makeContext(pubsub, message.payload.token);
-            if (!context.user) {
-              throw new Error('Unauthorized');
-            }
+          const token = message?.payload?.variables?.token;
 
-            return {
-              ...params,
-              context,
-            };
+          if (!token) {
+            throw new Error('Unauthorized');
           }
+
+          const context = await makeContext(pubsub, token);
+          if (!context.user) {
+            throw new Error('Unauthorized');
+          }
+
+          return {
+            ...params,
+            context,
+          };
         },
       },
       {

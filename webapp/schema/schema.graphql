@@ -75,7 +75,7 @@ type Mutation {
   createGame(gameName: String!): Game!
   interactWebRTC(actionType: WebRTCActionType!, data: String!): Boolean!
   joinGame(gameId: ID!): User!
-  leaveGame(gameId: ID!): User!
+  leaveGame: User!
   sendActions(input: SendActionsInput!): Boolean!
   signIn(login: String!, password: String!): AuthorizationPayload!
   signUp(login: String!, password: String!): AuthorizationPayload!
