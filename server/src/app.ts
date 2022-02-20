@@ -1,5 +1,8 @@
 import { User } from '@prisma/client';
 import * as express from 'express';
+import * as https from 'https';
+import * as http from 'http';
+import * as fs from 'fs';
 import { PubSub } from 'graphql-subscriptions';
 import { ApolloServer } from 'apollo-server-express';
 import { getAuthorizedUserAsync } from './auth';
@@ -25,10 +28,16 @@ const makeContext = async (
   };
 };
 
-export const init = async (
-  gqlPort: string,
-  graphqlPath: string,
-): Promise<ApolloServer> => {
+interface IConfig {
+  ssl: boolean;
+  ssl_key: string;
+  ssl_crt: string;
+  hostname: string;
+  port: string;
+  graphql_endpoint: string;
+}
+
+export const init = async (config: IConfig): Promise<ApolloServer> => {
   const apolloServer = new ApolloServer({
     schema,
     context: async ({ req }) =>
@@ -40,7 +49,7 @@ export const init = async (
   const app = express();
 
   app.get('*', (req, res, next) => {
-    if (req.url === graphqlPath) {
+    if (req.url === config.graphql_endpoint) {
       return next();
     }
 
@@ -51,9 +60,21 @@ export const init = async (
     }
   });
 
-  apolloServer.applyMiddleware({ app, path: graphqlPath });
+  apolloServer.applyMiddleware({ app, path: config.graphql_endpoint });
 
-  const server = app.listen(gqlPort, () => {
+  const server = config.ssl
+    ? https.createServer(
+        {
+          // Assumes certificates are in .ssl folder from package root. Make sure the files
+          // are secured.
+          key: fs.readFileSync(config.ssl_key),
+          cert: fs.readFileSync(config.ssl_crt),
+        },
+        app,
+      )
+    : http.createServer(app);
+
+  server.listen(config.port, () => {
     SubscriptionServer.create(
       {
         schema,
@@ -79,7 +100,7 @@ export const init = async (
       },
       {
         server,
-        path: graphqlPath,
+        path: config.graphql_endpoint,
       },
     );
   });
