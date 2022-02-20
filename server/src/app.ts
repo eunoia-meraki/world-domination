@@ -49,15 +49,19 @@ export const init = async (
         schema,
         execute,
         subscribe,
-        onConnect: async (params) => {
-          if (!params.Authorization) {
+        onOperation: async (message, params) => {
+          if (!message.payload.token) {
             throw new Error('Unauthorized');
           } else {
-            const context = await makeContext(pubsub, params.Authorization);
+            const context = await makeContext(pubsub, message.payload.token);
             if (!context.user) {
               throw new Error('Unauthorized');
             }
-            return context;
+
+            return {
+              ...params,
+              context,
+            };
           }
         },
       },

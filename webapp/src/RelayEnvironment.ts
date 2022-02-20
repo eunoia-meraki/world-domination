@@ -112,9 +112,17 @@ const subscriptionClient = new SubscriptionClient(
   `ws://${GRAPHQL_ENDPOINT}`,
   {
     reconnect: true,
-    connectionParams: () => ({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }),
   },
 );
+subscriptionClient.use([
+  {
+    applyMiddleware (operationOptions, next) {
+      // eslint-disable-next-line no-param-reassign
+      operationOptions['token'] = `Bearer ${sessionStorage.getItem('token')}`;
+      next();
+    },
+  },
+]);
 
 // Mismatch type between relay and subscriptions-transport-ws
 // https://github.com/facebook/relay/issues/3091
