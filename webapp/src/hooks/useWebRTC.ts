@@ -22,7 +22,7 @@ const voiceChatSubscription = graphql`
 
 const interactWebRTCMutation = graphql`
   mutation useWebRTC_interactWebRTC_Mutation(
-    $actionType: ActionType!
+    $actionType: WebRTCActionType!
     $data: String!
   ) {
     interactWebRTC(actionType: $actionType, data: $data)

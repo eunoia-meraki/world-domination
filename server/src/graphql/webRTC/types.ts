@@ -1,9 +1,8 @@
 import { builder } from '../schemaBuilder';
 
-export enum ActionType {
+export enum WebRTCActionType {
   JOIN = 'join',
   LEAVE = 'leave',
-  SHARE_ROOMS = 'share-rooms',
   ADD_PEER = 'add-peer',
   REMOVE_PEER = 'remove-peer',
   RELAY_SDP = 'relay-sdp',
@@ -12,22 +11,22 @@ export enum ActionType {
   SESSION_DESCRIPTION = 'session-description',
 }
 
-export class ActionEvent {
-  actionType: ActionType;
+export class WebRTCActionEvent {
+  actionType: WebRTCActionType;
   data: string;
 
-  constructor(actionType: ActionType, data: string) {
+  constructor(actionType: WebRTCActionType, data: string) {
     this.actionType = actionType;
     this.data = data;
   }
 }
 
-export const ActionTypeGql = builder.enumType(ActionType, {
-  name: 'ActionType',
+export const ActionTypeGql = builder.enumType(WebRTCActionType, {
+  name: 'WebRTCActionType',
 });
 
-export const ActionEventGqlType = builder.objectType(ActionEvent, {
-  name: 'ActionEvent',
+export const ActionEventGqlType = builder.objectType(WebRTCActionEvent, {
+  name: 'WebRTCActionEvent',
   fields: (t) => ({
     actionType: t.field({
       type: ActionTypeGql,

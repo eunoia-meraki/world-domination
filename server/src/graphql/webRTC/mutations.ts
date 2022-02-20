@@ -1,6 +1,6 @@
 import { builder, encodeGlobalID } from '../schemaBuilder';
 import { AuthenticationError } from 'apollo-server';
-import { ActionType, ActionTypeGql } from './types';
+import { WebRTCActionType, ActionTypeGql } from './types';
 import { broadcastWebRTCEvent } from './subscriptions';
 import { GQLContext } from 'src/app';
 
@@ -9,11 +9,11 @@ type SessionDescriptionDict = { [key: string]: RTCSessionDescriptionInit };
 type IceCandidateDict = { [key: string]: RTCIceCandidate };
 
 const actionResolvers = {
-  [ActionType.RELAY_ICE]: (icd: IceCandidateDict, ctx: GQLContext) => {
+  [WebRTCActionType.RELAY_ICE]: (icd: IceCandidateDict, ctx: GQLContext) => {
     const user = ctx.user;
     if (user) {
       broadcastWebRTCEvent(ctx, {
-        actionType: ActionType.ICE_CANDIDATE,
+        actionType: WebRTCActionType.ICE_CANDIDATE,
         data: JSON.stringify({
           creator: encodeGlobalID('User', user.id),
           icd: icd,
@@ -22,11 +22,14 @@ const actionResolvers = {
     }
   },
 
-  [ActionType.RELAY_SDP]: (sdd: SessionDescriptionDict, ctx: GQLContext) => {
+  [WebRTCActionType.RELAY_SDP]: (
+    sdd: SessionDescriptionDict,
+    ctx: GQLContext,
+  ) => {
     const user = ctx.user;
     if (user) {
       broadcastWebRTCEvent(ctx, {
-        actionType: ActionType.SESSION_DESCRIPTION,
+        actionType: WebRTCActionType.SESSION_DESCRIPTION,
         data: JSON.stringify({
           creator: encodeGlobalID('User', user.id),
           sdd,

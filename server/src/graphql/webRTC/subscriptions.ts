@@ -1,7 +1,11 @@
 import { User } from '@prisma/client';
 import { GQLContext } from '../../app';
 import { builder, encodeGlobalID } from '../schemaBuilder';
-import { ActionEvent, ActionEventGqlType, ActionType } from './types';
+import {
+  WebRTCActionEvent,
+  ActionEventGqlType,
+  WebRTCActionType,
+} from './types';
 
 // TODO move to db
 const rooms: { [room: string]: User[] } = {};
@@ -32,21 +36,26 @@ export const webRtcSubscription = builder.subscriptionField('webRTC', (t) =>
       roomId: t.arg.string({ required: true }),
     },
     subscribe: (_, { roomId }, ctx) => {
+      const confId = `${roomId}_voiceChat`; // TODO: subcribe stage id
+      console.log(ctx);
       // need to wait until the new client subscribes (after current finction returns)
       setTimeout(() => {
-        addPeerEventHandler(ctx, roomId);
-        console.log(`User ${ctx.user?.login} joined the room ${roomId}`);
+        addPeerEventHandler(ctx, confId);
+        console.log(`User ${ctx.user?.login} joined the room ${confId}`);
       });
-      return withOnUnsubscribe(ctx.pubsub.asyncIterator(roomId), () => {
-        removePeerEventHandler(ctx, roomId);
-        console.log(`User ${ctx.user?.login} leaved the room ${roomId}`);
+      return withOnUnsubscribe(ctx.pubsub.asyncIterator(confId), () => {
+        removePeerEventHandler(ctx, confId);
+        console.log(`User ${ctx.user?.login} leaved the room ${confId}`);
       });
     },
-    resolve: (payload) => payload as ActionEvent,
+    resolve: (payload) => payload as WebRTCActionEvent,
   }),
 );
 
-export const broadcastWebRTCEvent = (ctx: GQLContext, event: ActionEvent) => {
+export const broadcastWebRTCEvent = (
+  ctx: GQLContext,
+  event: WebRTCActionEvent,
+) => {
   const roomEntry = Object.entries(rooms).find((e) =>
     e[1].find((u) => u.id === ctx.user?.id),
   ); // later can get from user
@@ -74,7 +83,7 @@ const addPeerEventHandler = (ctx: GQLContext, roomId: string) => {
 
     if (to.length !== 0) {
       broadcastWebRTCEvent(ctx, {
-        actionType: ActionType.ADD_PEER,
+        actionType: WebRTCActionType.ADD_PEER,
         data: JSON.stringify({
           offerCreator: encodeGlobalID('User', user.id),
           to,
@@ -89,7 +98,7 @@ const removePeerEventHandler = (ctx: GQLContext, roomId: string) => {
 
   if (user && rooms[roomId]) {
     broadcastWebRTCEvent(ctx, {
-      actionType: ActionType.REMOVE_PEER,
+      actionType: WebRTCActionType.REMOVE_PEER,
       data: JSON.stringify({
         disconnected: encodeGlobalID('User', user.id),
       }),

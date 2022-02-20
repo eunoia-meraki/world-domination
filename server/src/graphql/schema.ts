@@ -7,7 +7,7 @@ import { includeCommonSubscriptions } from './commonSubscriptions';
 
 import { builder } from './schemaBuilder';
 import includeNodeUser from './nodes/user';
-import includeGameMutations from './gameMutations';
+import includeGameMutations from './game/mutations';
 import includeNodePlayer from './nodes/player';
 import includeNodeCreateBombAction from './nodes/createBombAction';
 import includeNodeInvestTownAction from './nodes/investTownAction';
@@ -26,6 +26,7 @@ import includeNodeDevelopNuclearTechnologyAction from './nodes/developNuclearTec
 import includeNodeEcologyDepositAction from './nodes/ecologyDepositAction';
 import includeNodeSanctionAction from './nodes/sanctionAction';
 import { includeWebRTC } from './webRTC';
+import { gameSubscription } from './game/subscriptions';
 
 const getGraphQLSchema = (): GraphQLSchema => {
   // TODO uncomment later

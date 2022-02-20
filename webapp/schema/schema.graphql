@@ -4,23 +4,6 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
-type ActionEvent {
-  actionType: ActionType!
-  data: String!
-}
-
-enum ActionType {
-  ADD_PEER
-  ICE_CANDIDATE
-  JOIN
-  LEAVE
-  RELAY_ICE
-  RELAY_SDP
-  REMOVE_PEER
-  SESSION_DESCRIPTION
-  SHARE_ROOMS
-}
-
 type AuthorizationPayload {
   token: String!
   user: User!
@@ -90,7 +73,7 @@ type InvestTownAction implements Node {
 
 type Mutation {
   createGame(gameName: String!): Game!
-  interactWebRTC(actionType: ActionType!, data: String!): Boolean!
+  interactWebRTC(actionType: WebRTCActionType!, data: String!): Boolean!
   joinGame(gameId: ID!): User!
   leaveGame(gameId: ID!): User!
   sendActions(input: SendActionsInput!): Boolean!
@@ -203,7 +186,8 @@ type Stage implements Node {
 }
 
 type Subscription {
-  webRTC(roomId: String!): ActionEvent!
+  gameSubscription: Game!
+  webRTC(roomId: String!): WebRTCActionEvent!
 }
 
 type Team implements Node {
@@ -265,5 +249,21 @@ type UserAvailableGamesConnection {
 type UserAvailableGamesConnectionEdge {
   cursor: String!
   node: Game!
+}
+
+type WebRTCActionEvent {
+  actionType: WebRTCActionType!
+  data: String!
+}
+
+enum WebRTCActionType {
+  ADD_PEER
+  ICE_CANDIDATE
+  JOIN
+  LEAVE
+  RELAY_ICE
+  RELAY_SDP
+  REMOVE_PEER
+  SESSION_DESCRIPTION
 }
 

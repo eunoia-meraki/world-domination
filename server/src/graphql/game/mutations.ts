@@ -1,4 +1,4 @@
-import { db } from '../database/db';
+import { db } from '../../database/db';
 
 import {
   GameActionType,
@@ -8,7 +8,7 @@ import {
   User,
 } from '@prisma/client';
 
-import { builder } from './schemaBuilder';
+import { builder } from '../schemaBuilder';
 
 import {
   CREATE_BOMB_PRICE,
@@ -23,7 +23,8 @@ import {
   START_ECOLOGY,
   START_MONEY,
   TEAM_MAX_PLAYERS,
-} from './constants';
+} from '../constants';
+import { broadcastGame } from './subscriptions';
 
 interface iSendActionsInput {
   investTownsIds: string[];
@@ -128,6 +129,7 @@ const includeGameMutations = () => {
           },
         });
 
+        broadcastGame(context);
         return updated;
       },
     }),
@@ -149,6 +151,8 @@ const includeGameMutations = () => {
         if (!game) {
           throw new Error('Игра не найдена');
         }
+
+        broadcastGame(context);
 
         const updated = await db.user.update({
           where: { id: user.id },
