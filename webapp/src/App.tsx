@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet, ReactLocation, Router } from 'react-location';
-import { ReactLocationDevtools } from 'react-location-devtools';
+// import { ReactLocationDevtools } from 'react-location-devtools';
 
 import type { FC } from 'react';
 import { Suspense } from 'react';
@@ -22,7 +22,7 @@ export const App: FC = () => {
         <Suspense fallback={<FullPageLoading />}>
           <Outlet />
         </Suspense>
-        <ReactLocationDevtools initialIsOpen={false} />
+        {/* <ReactLocationDevtools initialIsOpen={false} /> */}
       </Router>
     </ErrorBoundary>
   );
