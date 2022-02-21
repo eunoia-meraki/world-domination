@@ -1,6 +1,6 @@
 export const ROUNDS_AMOUNT = 6;
-export const STAGES_PER_ROUND = 3;
-export const STAGE_LIFETIME = 3;
+export const STAGES_PER_ROUND = 2;
+export const STAGE_LIFETIME = 10 * 1000; // ms
 export const TEAM_MAX_PLAYERS = 2;
 export const MAX_BOMB_COUNT = 2;
 export const START_MONEY = 100;

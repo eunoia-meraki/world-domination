@@ -28,6 +28,8 @@ import includeNodeSanctionAction from './nodes/sanctionAction';
 import { includeWebRTC } from './webRTC';
 import { gameSubscription } from './game/subscriptions';
 
+import { DateTimeResolver } from 'graphql-scalars';
+
 const getGraphQLSchema = (): GraphQLSchema => {
   // TODO uncomment later
   // builder.queryType({});
@@ -49,6 +51,8 @@ const getGraphQLSchema = (): GraphQLSchema => {
   builder.enumType(GameActionType, {
     name: 'GameActionType',
   });
+
+  builder.addScalarType('Date', DateTimeResolver, {});
 
   includeNodeUser();
   includeNodePlayer();

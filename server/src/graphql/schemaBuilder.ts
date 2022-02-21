@@ -12,6 +12,12 @@ export type SBProps = {
     public: boolean;
   };
   Context: GQLContext;
+  Scalars: {
+    Date: {
+      Input: Date;
+      Output: Date;
+    };
+  };
 };
 
 export type WDSchemaBuilder = PothosSchemaTypes.SchemaBuilder<

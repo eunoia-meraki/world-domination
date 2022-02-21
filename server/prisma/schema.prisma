@@ -86,7 +86,7 @@ model Game {
 
 model Round {
   id           String       @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  currentStage Int
+  currentStage Int          @default(0)
   order        Int
   stages       Stage[]
   gameId       String       @db.ObjectId
@@ -95,11 +95,12 @@ model Round {
 }
 
 model Stage {
-  id       String @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  order    Int
-  livetime Int
-  roundId  String @db.ObjectId
-  round    Round  @relation(fields: [roundId], references: [id])
+  id        String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  order     Int
+  startDate DateTime?
+  livetime  Int
+  roundId   String   @db.ObjectId
+  round     Round    @relation(fields: [roundId], references: [id])
 }
 
 model TeamRoom {
@@ -133,7 +134,7 @@ model TownLevel {
 }
 
 enum GameActionType {
-  INVEST_TOWN 
+  INVEST_TOWN
   SHILED_CREATION
   SEND_BOMB
   CREATE_BOMB

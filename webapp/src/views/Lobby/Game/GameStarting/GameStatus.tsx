@@ -14,28 +14,47 @@ export const GameStatus: FC<IGameStarting> = ({ game }) => {
   const data = useFragment(
     graphql`
       fragment GameStatus_game_Fragment on Game {
+        id
         status
+        currentRound
+        rounds {
+          id
+          currentStage
+          order
+          stages {
+            id
+            startDate
+            order
+          }
+        }
       }
     `,
     game,
   );
 
-  if (data.status === 'ON_STARTING') {
+  const curRound = data.rounds.find(round => round.order === data.currentRound);
+  const curStage = curRound?.stages.find(stage => stage.order === curRound?.currentStage);
 
-    return (
-      <Container sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center' }}>
-        <CircularProgress />
-        <b>Starting game...</b>
-      </Container>);
-  }
-
-  if (data.status === 'NOT_STARTED') {
-
-    return (
-      <Container sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center' }}>
+  return (
+    <Container sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center' }}>
+      {data.status === 'ON_STARTING' && (
+        <>
+          <CircularProgress />
+          <b>Starting game...</b>
+        </>
+      )}
+      {data.status === 'NOT_STARTED' && (
         <b>Waiting for the players...</b>
-      </Container>);
-  }
+      )}
+      {data.status === 'ON_GOING' && curRound && (
+        <b>Round {data.currentRound+1}/{data.rounds.length},
+          Stage: {curRound.currentStage+1}/{curRound.stages.length},
+          StartDate: {curStage?.startDate}</b>
+      )}
+      {data.status === 'ENDED' && curRound && (
+        <b>Game ended :)</b>
+      )}
 
-  return null;
+    </Container>);
+
 };

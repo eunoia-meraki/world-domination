@@ -11,6 +11,11 @@ const includeNodeStage = () => {
       livetime: t.exposeInt('livetime'),
       order: t.exposeInt('order'),
       round: t.relation('round'),
+      startDate: t.field({
+        type: 'Date',
+        nullable: true,
+        resolve: async (s) => s.startDate,
+      }),
     }),
   });
 };

@@ -182,7 +182,12 @@ const includeGameMutations = () => {
         const updatedUser = await db.user.update({
           where: { id: user.id },
           include: {
-            currentGame: { include: { teams: { include: { players: true } } } },
+            currentGame: {
+              include: {
+                rounds: { include: { stages: true } },
+                teams: { include: { players: true } },
+              },
+            },
           },
           data: {
             currentGameId: game.id,
