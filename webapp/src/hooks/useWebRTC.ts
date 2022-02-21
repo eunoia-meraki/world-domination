@@ -92,10 +92,10 @@ const getAudioIndicationGetter = (media: MediaStream) => {
   return getIndication;
 };
 
-const debugPrint = (op:string, data: unknown) =>
+const debugPrint = (op:string, data: unknown) => {
   // eslint-disable-next-line no-console
-  // console.log(op, data);
-  ({ op, data })
+  console.log(op, data);
+}
 ;
 
 export interface Client {

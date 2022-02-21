@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -24,7 +25,14 @@ import type {
   Observable,
 } from 'subscriptions-transport-ws';
 
-const GRAPHQL_ENDPOINT = 'localhost:8002/graphql';
+const GRAPHQL_ENDPOINT = 'graphql';
+const PROTOCOL = location.protocol;
+const WS_PROTOCOL = PROTOCOL === 'https:' ? 'wss:' : 'ws:';
+const HOST = location.host;
+const PORT = location.port;
+
+const GRAPHQL_LINK = `${PROTOCOL}//${HOST}:${PORT}/${GRAPHQL_ENDPOINT}`;
+const GRAPHQL_WS_LINK = `${WS_PROTOCOL}//${HOST}:${PORT}/${GRAPHQL_ENDPOINT}`;
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
@@ -40,7 +48,7 @@ const fetchQuery: FetchFunction = (
     // Check that the auth token is configured
     const token = sessionStorage.getItem('token');
 
-    const response = await fetch(`http://${GRAPHQL_ENDPOINT}`, {
+    const response = await fetch(GRAPHQL_LINK, {
       body: JSON.stringify({
         query: params.text,
         variables,
@@ -113,7 +121,7 @@ function isAsyncIterable (input: unknown): input is AsyncIterable<unknown> {
 /* eslint-enable */
 
 const subscriptionClient = new SubscriptionClient(
-  `ws://${GRAPHQL_ENDPOINT}`,
+  GRAPHQL_WS_LINK,
   {
     reconnect: true,
   },
