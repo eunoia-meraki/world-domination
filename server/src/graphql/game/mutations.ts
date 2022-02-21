@@ -211,8 +211,6 @@ const includeGameMutations = () => {
           throw new Error('Текущая игра не найдена');
         }
 
-        broadcastGame(ctx, game);
-
         const curPlayer = await db.player.findFirst({
           where: { userId: user.id, team: { gameId: game.id } },
         });
@@ -223,6 +221,8 @@ const includeGameMutations = () => {
           where: { id: user.id },
           data: { currentGameId: null },
         });
+
+        broadcastGame(ctx, game);
 
         return updatedUser;
       },
