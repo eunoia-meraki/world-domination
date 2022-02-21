@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { AuthenticationError } from 'apollo-server';
 import { generateJwtToken } from '../auth';
 import { db } from '../database/db';
