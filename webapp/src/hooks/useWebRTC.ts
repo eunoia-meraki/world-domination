@@ -99,7 +99,7 @@ const getAudioIndicationGetter = (media: MediaStream) => {
     return vol;
   };
 
-  return getIndication;
+  return { getIndication, close: () => audioContext.close() };
 };
 
 const debugPrint = (op:string, data: unknown) => {
@@ -119,6 +119,7 @@ const useWebRTC = (roomID: string, userId: string) => {
   const HTMLMediaElements = useRef<HTMLMediaElementDictionary>({});
   const RTCPeerConnections = useRef<RTCPeerConnectionDictionary>({});
   const selfMediaStream = useRef<MediaStream | null>(null);
+  const audioIndicatorClosers = useRef<(() => void)[]>([]);
 
   const addOneClient = useCallback((newClient: Client, cb: StateUpdatedCallback<Client[]>) => {
     updateClients(list => !list.includes(newClient) ? [...list, newClient] : list, cb);
@@ -201,10 +202,12 @@ const useWebRTC = (roomID: string, userId: string) => {
             // video & audio tracks received
             if (tracksNumber === 1) {// TODO set 2 in next version
               tracksNumber = 0;
+              const { getIndication, close } = getAudioIndicationGetter(remoteMediaStream);
+              audioIndicatorClosers.current.push(close);
               addOneClient(
                 {
                   clientId: acceptor,
-                  audioIndicationGetter: getAudioIndicationGetter(remoteMediaStream),
+                  audioIndicationGetter: getIndication,
                   setMuted: muted => remoteMediaStream.getAudioTracks().forEach(track => {
                     const audio = track;
                     audio.enabled = muted;
@@ -285,10 +288,12 @@ const useWebRTC = (roomID: string, userId: string) => {
       video: false, // TODO pass true in next version
     }).then(mediaStream => {
       selfMediaStream.current = mediaStream;
+      const { getIndication, close } = getAudioIndicationGetter(mediaStream);
+      audioIndicatorClosers.current.push(close);
       addOneClient(
         {
           clientId: userId,
-          audioIndicationGetter: getAudioIndicationGetter(mediaStream),
+          audioIndicationGetter: getIndication,
           setMuted: muted => mediaStream.getAudioTracks().forEach(track => {
             const audio = track;
             audio.enabled = muted;
@@ -325,8 +330,16 @@ const useWebRTC = (roomID: string, userId: string) => {
     });
 
     return () => {
-      selfMediaStream.current?.getTracks().forEach(track => track.stop());
       subscription?.dispose();
+      Object.values(HTMLMediaElements.current || {}).forEach(htmlMedia => {
+        (htmlMedia?.srcObject as MediaStream)?.getTracks()?.forEach(track => track?.stop());
+      });
+      HTMLMediaElements.current = {};
+      RTCPeerConnections.current = {};
+      selfMediaStream.current = null;
+      audioIndicatorClosers.current.forEach(closer => closer());
+      audioIndicatorClosers.current = [];
+      updateClients(() => []);
     };
   }, [userId, roomID, addOneClient, interactWebRTC, updateClients]);
 
