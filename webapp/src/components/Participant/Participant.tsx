@@ -1,4 +1,4 @@
-import { Mic, MicOff } from '@mui/icons-material';
+import { Mic, MicOff, VolumeUp, VolumeOff } from '@mui/icons-material';
 import { Box, IconButton, Card, CardContent, Typography, CardMedia } from '@mui/material';
 
 import { FC, useEffect, useState } from 'react';
@@ -52,7 +52,8 @@ export const Participant: FC<IParticipant> = ({
     }}>
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
         <IconButton color="inherit" onClick={onMicClick}>
-          {micOn ? <Mic /> : <MicOff />}
+          {myself && (micOn ? <Mic /> : <MicOff />)}
+          {!myself && (micOn ? <VolumeUp /> : <VolumeOff />)}
         </IconButton>
         <CardContent>
           <Typography variant="subtitle2" color="text.secondary" component="span">
