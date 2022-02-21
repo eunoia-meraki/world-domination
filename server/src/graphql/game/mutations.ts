@@ -4,6 +4,7 @@ import {
   GameActionType,
   GameStatus,
   Nation,
+  Player,
   RoleType,
   User,
 } from '@prisma/client';
@@ -24,7 +25,10 @@ import {
   START_MONEY,
   TEAM_MAX_PLAYERS,
 } from '../constants';
+
 import { broadcastGame } from './subscriptions';
+
+import { startGame, stopGameStarting } from './helper';
 
 interface iSendActionsInput {
   investTownsIds: string[];
@@ -177,7 +181,9 @@ const includeGameMutations = () => {
 
         const updatedUser = await db.user.update({
           where: { id: user.id },
-          include: { currentGame: { include: { teams: true } } },
+          include: {
+            currentGame: { include: { teams: { include: { players: true } } } },
+          },
           data: {
             currentGameId: game.id,
           },
@@ -185,6 +191,17 @@ const includeGameMutations = () => {
 
         if (!updatedUser.currentGame) {
           throw new Error('Игра не найдена');
+        }
+
+        const isGameShouldStart = updatedUser.currentGame.teams.every(
+          (team) => team.players.length == team.maxPlayersCount,
+        );
+
+        if (isGameShouldStart) {
+          const updatedGame = await startGame(context, updatedUser.currentGame);
+          broadcastGame(context, updatedGame);
+
+          return updatedUser;
         }
 
         broadcastGame(context, updatedUser.currentGame);
@@ -201,21 +218,26 @@ const includeGameMutations = () => {
       },
       type: 'User',
       resolve: async (_, __, ___, ctx) => {
-        const user = ctx.user as User;
+        const user = ctx.user!;
 
-        const game = await db.game.findUnique({
+        let game = await db.game.findUnique({
           where: { id: user.currentGameId || undefined },
+          include: { teams: { include: { players: true } } },
         });
 
         if (!game) {
           throw new Error('Текущая игра не найдена');
         }
 
-        const curPlayer = await db.player.findFirst({
-          where: { userId: user.id, team: { gameId: game.id } },
-        });
+        const curPlayer = game.teams
+          .reduce<Player[]>((acc, team) => [...acc, ...team.players], [])
+          .find((player) => player.userId == user.id);
 
         await db.player.delete({ where: { id: curPlayer!.id } });
+
+        if (game.status == GameStatus.ON_STARTING) {
+          game = await stopGameStarting(ctx, game);
+        }
 
         const updatedUser = await db.user.update({
           where: { id: user.id },

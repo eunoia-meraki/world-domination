@@ -65,8 +65,9 @@ model Team {
 }
 
 enum GameStatus {
-  ON_GOING
   NOT_STARTED
+  ON_STARTING
+  ON_GOING
   ENDED
 }
 

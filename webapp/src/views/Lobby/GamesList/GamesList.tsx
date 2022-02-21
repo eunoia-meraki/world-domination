@@ -86,6 +86,12 @@ export const GamesList: FC<IGamesList> = ({
             owner {
               login
             }
+            clients {
+              id
+              login
+            }
+
+            ...SortingRoom_game_Fragment
           }
           id
         }
