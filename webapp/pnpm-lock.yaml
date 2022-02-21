@@ -42,7 +42,6 @@ specifiers:
   eslint-plugin-react: ^7.28.0
   eslint-plugin-react-hooks: ^4.3.0
   file-loader: ^6.2.0
-  freeice: ^2.2.2
   get-graphql-schema: ^2.1.2
   graphql: ^15.8.0
   html-webpack-plugin: ^5.5.0
@@ -88,7 +87,6 @@ dependencies:
   autoprefixer: 10.4.2_postcss@8.4.6
   babel-plugin-relay: 13.1.1
   browserslist: 4.19.1
-  freeice: 2.2.2
   graphql: 15.8.0
   lodash: 4.17.21
   meros: 1.2.0-next.4_@types+node@17.0.17
@@ -5898,12 +5896,6 @@ packages:
     resolution: {integrity: sha512-pUHWWt6vHzZZiQJcM6S/0PXfS+g6FM4BF5rj9wZyreivhQPdsh5PpE25VtSNxq80wHS5RfY51Ii+8Z0Zl/pmzg==}
     dev: false
 
-  /freeice/2.2.2:
-    resolution: {integrity: sha512-XNoIxDHufqPIBSLpp4IrFPnoc+hv/0RwdOGhIoggIDC2ZKf5r6OoixbeoFJSmZOAq2aYiEUArhuQ8zVVrM5C4w==}
-    dependencies:
-      normalice: 1.0.1
-    dev: false
-
   /fresh/0.5.2:
     resolution: {integrity: sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=}
     engines: {node: '>= 0.6'}
@@ -7701,10 +7693,6 @@ packages:
 
   /node-releases/2.0.2:
     resolution: {integrity: sha512-XxYDdcQ6eKqp/YjI+tb2C5WM2LgjnZrfYg4vgQt49EK268b6gYCHsBLrK2qvJo4FmCtqmKezb0WZFK4fkrZNsg==}
-
-  /normalice/1.0.1:
-    resolution: {integrity: sha1-A0NcLuzVYxprygLaOTDsPjRagPc=}
-    dev: false
 
   /normalize-path/3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}

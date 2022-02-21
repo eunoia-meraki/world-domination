@@ -29,8 +29,8 @@ const GRAPHQL_ENDPOINT = 'graphql';
 const PROTOCOL = location.protocol;
 const WS_PROTOCOL = PROTOCOL === 'https:' ? 'wss:' : 'ws:';
 const HOST = location.hostname;
-// const PORT = HOST === 'localhost' ? '8002' : location.port;
-const PORT = '8002';
+const PORT = HOST === 'localhost' ? '8002' : location.port;
+// const PORT = '8002';
 
 const GRAPHQL_LINK = `${PROTOCOL}//${HOST}:${PORT}/${GRAPHQL_ENDPOINT}`;
 const GRAPHQL_WS_LINK = `${WS_PROTOCOL}//${HOST}:${PORT}/${GRAPHQL_ENDPOINT}`;

@@ -1,5 +1,4 @@
 import graphql from 'babel-plugin-relay/macro';
-import freeice from 'freeice';
 import { Disposable, requestSubscription, useMutation } from 'react-relay';
 
 import { useEffect, useRef, useCallback } from 'react';
@@ -73,6 +72,17 @@ type RemovePeerResponse = {
 
 type SubscriptionResolvers = {
   [key: string]: (data: never) => void;
+};
+
+const iceConfig: RTCConfiguration = {
+  iceTransportPolicy: 'relay',
+  iceServers: [
+    {
+      urls: 'turn:livwvil.xyz:5349',
+      username: 'LIVWVIL',
+      credential: 'LIVWVIL',
+    },
+  ],
 };
 
 const getAudioIndicationGetter = (media: MediaStream) => {
@@ -175,9 +185,7 @@ const useWebRTC = (roomID: string, userId: string) => {
     const subscriptionResolvers: SubscriptionResolvers = {
       ADD_PEER: async ({ offerCreator, to }: AddPeerResponse) => {
         const createRTCPeerConnection = (acceptor: string) => {
-          RTCPeerConnections.current[acceptor] = new RTCPeerConnection({
-            iceServers: freeice(),
-          });
+          RTCPeerConnections.current[acceptor] = new RTCPeerConnection(iceConfig);
 
           RTCPeerConnections.current[acceptor].onicecandidate = e => {
             if (e.candidate) {
