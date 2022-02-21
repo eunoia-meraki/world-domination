@@ -83,19 +83,19 @@ const includeGameMutations = () => {
           },
         });
 
-        await db.team.create({
-          data: {
-            gameId: game.id,
-            nation: Nation.RUSSIA,
-            maxBombCount: MAX_BOMB_COUNT,
-            money: START_MONEY,
-            maxPlayersCount: TEAM_MAX_PLAYERS,
-            voiceChatRoomId: game.id,
-            teamRoom: {
-              create: {},
-            },
-          },
-        });
+        // await db.team.create({
+        //   data: {
+        //     gameId: game.id,
+        //     nation: Nation.RUSSIA,
+        //     maxBombCount: MAX_BOMB_COUNT,
+        //     money: START_MONEY,
+        //     maxPlayersCount: TEAM_MAX_PLAYERS,
+        //     voiceChatRoomId: game.id,
+        //     teamRoom: {
+        //       create: {},
+        //     },
+        //   },
+        // });
         await db.team.create({
           data: {
             gameId: game.id,

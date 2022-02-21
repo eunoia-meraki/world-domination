@@ -77,9 +77,8 @@ export const GameStatus: FC<IGameStarting> = ({ game }) => {
       )}
       {data.status === 'ON_GOING' && currentRound.current && (
         <div>
-          <p>Round {data.currentRound+1}/{data.rounds.length},
-          Stage: {currentRound.current.currentStage+1}/{currentRound.current.stages.length},
-          StartDate: {currentStage.current?.startDate}</p>
+          <p>Round {data.currentRound+1}/{data.rounds.length}</p>
+          <p>Stage: {currentRound.current.currentStage+1}/{currentRound.current.stages.length}</p>
           <p>Timer: {timer}</p>
         </div>
       )}
