@@ -53,7 +53,7 @@ const includeGameMutations = () => {
       resolve: async (_, __, args, context) => {
         const user = context.user;
 
-        return await db.game.create({
+        const game = await db.game.create({
           data: {
             name: args.gameName,
             status: GameStatus.NOT_STARTED,
@@ -61,28 +61,6 @@ const includeGameMutations = () => {
               connect: {
                 id: user?.id,
               },
-            },
-            teams: {
-              create: [
-                {
-                  nation: Nation.RUSSIA,
-                  maxBombCount: MAX_BOMB_COUNT,
-                  money: START_MONEY,
-                  maxPlayersCount: TEAM_MAX_PLAYERS,
-                },
-                {
-                  nation: Nation.CHINA,
-                  maxBombCount: MAX_BOMB_COUNT,
-                  money: START_MONEY,
-                  maxPlayersCount: TEAM_MAX_PLAYERS,
-                },
-                {
-                  nation: Nation.USA,
-                  maxBombCount: MAX_BOMB_COUNT,
-                  money: START_MONEY,
-                  maxPlayersCount: TEAM_MAX_PLAYERS,
-                },
-              ],
             },
             currentRound: 1,
             ecologyValue: START_ECOLOGY,
@@ -104,6 +82,48 @@ const includeGameMutations = () => {
             },
           },
         });
+
+        await db.team.create({
+          data: {
+            gameId: game.id,
+            nation: Nation.RUSSIA,
+            maxBombCount: MAX_BOMB_COUNT,
+            money: START_MONEY,
+            maxPlayersCount: TEAM_MAX_PLAYERS,
+            voiceChatRoomId: game.id,
+            teamRoom: {
+              create: {},
+            },
+          },
+        });
+        await db.team.create({
+          data: {
+            gameId: game.id,
+            nation: Nation.CHINA,
+            maxBombCount: MAX_BOMB_COUNT,
+            money: START_MONEY,
+            maxPlayersCount: TEAM_MAX_PLAYERS,
+            voiceChatRoomId: game.id,
+            teamRoom: {
+              create: {},
+            },
+          },
+        });
+        await db.team.create({
+          data: {
+            gameId: game.id,
+            nation: Nation.USA,
+            maxBombCount: MAX_BOMB_COUNT,
+            money: START_MONEY,
+            maxPlayersCount: TEAM_MAX_PLAYERS,
+            voiceChatRoomId: game.id,
+            teamRoom: {
+              create: {},
+            },
+          },
+        });
+
+        return game;
       },
     }),
   );

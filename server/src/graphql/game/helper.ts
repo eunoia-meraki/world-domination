@@ -121,7 +121,8 @@ const startNextStage = async (ctx: GQLContext, gameId: string) => {
       data: { status: GameStatus.ENDED },
     });
 
-    broadcastGame(ctx, updatedGame);
+    updateTeamsVoiceChatId(ctx, updatedGame.id);
+    broadcastGame(ctx, await db.game.findFirst({ where: { id: game.id } }));
 
     return;
   }
@@ -146,6 +147,7 @@ const startNextStage = async (ctx: GQLContext, gameId: string) => {
       data: { startDate: new Date() },
     });
 
+    updateTeamsVoiceChatId(ctx, updatedGame.id);
     broadcastGame(ctx, await db.game.findFirst({ where: { id: game.id } }));
 
     setTimeout(async () => {
@@ -174,9 +176,51 @@ const startNextStage = async (ctx: GQLContext, gameId: string) => {
     data: { startDate: new Date() },
   });
 
+  updateTeamsVoiceChatId(ctx, game.id);
   broadcastGame(ctx, await db.game.findFirst({ where: { id: game.id } }));
+
   setTimeout(async () => {
     await startNextStage(ctx, game.id);
   }, newStage.livetime);
-  // broadcastGame(ctx, game); // TODO: check updating
+};
+
+const updateTeamsVoiceChatId = async (ctx: GQLContext, gameId: string) => {
+  const game = await db.game.findFirst({
+    where: { id: gameId },
+    include: {
+      teams: { include: { players: true, teamRoom: true } },
+      rounds: { include: { stages: true } },
+    },
+  });
+
+  if (!game) {
+    throw new Error('Текущая игра не найдена');
+  }
+
+  const curRound = game.rounds.find(
+    (round) => game.currentRound === round.order,
+  );
+  const curStage = curRound?.stages.find(
+    (stage) => curRound.currentStage === stage.order,
+  );
+
+  if (!curStage) {
+    throw new Error('Текущая стадия игры не найдена');
+  }
+
+  const isPrivateStage = curStage.order === 1;
+
+  if (isPrivateStage) {
+    game.teams.forEach(async (team) => {
+      await db.team.update({
+        where: { id: team.id },
+        data: { voiceChatRoomId: team.teamRoom!.id },
+      });
+    });
+  } else {
+    await db.team.updateMany({
+      where: { gameId: game.id },
+      data: { voiceChatRoomId: gameId },
+    });
+  }
 };

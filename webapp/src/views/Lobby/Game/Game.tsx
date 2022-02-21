@@ -16,8 +16,70 @@ import { SortingRoom } from '../SortingRoom';
 
 import type { LobbyLocation } from '../LobbyLocations';
 import type { Game_gameSubscription_Subscription } from './__generated__/Game_gameSubscription_Subscription.graphql';
-import type { Game_game_Query } from './__generated__/Game_game_Query.graphql';
+import type { Game_game_Query, Game_game_Query$data } from './__generated__/Game_game_Query.graphql';
 import type { ClientData } from './types';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+graphql`
+  fragment Game_game_Fragment on Game {
+    clients {
+      id
+      login
+    }
+
+    teams {
+      id 
+      voiceChatRoomId
+      players {
+        id
+        user {
+          id
+        }
+        guestTeamRoom {
+          id
+        }
+      }
+      teamRoom {
+        id
+      }
+    }
+    status
+  }`;
+
+const getVoiceChatId = (data: Game_game_Query$data) => {
+  const { node } = data;
+  if (!node) {
+    return null;
+  }
+
+  const { teams } = node;
+
+  if (!teams) {
+    return null;
+  }
+
+  const players = teams.map(team => team.players)
+    .reduce((acc, arr) => [...acc, ...arr], []);
+
+  const player = players.find(plr => plr.user.id === data.authorizedUser.id);
+
+  if (!player) {
+    return null;
+  }
+  const guestTeamRoomId = player.guestTeamRoom?.id;
+
+  if (guestTeamRoomId) {
+    return guestTeamRoomId;
+  }
+
+  const team = teams.find(curTeam => curTeam.players.some(plr => plr.id === player.id ));
+
+  if (!team) {
+    return null;
+  }
+
+  return team.voiceChatRoomId;
+};
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,11 +117,7 @@ export const Game: FC = () => {
         node(id: $gameId) {
           id
           ... on Game {
-            clients {
-              id
-              login
-            }
-
+            ...Game_game_Fragment @relay(mask: false)
             ...SortingRoom_game_Fragment
           }
         }
@@ -83,9 +141,8 @@ export const Game: FC = () => {
             login
           }
 
+          ...Game_game_Fragment @relay(mask: false)
           ...SortingRoom_game_Fragment
-
-          status
         }
       }
     `,
@@ -106,14 +163,18 @@ export const Game: FC = () => {
     setOpen(!open);
   };
 
-  const clientData =
-    data.node?.clients?.reduce(
+  const clientData = // TODO optimization
+    game?.clients?.reduce(
       (acc: ClientData, client) => ({
         ...acc,
         [client.id]: client.login,
       }),
       { [data.authorizedUser.id]: data.authorizedUser.login },
     ) || {};
+
+  const voiceChatId = getVoiceChatId(data);
+  // eslint-disable-next-line no-console
+  console.log(voiceChatId);
 
   return (
     game && (
@@ -183,7 +244,7 @@ export const Game: FC = () => {
           </Tabs>
 
           <IconButton onClick={toggleDrawer}>
-            { open ? <ChevronRight/> : <ChevronLeft /> }
+            {open ? <ChevronRight /> : <ChevronLeft />}
           </IconButton>
         </Box>
 
@@ -217,7 +278,7 @@ export const Game: FC = () => {
           </Box>
 
           {/* TODO handle it */}
-          <VoiceChat userId={data.authorizedUser.id} clientData={clientData} open={open} />
+          {voiceChatId && <VoiceChat voiceChatId={voiceChatId} userId={data.authorizedUser.id} clientData={clientData} open={open} />}
         </Box>
       </Box>
     )

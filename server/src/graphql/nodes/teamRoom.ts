@@ -9,7 +9,7 @@ const includeNodeTeamRoom = () => {
     },
     fields: (t) => ({
       team: t.relation('team'),
-      gues: t.relation('guest'),
+      guest: t.relation('guest', { nullable: true }),
     }),
   });
 };

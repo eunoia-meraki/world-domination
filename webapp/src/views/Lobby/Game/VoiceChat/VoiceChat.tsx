@@ -1,10 +1,8 @@
 import { Box, styled } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { useMatch } from 'react-location';
 
-import { FC, useState } from 'react';
+import type { FC } from 'react';
 
-import type { LobbyLocation } from '../../LobbyLocations';
 import type { ClientData } from '../types';
 
 import { Participant } from '@/components/Participant';
@@ -41,16 +39,11 @@ interface IVoiceChat {
   userId: string;
   clientData: ClientData;
   open: boolean;
+  voiceChatId: string;
 }
 
-export const VoiceChat: FC<IVoiceChat> = ({ userId, clientData, open }) => {
-  const {
-    params: { gameId },
-  } = useMatch<LobbyLocation>();
-
-  const [voiceRoom] = useState<string>(gameId);
-
-  const { clients: participants, provideMediaRef } = useWebRTC(voiceRoom, userId);
+export const VoiceChat: FC<IVoiceChat> = ({ userId, clientData, open, voiceChatId }) => {
+  const { clients: participants, provideMediaRef } = useWebRTC(voiceChatId, userId);
 
   // eslint-disable-next-line no-console
   console.log(participants.map(p => p.clientId));

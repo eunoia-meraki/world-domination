@@ -11,6 +11,7 @@ const includeNodePlayer = () => {
     fields: (t) => ({
       user: t.relation('user'),
       role: t.expose('role', { type: RoleType }),
+      guestTeamRoom: t.relation('guestTeamRoom', { nullable: true }),
     }),
   });
 };
