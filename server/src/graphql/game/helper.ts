@@ -18,7 +18,7 @@ export const startGame = async (ctx: GQLContext, game: Game) => {
     });
 
     broadcastGame(ctx, gameUpdated);
-  }, 20000);
+  }, 10000);
 
   startingGame.set(game.id, timeout);
 

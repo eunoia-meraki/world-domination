@@ -201,7 +201,7 @@ const includeGameMutations = () => {
           const updatedGame = await startGame(context, updatedUser.currentGame);
           broadcastGame(context, updatedGame);
 
-          return updatedUser;
+          return { ...updatedUser, currentGame: updatedGame };
         }
 
         broadcastGame(context, updatedUser.currentGame);

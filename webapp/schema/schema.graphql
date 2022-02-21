@@ -63,6 +63,7 @@ enum GameStatus {
   ENDED
   NOT_STARTED
   ON_GOING
+  ON_STARTING
 }
 
 type InvestTownAction implements Node {

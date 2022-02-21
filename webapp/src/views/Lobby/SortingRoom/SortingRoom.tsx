@@ -16,6 +16,8 @@ import { useFragment } from 'react-relay';
 
 import { FC, Fragment } from 'react';
 
+import { GameStatus } from '../Game/GameStarting/GameStatus';
+
 import type { SortingRoom_game_Fragment$key } from './__generated__/SortingRoom_game_Fragment.graphql';
 
 const HeadTableCell = styled(TableCell)(({ theme }) => ({
@@ -52,6 +54,7 @@ export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
           }
           nation
         }
+        ...GameStatus_game_Fragment
       }
     `,
     game,
@@ -68,13 +71,18 @@ export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
           theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
       }}
     >
+
       <Container
         maxWidth="md"
         sx={{
           display: 'flex',
           alignItems: 'center',
+          flexDirection: 'column',
+          alignSelf: 'center',
+          gap: 2,
         }}
       >
+        <GameStatus game={data}/>
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
