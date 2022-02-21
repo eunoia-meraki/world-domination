@@ -14,7 +14,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import graphql from 'babel-plugin-relay/macro';
 import { useFragment } from 'react-relay';
 
-import type { FC } from 'react';
+import { FC, Fragment } from 'react';
 
 import type { SortingRoom_game_Fragment$key } from './__generated__/SortingRoom_game_Fragment.graphql';
 
@@ -90,17 +90,19 @@ export const SortingRoom: FC<ISortingRoom> = ({ game }) => {
                   const president = team.players.find(player => player.role === 'PRESIDENT');
                   const diplomat = team.players.find(player => player.role === 'DIPLOMAT');
 
-                  return <>
-                    <TableRow key={president?.user?.id || `${team.id}_president`}>
-                      <BodyTableCell rowSpan={2}>{team.nation}</BodyTableCell>
-                      <BodyTableCell>PRESIDENT</BodyTableCell>
-                      <BodyTableCell>{president?.user?.login || ''}</BodyTableCell>
-                    </TableRow>
-                    <TableRow key={diplomat?.user?.id || `${team.id}_diplomat`}>
-                      <BodyTableCell>DIPLOMAT</BodyTableCell>
-                      <BodyTableCell>{diplomat?.user?.login || ''}</BodyTableCell>
-                    </TableRow>
-                  </>;
+                  return (
+                    <Fragment key={team.id}>
+                      <TableRow key={president?.user?.id || `${team.id}_president`}>
+                        <BodyTableCell rowSpan={2}>{team.nation}</BodyTableCell>
+                        <BodyTableCell>PRESIDENT</BodyTableCell>
+                        <BodyTableCell>{president?.user?.login || ''}</BodyTableCell>
+                      </TableRow>
+                      <TableRow key={diplomat?.user?.id || `${team.id}_diplomat`}>
+                        <BodyTableCell>DIPLOMAT</BodyTableCell>
+                        <BodyTableCell>{diplomat?.user?.login || ''}</BodyTableCell>
+                      </TableRow>
+                    </Fragment>
+                  );
                 },
                 )}
               </TableBody>
