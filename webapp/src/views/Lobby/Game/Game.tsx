@@ -93,7 +93,7 @@ const TabPanel: FC<TabPanelProps> = ({ children, value, index }) => (
     hidden={value !== index}
     id={`simple-tabpanel-${index}`}
     aria-labelledby={`simple-tab-${index}`}
-    style={{ minHeight: '100%' }}
+    style={{ height: '100%' }}
   >
     {value === index && children}
   </div>

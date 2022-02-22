@@ -10,7 +10,7 @@ export const WorldStatistics: FC = () => (
   <Box
     sx={{
       display: 'flex',
-      minHeight: '100%',
+      height: '100%',
       backgroundColor: theme =>
         theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
     }}
