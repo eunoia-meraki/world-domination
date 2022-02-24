@@ -10,6 +10,7 @@ import { pubsub } from './pubsub';
 import getGraphQLSchema from './graphql/schema';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { execute, subscribe } from 'graphql';
+import * as path from 'path';
 
 const schema = getGraphQLSchema();
 
@@ -48,16 +49,14 @@ export const init = async (config: IConfig): Promise<ApolloServer> => {
 
   const app = express();
 
-  app.get('*', (req, res, next) => {
+  app.use(express.static(path.join(__dirname, 'clientApp')));
+
+  app.get('/*', function (req, res, next) {
     if (req.url === config.graphql_endpoint) {
       return next();
     }
 
-    if (req.url.startsWith('/static')) {
-      res.sendFile(__dirname + `/clientApp${req.url}`);
-    } else {
-      res.sendFile(__dirname + '/clientApp/index.html');
-    }
+    res.sendFile(path.join(__dirname, 'clientApp', 'index.html'));
   });
 
   apolloServer.applyMiddleware({ app, path: config.graphql_endpoint });
